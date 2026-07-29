@@ -160,3 +160,44 @@ padding:20px;
     border: none;
     border-radius: 5px;
 }
+/* ===== Semester Cards ===== */
+
+.semester-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-top:30px;
+}
+
+.semester-card{
+background:#ffffff;
+padding:25px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+transition:.3s;
+}
+
+.semester-card:hover{
+transform:translateY(-5px);
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.semester-card h3{
+color:#0056b3;
+margin-bottom:15px;
+}
+
+.semester-card button{
+background:#0056b3;
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+.semester-card button:hover{
+background:#003d80;
+}
