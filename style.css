@@ -134,3 +134,29 @@ padding:20px;
     border-bottom: 1px solid #ddd;
     font-size: 17px;
 }
+.search-section {
+    background: white;
+    margin: 20px;
+    padding: 25px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.search-section h2 {
+    color: #0057b8;
+}
+
+.search-section input,
+.search-section select {
+    padding: 12px;
+    margin: 10px;
+    width: 250px;
+}
+
+.search-section button {
+    padding: 12px 25px;
+    background: #0057b8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
