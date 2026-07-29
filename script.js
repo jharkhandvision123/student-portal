@@ -1,29 +1,130 @@
-/* CSS File */).
-function function checkAnswer() {
+ 
 
-    let options = document.getElementsByName("q1");
-    let result = document.getElementById("result");
 
-    if (options[2].checked) {
-        result.innerHTML = "✅ Correct Answer";
-        result.style.color = "green";
-    } else {
-        result.innerHTML = "❌ Wrong Answer";
-        result.style.color = "red";
+
+
+
+let questions = [
+    {
+        question: "Political Science is the study of?",
+        options: [
+            "History",
+            "Geography",
+            "Politics and Government",
+            "Economics"
+        ],
+        answer: "Politics and Government"
+    },
+
+    {
+        question: "Who is known as the Father of Political Science?",
+        options: [
+            "Plato",
+            "Aristotle",
+            "Socrates",
+            "Karl Marx"
+        ],
+        answer: "Aristotle"
+    },
+
+    {
+        question: "The Indian Constitution came into effect on?",
+        options: [
+            "15 August 1947",
+            "26 January 1950",
+            "26 November 1949",
+            "2 October 1950"
+        ],
+        answer: "26 January 1950"
+    }
+];
+
+
+let currentQuestion = 0;
+
+
+function loadQuestion(){
+
+    document.getElementById("question").innerHTML =
+    questions[currentQuestion].question;
+
+
+    let options = "";
+
+    questions[currentQuestion].options.forEach(function(option){
+
+        options += `
+        <input type="radio" name="answer" value="${option}">
+        ${option}<br><br>
+        `;
+
+    });
+
+
+    document.getElementById("options").innerHTML = options;
+
+    document.getElementById("result").innerHTML="";
+
+    document.getElementById("nextBtn").style.display="none";
+
+}
+
+
+
+function checkAnswer(){
+
+    let selected =
+    document.querySelector('input[name="answer"]:checked');
+
+
+    if(!selected){
+        alert("Please select an answer");
+        return;
     }
 
-} {
 
-    let options = document.getElementsByName("q1");
+    if(selected.value == questions[currentQuestion].answer){
 
-    if (options[2].checked) {
+        document.getElementById("result").innerHTML =
+        "✅ Correct Answer";
 
-        alert("✅ Correct Answer");
+    }
+    else{
 
-    } else {
-document.getElementById("nextBtn").style.display = "inline-block";
-        alert("❌ Wrong Answer");
+        document.getElementById("result").innerHTML =
+        "❌ Wrong Answer";
+
+    }
+
+
+    document.getElementById("nextBtn").style.display="inline";
+
+}
+
+
+
+function nextQuestion(){
+
+    currentQuestion++;
+
+
+    if(currentQuestion < questions.length){
+
+        loadQuestion();
+
+    }
+    else{
+
+        document.getElementById("question").innerHTML =
+        "Quiz Completed 🎉";
+
+        document.getElementById("options").innerHTML="";
+
+        document.getElementById("nextBtn").style.display="none";
 
     }
 
 }
+
+
+loadQuestion();
