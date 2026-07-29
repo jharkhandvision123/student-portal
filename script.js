@@ -21,7 +21,7 @@ function function checkAnswer() {
         alert("✅ Correct Answer");
 
     } else {
-
+document.getElementById("nextBtn").style.display = "inline-block";
         alert("❌ Wrong Answer");
 
     }
