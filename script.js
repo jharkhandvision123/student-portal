@@ -174,3 +174,30 @@ window.location.href="result.html";
 
 
 loadQuestion();
+// Search Box
+
+const searchBox = document.getElementById("searchBox");
+
+if (searchBox) {
+
+    searchBox.addEventListener("keyup", function () {
+
+        let filter = searchBox.value.toLowerCase();
+
+        let boxes = document.querySelectorAll(".box");
+
+        boxes.forEach(function(box){
+
+            let text = box.innerText.toLowerCase();
+
+            if(text.includes(filter)){
+                box.style.display = "block";
+            }else{
+                box.style.display = "none";
+            }
+
+        });
+
+    });
+
+}
