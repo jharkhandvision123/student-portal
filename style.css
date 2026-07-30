@@ -235,3 +235,12 @@ box-shadow:0 15px 35px rgba(0,0,0,.18);
 .banner:hover img{
 transform:scale(1.02);
 }
+.box p{
+margin-top:10px;
+font-size:15px;
+color:#666;
+}
+
+.box:hover p{
+color:#fff;
+}
