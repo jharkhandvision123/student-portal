@@ -1,6 +1,5 @@
 /* ===========================
-   JHARKHANDVISION123 EDUCATION
-   HOME PAGE STYLE
+   JharkhandVision123 UI 4.0
 =========================== */
 
 *{
@@ -11,16 +10,17 @@ font-family:'Poppins',sans-serif;
 }
 
 body{
-background:#f4f8ff;
+background:#f5f7fb;
 color:#222;
+line-height:1.6;
 }
 
-/* HEADER */
+/* Header */
 
 header{
 background:linear-gradient(135deg,#0d47a1,#1976d2);
-padding:18px 8%;
-box-shadow:0 5px 15px rgba(0,0,0,.15);
+padding:20px;
+box-shadow:0 4px 15px rgba(0,0,0,.15);
 }
 
 .logo-area{
@@ -30,143 +30,125 @@ gap:20px;
 }
 
 .logo{
-width:85px;
-height:85px;
+width:80px;
+height:80px;
 border-radius:50%;
 background:#fff;
 padding:5px;
 object-fit:cover;
 }
 
-header h1{
+.logo-area h1{
+color:#fff;
 font-size:32px;
+font-weight:700;
 }
 
-header p{
-margin-top:8px;
-font-size:18px;
+.logo-area p{
+color:#eaf4ff;
 }
 
-/* NAVIGATION */
+/* Navigation */
 
 nav{
-background:#ffffff;
+background:#fff;
 display:flex;
 justify-content:center;
-align-items:center;
-gap:15px;
+flex-wrap:wrap;
 padding:15px;
+gap:12px;
 box-shadow:0 2px 10px rgba(0,0,0,.08);
 position:sticky;
 top:0;
-z-index:999;
-flex-wrap:wrap;
+z-index:1000;
 }
+
 nav a{
 text-decoration:none;
 color:#0d47a1;
 font-weight:600;
-padding:12px 22px;
+padding:10px 20px;
 border-radius:8px;
 transition:.3s;
 }
 
 nav a:hover{
 background:#0d47a1;
-color:#ffffff;
+color:#fff;
 }
 
-/* BANNER */
-
-.banner{
-width:100%;
-max-width:1200px;
-margin:25px auto;
-border-radius:18px;
-overflow:hidden;
-box-shadow:0 10px 25px rgba(0,0,0,.15);
-}
-
-.banner img{
-width:100%;
-height:420px;
-object-fit:cover;
-display:block;
-transition:.5s;
-}
-
-/* WELCOME */
+/* Welcome */
 
 .welcome{
-max-width:1100px;
-margin:40px auto;
-background:white;
-padding:30px;
-border-radius:15px;
-box-shadow:0 5px 20px rgba(0,0,0,.1);
 text-align:center;
+padding:40px 20px;
 }
 
 .welcome h2{
-font-size:32px;
+font-size:34px;
 color:#0d47a1;
-margin-bottom:20px;
+margin-bottom:10px;
 }
 
 .welcome p{
-font-size:20px;
-line-height:1.8;
+font-size:18px;
+color:#555;
 }
 
-/* BUTTON SECTION */
+/* Cards */
 
 .menu{
-max-width:1100px;
-margin:40px auto;
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:25px;
-padding:20px;
+padding:30px;
+max-width:1200px;
+margin:auto;
 }
 
 .box{
-background:white;
+background:#fff;
 text-decoration:none;
 color:#222;
-padding:40px 20px;
+padding:30px;
+border-radius:18px;
 text-align:center;
-border-radius:15px;
-box-shadow:0 8px 20px rgba(0,0,0,.1);
-transition:.3s;
+box-shadow:0 5px 15px rgba(0,0,0,.10);
+transition:.35s;
 }
 
 .box:hover{
 transform:translateY(-8px);
 background:#0d47a1;
-color:white;
-}
-
-.box{
-font-size:40px;
+color:#fff;
+box-shadow:0 15px 30px rgba(0,0,0,.20);
 }
 
 .box h3{
-margin-top:20px;
-font-size:24px;
+margin:15px 0;
+font-size:22px;
 }
 
-/* FOOTER */
+.box p{
+font-size:15px;
+color:#666;
+}
+
+.box:hover p{
+color:#fff;
+}
+
+/* Footer */
 
 footer{
 background:#0d47a1;
-color:white;
+color:#fff;
 text-align:center;
 padding:20px;
 margin-top:40px;
-font-size:18px;
 }
 
-/* MOBILE */
+/* Mobile */
 
 @media(max-width:768px){
 
@@ -175,72 +157,25 @@ flex-direction:column;
 text-align:center;
 }
 
-header h1{
+.logo-area h1{
 font-size:24px;
 }
 
-.banner img{
-height:220px;
+.welcome h2{
+font-size:28px;
+}
+
+.menu{
+padding:20px;
+}
+
+nav{
+gap:8px;
 }
 
 nav a{
-width:100%;
-text-align:center;
-border-top:1px solid rgba(255,255,255,.2);
+padding:8px 15px;
+font-size:14px;
 }
 
-.welcome h2{
-font-size:26px;
-}
-
-.welcome p{
-font-size:18px;
-}
-
-.box{
-padding:30px;
-}
-
-}
-html{
-scroll-behavior:smooth;
-}
-
-body{
-background:#eef4ff;
-}
-
-.container{
-width:90%;
-max-width:1200px;
-margin:auto;
-}
-
-img{
-max-width:100%;
-display:block;
-}
-
-button,.box{
-cursor:pointer;
-transition:.3s;
-}
-
-.box:hover{
-transform:translateY(-8px);
-box-shadow:0 15px 35px rgba(0,0,0,.18);
-}
-/* ===== Hero Animation ===== */
-
-.banner:hover img{
-transform:scale(1.02);
-}
-.box p{
-margin-top:10px;
-font-size:15px;
-color:#666;
-}
-
-.box:hover p{
-color:#fff;
 }
