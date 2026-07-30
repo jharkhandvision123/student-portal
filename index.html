@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,37 +8,45 @@
 
 <meta name="theme-color" content="#0d47a1">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <title>JharkhandVision123 Education</title>
 
 <link rel="stylesheet" href="style.css">
+
 <link rel="manifest" href="manifest.json">
+
 
 <script>
 if ("serviceWorker" in navigator) {
+
   window.addEventListener("load", function () {
+
     navigator.serviceWorker.register("./service-worker.js")
+    
     .then(function () {
       console.log("Service Worker Registered");
     })
+
     .catch(function (error) {
       console.log("Service Worker Error:", error);
     });
+
   });
+
 }
 </script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 
 </head>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
-</script>
+
+
 <body>
 
-<!-- ================= HEADER ================= -->
 
 <header>
 
@@ -58,7 +67,6 @@ if ("serviceWorker" in navigator) {
 </header>
 
 
-<!-- ================= NAVIGATION ================= -->
 
 <nav>
 
@@ -73,7 +81,6 @@ if ("serviceWorker" in navigator) {
 </nav>
 
 
-<!-- ================= BANNER ================= -->
 
 <section class="banner">
 
@@ -82,7 +89,6 @@ if ("serviceWorker" in navigator) {
 </section>
 
 
-<!-- ================= WELCOME ================= -->
 
 <section class="welcome">
 
@@ -90,42 +96,37 @@ if ("serviceWorker" in navigator) {
 
 <p>
 
-यहाँ आपको सभी Semester Wise
-
-Syllabus,
-
-Notes,
-
-Previous Year Question,
-
-Suggestion,
-
-E-Book,
-
+यहाँ आपको Semester Wise Syllabus,
+Notes, Previous Year Question,
+Suggestion, E-Book,
 Online Quiz,
-
-Solution Video,
-
-Education Updates
-
+Solution Video और Education Updates
 एक ही जगह पर मिलेंगे।
 
 </p>
 
 </section>
+
+
+
 <section class="search-section">
 
 <input
+
 type="text"
+
 id="searchBox"
+
 placeholder="🔍 Search Subject, Notes, PDF..."
+
 onkeyup="searchCards()">
 
 </section>
 
-<!-- ================= QUICK BUTTONS ================= -->
+
 
 <section class="menu">
+
 
 <a href="syllabus.html" class="box">
 
@@ -134,6 +135,7 @@ onkeyup="searchCards()">
 <h3>Syllabus</h3>
 
 </a>
+
 
 
 <a href="notes.html" class="box">
@@ -145,6 +147,7 @@ onkeyup="searchCards()">
 </a>
 
 
+
 <a href="quiz.html" class="box">
 
 📝
@@ -152,6 +155,7 @@ onkeyup="searchCards()">
 <h3>Online Quiz</h3>
 
 </a>
+
 
 
 <a href="notification.html" class="box">
@@ -163,6 +167,7 @@ onkeyup="searchCards()">
 </a>
 
 
+
 <a href="solution.html" class="box">
 
 🎥
@@ -171,10 +176,10 @@ onkeyup="searchCards()">
 
 </a>
 
+
 </section>
 
 
-<!-- ================= FOOTER ================= -->
 
 <footer>
 
@@ -186,7 +191,10 @@ onkeyup="searchCards()">
 
 </footer>
 
+
+
 <script src="script.js"></script>
+
 
 </body>
 
