@@ -1,120 +1,79 @@
-let questions = [
+/* ==========================
+   JHARKHANDVISION123 EDUCATION
+   HOME PAGE SCRIPT
+========================== */
 
-{
-    question: "Political Science is the study of?",
-    options: [
-        "History",
-        "Government and Politics",
-        "Geography",
-        "Economics"
-    ],
-    answer: "Government and Politics"
-},
-
-{
-    question: "Who is known as the Father of Political Science?",
-    options: [
-        "Plato",
-        "Aristotle",
-        "Karl Marx",
-        "Socrates"
-    ],
-    answer: "Aristotle"
-},
-
-{
-    question: "Indian Constitution came into effect on?",
-    options: [
-        "15 August 1947",
-        "26 January 1950",
-        "26 November 1949",
-        "2 October 1950"
-    ],
-    answer: "26 January 1950"
-}
-
+const banners = [
+    "images/banner1.jpg",
+    "images/banner2.jpg",
+    "images/banner3.jpg"
 ];
 
-let currentQuestion = 0;
-let score = 0;
-let userAnswers = [];
+let currentBanner = 0;
 
-function loadQuestion(){
+const slider = document.getElementById("slider");
 
-    let q = questions[currentQuestion];
+function changeBanner() {
 
-    document.getElementById("question").innerHTML =
-    "Question " + (currentQuestion+1) + " of " + questions.length + "<br><br>" + q.question;
+    currentBanner++;
 
-    let html = "";
+    if (currentBanner >= banners.length) {
+        currentBanner = 0;
+    }
 
-    q.options.forEach(function(option){
+    slider.src = banners[currentBanner];
 
-        html += `
-        <label>
-            <input type="radio" name="answer" value="${option}">
-            ${option}
-        </label>
-        <br><br>
-        `;
+}
+
+// Change banner every 3 seconds
+setInterval(changeBanner, 3000);
+
+
+// ==========================
+// Button Click Animation
+// ==========================
+
+const boxes = document.querySelectorAll(".box");
+
+boxes.forEach(function(box){
+
+    box.addEventListener("click",function(){
+
+        box.style.transform="scale(0.95)";
+
+        setTimeout(function(){
+
+            box.style.transform="";
+
+        },150);
 
     });
 
-    document.getElementById("options").innerHTML = html;
+});
 
-    document.getElementById("nextBtn").style.display="none";
 
-}
+// ==========================
+// Smooth Scroll
+// ==========================
 
-function checkAnswer(){
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
-    let selected =
-    document.querySelector('input[name="answer"]:checked');
+    anchor.addEventListener('click', function (e) {
 
-    if(!selected){
+        e.preventDefault();
 
-        alert("Please select an answer.");
+        const target = document.querySelector(this.getAttribute('href'));
 
-        return;
+        if(target){
 
-    }
+            target.scrollIntoView({
 
-    userAnswers[currentQuestion]=selected.value;
+                behavior: 'smooth'
 
-    if(selected.value===questions[currentQuestion].answer){
+            });
 
-        score++;
+        }
 
-    }
+    });
 
-    document.getElementById("nextBtn").style.display="inline-block";
-
-}
-
-function nextQuestion(){
-
-    currentQuestion++;
-
-    if(currentQuestion<questions.length){
-
-        loadQuestion();
-
-    }
-
-    else{
-
-        localStorage.setItem("quizScore",score);
-
-        localStorage.setItem("quizQuestions",
-        JSON.stringify(questions));
-
-        localStorage.setItem("quizAnswers",
-        JSON.stringify(userAnswers));
-
-        window.location.href="results.html";
-
-    }
-
-}
-
-loadQuestion();
+});
