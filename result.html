@@ -1,32 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Quiz Result</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Result</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-    <h1>MJ1 Quiz Result</h1>
+<h1>MJ1 Quiz Result</h1>
+<p>JharkhandVision123 Education</p>
 </header>
 
 <main>
 
 <div class="box">
 
-    <h2>Your Score</h2>
+<h2>Your Result</h2>
 
-    <h1 id="score"></h1>
+<p><b>Total Questions:</b> <span id="total"></span></p>
 
-    <p id="status"></p>
+<p><b>Correct Answers:</b> <span id="correct"></span></p>
 
-    <br>
+<p><b>Wrong Answers:</b> <span id="wrong"></span></p>
 
-    <a href="quiz-mj1.html">
-        <button>🔄 Restart Quiz</button>
-    </a>
+<p><b>Percentage:</b> <span id="percentage"></span>%</p>
+
+<h2 id="status"></h2>
+
+<hr><br>
+
+<h2>Answer Review</h2>
+
+<div id="review"></div>
+
+<br>
+
+<a href="quiz-mj1.html">
+<button>🔄 Restart Quiz</button>
+</a>
+
+&nbsp;&nbsp;
+
+<a href="index.html">
+<button>🏠 Home</button>
+</a>
 
 </div>
 
@@ -34,21 +55,58 @@
 
 <script>
 
-let score = localStorage.getItem("quizScore");
+let score = Number(localStorage.getItem("quizScore"));
 
-let total = 3;
+let questions = JSON.parse(localStorage.getItem("quizQuestions"));
 
-document.getElementById("score").innerHTML =
-score + " / " + total;
+let answers = JSON.parse(localStorage.getItem("quizAnswers"));
 
-if(score >= 2){
-    document.getElementById("status").innerHTML =
-    "✅ Pass";
+let total = questions.length;
+
+let wrong = total - score;
+
+let percentage = ((score/total)*100).toFixed(2);
+
+document.getElementById("total").innerHTML = total;
+document.getElementById("correct").innerHTML = score;
+document.getElementById("wrong").innerHTML = wrong;
+document.getElementById("percentage").innerHTML = percentage;
+
+if(percentage>=40){
+document.getElementById("status").innerHTML="✅ PASS";
+document.getElementById("status").style.color="green";
 }
 else{
-    document.getElementById("status").innerHTML =
-    "❌ Fail";
+document.getElementById("status").innerHTML="❌ FAIL";
+document.getElementById("status").style.color="red";
 }
+
+let review="";
+
+for(let i=0;i<questions.length;i++){
+
+review+=`
+<hr>
+
+<h3>Question ${i+1}</h3>
+
+<p><b>${questions[i].question}</b></p>
+
+<p>Your Answer:
+${answers[i] ? answers[i] : "Not Answered"}
+</p>
+
+<p>Correct Answer:
+<span style="color:green;">
+${questions[i].answer}
+</span>
+</p>
+
+`;
+
+}
+
+document.getElementById("review").innerHTML=review;
 
 </script>
 
