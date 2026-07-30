@@ -42,7 +42,7 @@ answer: "26 January 1950"
 let currentQuestion = 0;
 
 let score = 0;
-
+let userAnswers = [];
 
 
 function loadQuestion(){
@@ -111,16 +111,10 @@ return;
 }
 
 
+userAnswers[currentQuestion] = selected.value;
 
-if(selected.value == questions[currentQuestion].answer){
-
-
-document.getElementById("result").innerHTML =
-"✅ Correct Answer";
-
-score++;
-
-
+if (selected.value == questions[currentQuestion].answer) {
+    score++;
 }
 
 else{
@@ -159,12 +153,11 @@ loadQuestion();
 
 else{
 
-
 localStorage.setItem("quizScore", score);
+localStorage.setItem("quizAnswers", JSON.stringify(userAnswers));
+localStorage.setItem("quizQuestions", JSON.stringify(questions));
 
-
-window.location.href="result.html";
-
+window.location.href = "results.html";
 
 }
 
