@@ -216,3 +216,62 @@ footer{
 .slide.active{
     opacity:1;
 }
+/* Professional Semester Subject Cards */
+
+.box{
+    width:300px;
+    min-height:200px;
+    padding:30px 20px;
+    border-radius:15px;
+}
+
+
+.box h3{
+    font-size:24px;
+    margin-bottom:25px;
+}
+
+
+/* Professional Buttons */
+
+.btn{
+    display:block !important;
+    width:90%;
+    margin:15px auto !important;
+    padding:14px 20px !important;
+    font-size:18px;
+    font-weight:bold;
+    border-radius:10px !important;
+}
+
+
+/* Semester Page Heading */
+
+main h2{
+    font-size:30px;
+    margin-bottom:35px;
+}
+
+
+
+/* Better Hover */
+
+.box:hover{
+    transform:translateY(-10px);
+}
+
+
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.box{
+    width:95%;
+}
+
+.btn{
+    font-size:17px;
+}
+
+}
