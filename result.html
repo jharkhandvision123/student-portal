@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Result</title>
+<title>MJ1 Quiz Result</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -19,7 +19,7 @@
 
 <div class="box">
 
-<h2>Your Result</h2>
+<h2>Quiz Completed</h2>
 
 <p><b>Total Questions:</b> <span id="total"></span></p>
 
@@ -31,7 +31,7 @@
 
 <h2 id="status"></h2>
 
-<hr><br>
+<hr>
 
 <h2>Answer Review</h2>
 
@@ -43,7 +43,7 @@
 <button>🔄 Restart Quiz</button>
 </a>
 
-&nbsp;&nbsp;
+&nbsp;
 
 <a href="index.html">
 <button>🏠 Home</button>
@@ -55,58 +55,63 @@
 
 <script>
 
-let score = Number(localStorage.getItem("quizScore"));
+const score = Number(localStorage.getItem("quizScore")) || 0;
 
-let questions = JSON.parse(localStorage.getItem("quizQuestions"));
+const questions = JSON.parse(localStorage.getItem("quizQuestions") || "[]");
 
-let answers = JSON.parse(localStorage.getItem("quizAnswers"));
+const answers = JSON.parse(localStorage.getItem("quizAnswers") || "[]");
 
-let total = questions.length;
+const total = questions.length;
 
-let wrong = total - score;
+document.getElementById("total").innerText = total;
+document.getElementById("correct").innerText = score;
+document.getElementById("wrong").innerText = total - score;
 
-let percentage = ((score/total)*100).toFixed(2);
+const percentage = total > 0 ? ((score / total) * 100).toFixed(2) : 0;
 
-document.getElementById("total").innerHTML = total;
-document.getElementById("correct").innerHTML = score;
-document.getElementById("wrong").innerHTML = wrong;
-document.getElementById("percentage").innerHTML = percentage;
+document.getElementById("percentage").innerText = percentage;
 
-if(percentage>=40){
-document.getElementById("status").innerHTML="✅ PASS";
-document.getElementById("status").style.color="green";
-}
-else{
-document.getElementById("status").innerHTML="❌ FAIL";
-document.getElementById("status").style.color="red";
+if (percentage >= 40) {
+    document.getElementById("status").innerHTML = "✅ PASS";
+    document.getElementById("status").style.color = "green";
+} else {
+    document.getElementById("status").innerHTML = "❌ FAIL";
+    document.getElementById("status").style.color = "red";
 }
 
-let review="";
+let html = "";
 
-for(let i=0;i<questions.length;i++){
+for(let i = 0; i < questions.length; i++){
 
-review+=`
-<hr>
+    const studentAnswer = answers[i] || "Not Answered";
+    const correctAnswer = questions[i].answer;
 
-<h3>Question ${i+1}</h3>
+    html += `
+    <div style="border:1px solid #ddd;padding:15px;margin:15px 0;border-radius:8px;">
+        <h3>Question ${i+1}</h3>
 
-<p><b>${questions[i].question}</b></p>
+        <p><b>${questions[i].question}</b></p>
 
-<p>Your Answer:
-${answers[i] ? answers[i] : "Not Answered"}
-</p>
+        <p>
+        <b>Your Answer:</b>
+        <span style="color:${studentAnswer===correctAnswer?'green':'red'}">
+        ${studentAnswer}
+        </span>
+        </p>
 
-<p>Correct Answer:
-<span style="color:green;">
-${questions[i].answer}
-</span>
-</p>
+        <p>
+        <b>Correct Answer:</b>
+        <span style="color:green">
+        ${correctAnswer}
+        </span>
+        </p>
 
-`;
+    </div>
+    `;
 
 }
 
-document.getElementById("review").innerHTML=review;
+document.getElementById("review").innerHTML = html;
 
 </script>
 
