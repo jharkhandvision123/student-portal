@@ -77,3 +77,26 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 
 });
+function searchCards(){
+
+let input=document.getElementById("searchBox").value.toLowerCase();
+
+let cards=document.querySelectorAll(".box");
+
+cards.forEach(function(card){
+
+let text=card.innerText.toLowerCase();
+
+if(text.indexOf(input)>-1){
+
+card.style.display="block";
+
+}else{
+
+card.style.display="none";
+
+}
+
+});
+
+}
