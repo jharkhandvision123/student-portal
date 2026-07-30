@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MJ1 Quiz | JharkhandVision123 Education</title>
+<title>Political Science MJ-1 Quiz</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -15,51 +15,131 @@
 
 <header>
 
-<h1>Political Science - MJ1 Quiz</h1>
+<div class="logo-area">
+
+<img src="images/logo.png" class="logo">
+
+<div>
+
+<h1>Political Science MJ-1 Quiz</h1>
 
 <p>JharkhandVision123 Education</p>
+
+</div>
+
+</div>
 
 </header>
 
 <nav>
 
 <a href="index.html">Home</a>
-
-<a href="syllabus.html">Syllabus</a>
-
-<a href="semester1.html">Semester 1</a>
-
-<a href="semester1-political-science.html">Political Science</a>
+<a href="mj1.html">Back</a>
 
 </nav>
 
-<main>
+<section class="welcome">
 
-<div class="box">
+<h2>Online Quiz</h2>
 
-<h2 id="question">
-Loading Question...
-</h2>
+<p>Select the Correct Answer</p>
 
-<div id="options"></div>
+</section>
 
-<br>
+<div class="welcome">
 
-<button id="submitBtn" onclick="checkAnswer()">
-Submit Answer
+<form id="quizForm">
+
+<h3>1. Political Science is the study of?</h3>
+
+<label>
+<input type="radio" name="q1" value="0">
+History
+</label>
+
+<br><br>
+
+<label>
+<input type="radio" name="q1" value="1">
+Politics and Government
+</label>
+
+<br><br>
+
+<label>
+<input type="radio" name="q1" value="0">
+Geography
+</label>
+
+<br><br>
+
+<hr><br>
+
+<h3>2. Father of Political Science?</h3>
+
+<label>
+
+<input type="radio" name="q2" value="1">
+
+Aristotle
+
+</label>
+
+<br><br>
+
+<label>
+
+<input type="radio" name="q2" value="0">
+
+Plato
+
+</label>
+
+<br><br>
+
+<label>
+
+<input type="radio" name="q2" value="0">
+
+Karl Marx
+
+</label>
+
+<br><br>
+
+<button type="button" onclick="checkQuiz()">
+
+Submit Quiz
+
 </button>
 
-<button id="nextBtn" onclick="nextQuestion()" style="display:none;">
-Next Question
-</button>
+</form>
 
-<p id="result"></p>
+<h2 id="result"></h2>
 
 </div>
 
-</main>
+<script>
 
-<script src="script.js"></script>
+function checkQuiz(){
+
+let score=0;
+
+let answers=document.querySelectorAll("input[type=radio]:checked");
+
+answers.forEach(function(ans){
+
+score+=Number(ans.value);
+
+});
+
+document.getElementById("result").innerHTML=
+
+"✅ Your Score : "+score+" / 2";
+
+}
+
+</script>
 
 </body>
 
