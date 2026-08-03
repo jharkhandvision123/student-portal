@@ -1,7 +1,7 @@
 // ==========================================
 // JharkhandVision123 Education
 // Universal Viewer Engine
-// FINAL VERSION
+// FINAL UPDATED VERSION
 // ==========================================
 
 
@@ -23,7 +23,8 @@ const contentArea = document.getElementById("contentArea");
 
 
 
-// Header Title
+
+// Header
 
 if(viewerTitle){
 
@@ -42,11 +43,14 @@ if(contentTitle){
 
 
 
-// Check URL Data
+
+// Check Parameters
 
 function checkParameters(){
 
-    if(!semester || !subject || !paper){
+
+    if(!semester || !subject || !paper || !type){
+
 
         contentArea.innerHTML = `
 
@@ -60,14 +64,18 @@ function checkParameters(){
 
         `;
 
+
         return false;
+
 
     }
 
 
     return true;
 
+
 }
+
 
 
 
@@ -76,28 +84,38 @@ function checkParameters(){
 
 function showLoading(){
 
+
     contentArea.innerHTML = `
 
+
     <div class="loading-box">
+
 
     <h3>
     Loading Content...
     </h3>
 
+
     <p>
     Please wait
     </p>
 
+
     </div>
 
+
     `;
+
 
 }
 
 
 
 
-// Display Content
+
+
+
+// Show Content
 
 function showContent(data){
 
@@ -113,6 +131,7 @@ function showContent(data){
 
         contentArea.innerHTML = `
 
+
         <iframe
 
         src="${data.file}"
@@ -125,67 +144,96 @@ function showContent(data){
 
         </iframe>
 
+
         `;
 
 
         return;
+
 
     }
 
 
 
 
-    // Notes / Ebook / PYQ
+
+    // Normal Content System
 
 
     if(
         type === "notes" ||
         type === "ebook" ||
-        type === "pyq"
+        type === "pyq" ||
+        type === "important" ||
+        type === "chapters" ||
+        type === "video" ||
+        type === "update"
     ){
+
+
+        const section = data[type];
+
+
+
+        if(!section){
+
+
+            contentArea.innerHTML = `
+
+            <h3>
+            Content Not Available
+            </h3>
+
+            `;
+
+
+            return;
+
+
+        }
+
+
 
 
         let html = "";
 
 
 
-        if(data.title){
+        if(section.title){
+
 
             html += `
+
             <h2>
-            ${data.title}
+            ${section.title}
             </h2>
+
             `;
+
 
         }
 
 
 
-        if(data.description){
+
+        if(section.content){
+
 
             html += `
-            <p>
-            ${data.description}
-            </p>
-            `;
 
-        }
-
-
-
-        if(data.content){
-
-            html += `
 
             <div class="viewer-text">
 
-            ${data.content}
+            ${section.content}
 
             </div>
 
+
             `;
 
+
         }
+
 
 
 
@@ -200,39 +248,62 @@ function showContent(data){
 
 
 
-    // Quiz
+
+
+    // Quiz System
 
 
     if(type === "quiz"){
 
 
+
+        const quizData = data.quiz;
+
+
+
         contentArea.innerHTML = `
+
 
 
         <div class="quiz-box">
 
 
+
         <h2>
-        Online Quiz
+
+        ${quizData.title || "Online Quiz"}
+
         </h2>
 
 
+
         <p>
+
         Test your knowledge
+
         </p>
 
 
-        <a href="${data.link}" class="btn">
+
+
+        <a href="${quizData.link}"
+
+        class="btn">
+
 
         Start Quiz
 
+
         </a>
+
 
 
         </div>
 
 
+
         `;
+
 
 
         return;
@@ -244,19 +315,29 @@ function showContent(data){
 
 
 
+
+
     // Default
 
 
     contentArea.innerHTML = `
 
+
     <h3>
+
     Content Loaded Successfully
+
     </h3>
+
 
     `;
 
 
 }
+
+
+
+
 
 
 
@@ -296,6 +377,9 @@ function addBackButton(){
 
 
 
+
+
+
 // Error Message
 
 
@@ -305,20 +389,29 @@ function showError(message){
     contentArea.innerHTML = `
 
 
+
     <div class="error-box">
 
 
+
     <h3>
+
     Something went wrong
+
     </h3>
 
 
+
     <p>
+
     ${message}
+
     </p>
 
 
+
     </div>
+
 
 
     `;
@@ -330,7 +423,10 @@ function showError(message){
 
 
 
-// Main Loading Function
+
+
+
+// Main Function
 
 
 async function loadContent(){
@@ -339,7 +435,9 @@ async function loadContent(){
 
     if(!checkParameters()){
 
+
         return;
+
 
     }
 
@@ -350,14 +448,18 @@ async function loadContent(){
 
 
 
+
     try{
 
 
         const response = await fetch(
 
+
         `data/semester${semester}/${subject}/${paper}.json`
 
+
         );
+
 
 
 
@@ -380,7 +482,9 @@ async function loadContent(){
 
 
 
+
         showContent(data);
+
 
 
 
@@ -389,6 +493,7 @@ async function loadContent(){
 
 
     }
+
 
 
 
@@ -408,6 +513,9 @@ async function loadContent(){
 
 
 }
+
+
+
 
 
 
