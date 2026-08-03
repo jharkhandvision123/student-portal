@@ -446,31 +446,45 @@ async function loadContent(){
 
     showLoading();
 
+try {
 
+    const response = await fetch("../../syllabus.json");
 
+    if (!response.ok) {
+        throw new Error("Syllabus JSON not found");
+    }
 
-    try{
+    const syllabus = await response.json();
 
+    const sem = syllabus.semesters.find(s => s.semester == semester);
 
-       const data = await response.json();
+    if (!sem) {
+        throw new Error("Semester not found");
+    }
 
-showContent(data);
+    const paperData = sem.papers.find(p => p.code === paper);
 
-addBackButton();
+    if (!paperData) {
+        throw new Error("Paper not found");
+    }
 
+    showContent({
+        chapters: {
+            title: paperData.code,
+            content: paperData.title
+        }
+    });
 
+    addBackButton();
 
-        const data = await response.json();
+}
+catch(error){
 
+    showError(error.message);
 
+    console.error(error);
 
-
-        showContent(data);
-
-
-
-
-        addBackButton();
+}
 
 
 
