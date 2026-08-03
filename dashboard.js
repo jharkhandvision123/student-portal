@@ -1,17 +1,20 @@
 // ==========================================
 // JharkhandVision123 Education
-// Dashboard Controller
+// Dashboard Controller FINAL FIX
 // ==========================================
 
 
-const urlParams = new URLSearchParams(window.location.search);
+// Get URL Parameters
 
+const urlParams = new URLSearchParams(window.location.search);
 
 const semester = urlParams.get("semester");
 const subject = urlParams.get("subject");
 const paper = urlParams.get("paper");
 
 
+
+// HTML Elements
 
 const subjectName = document.getElementById("subjectName");
 const semesterName = document.getElementById("semesterName");
@@ -47,30 +50,42 @@ if(paperTitle){
 
 
 
-// Viewer Link Generator
+
+
+
+// Viewer URL Function
 
 function openViewer(type){
 
 
-    const link =
+    return (
 
-    `viewer.html?semester=${semester}&subject=${subject}&paper=${paper}&type=${type}`;
+    "viewer.html?" +
 
+    "semester=" + encodeURIComponent(semester) +
 
-    return link;
+    "&subject=" + encodeURIComponent(subject) +
+
+    "&paper=" + encodeURIComponent(paper) +
+
+    "&type=" + encodeURIComponent(type)
+
+    );
+
 
 }
 
 
 
 
-// Button Connections
 
+
+// Button Setup
 
 const buttons = {
 
 
-    chaptersBtn : "pdf",
+    chaptersBtn : "chapters",
 
     notesBtn : "notes",
 
@@ -92,22 +107,38 @@ const buttons = {
 
 
 
-for(let id in buttons){
 
 
-    const btn = document.getElementById(id);
+Object.keys(buttons).forEach(function(id){
 
 
-    if(btn){
+    const button = document.getElementById(id);
 
 
-        btn.href = openViewer(buttons[id]);
+
+    if(button){
+
+
+        button.onclick = function(e){
+
+
+            e.preventDefault();
+
+
+            window.location.href =
+            openViewer(buttons[id]);
+
+
+        };
 
 
     }
 
 
-}
+});
+
+
+
 
 
 
@@ -116,6 +147,6 @@ for(let id in buttons){
 
 if(paperDashboard){
 
-    paperDashboard.style.display="block";
+    paperDashboard.style.display = "block";
 
 }
