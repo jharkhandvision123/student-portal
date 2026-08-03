@@ -96,3 +96,24 @@ async function loadData() {
 }
 
 loadData();
+// ===============================
+// Part 3 : Create Paper Buttons
+// ===============================
+
+function createPaperButtons() {
+
+    paperMenu.innerHTML = "";
+
+    paperData.papers.forEach(item => {
+
+        paperMenu.innerHTML += `
+            <a class="box"
+               href="dashboard.html?semester=${semester}&subject=${subject}&paper=${item.id}">
+               📘
+               <h3>${item.name}</h3>
+            </a>
+        `;
+
+    });
+
+}
