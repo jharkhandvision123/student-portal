@@ -1,7 +1,7 @@
 // ===================================================
 // JharkhandVision123 Education
 // Universal Dynamic Engine
-// Version 1
+// Version 2
 // ===================================================
 
 const params = new URLSearchParams(window.location.search);
@@ -38,26 +38,21 @@ async function init() {
     return;
   }
 
-  pageTitle.textContent =
-    `Semester ${semester} - ${subjectNames[subject] || subject}`;
+  pageTitle.textContent = `Semester ${semester} - ${subjectNames[subject] || subject}`;
+  subjectName.textContent = subjectNames[subject] || subject;
+  semesterName.textContent = `Semester ${semester}`;
 
-  subjectName.textContent =
-    subjectNames[subject] || subject;
-
-  semesterName.textContent =
-    `Semester ${semester}`;
-
-  // Paper Selected
   if (paper) {
-    openPaper(paper);
-  }
-
-  // Subject Selected
-  else {
-    loadPaperList();
+    await loadPaper(paper);
+  } else {
+    await loadPaperList();
   }
 
 }
+
+// ----------------------
+// Load Papers
+// ----------------------
 
 async function loadPaperList() {
 
@@ -67,24 +62,13 @@ async function loadPaperList() {
       `data/semester${semester}/${subject}/papers.json`
     );
 
-    if (!response.ok) {
-      paperMenu.innerHTML =
-      "<h3>No Papers Found</h3>";
-      return;
-    }
-
     const data = await response.json();
 
     createPaperButtons(data.papers);
 
-  }
+  } catch (e) {
 
-  catch (e) {
-
-    console.log(e);
-
-    paperMenu.innerHTML =
-    "<h3>Loading Error</h3>";
+    paperMenu.innerHTML = "<h3>Paper List Not Found</h3>";
 
   }
 
@@ -97,28 +81,76 @@ function createPaperButtons(papers) {
   papers.forEach(item => {
 
     paperMenu.innerHTML += `
-
-    <a class="box"
-    href="dashboard.html?semester=${semester}&subject=${subject}&paper=${item.id}">
-
-    📘
-
-    <h3>${item.name}</h3>
-
-    </a>
-
+      <a class="box"
+      href="dashboard.html?semester=${semester}&subject=${subject}&paper=${item.id}">
+      📘
+      <h3>${item.name}</h3>
+      </a>
     `;
 
   });
 
 }
 
-function openPaper(id){
+// ----------------------
+// Load Single Paper
+// ----------------------
 
-  paperMenu.style.display="none";
+async function loadPaper(id) {
 
-  paperDashboard.style.display="block";
+  try {
 
-  paperTitle.textContent=id.toUpperCase();
+    const response = await fetch(
+      `data/semester${semester}/${subject}/${id}.json`
+    );
+
+    const data = await response.json();
+
+    showDashboard(data);
+
+  } catch (e) {
+
+    paperMenu.style.display = "none";
+    paperDashboard.style.display = "block";
+
+    paperTitle.innerHTML = "Paper Not Ready";
+
+  }
+
+}
+
+// ----------------------
+// Dashboard
+// ----------------------
+
+function showDashboard(data) {
+
+  paperMenu.style.display = "none";
+  paperDashboard.style.display = "block";
+
+  paperTitle.innerHTML = data.title || paper.toUpperCase();
+
+  setLink("chaptersBtn", data.chapters);
+  setLink("notesBtn", data.notes);
+  setLink("ebookBtn", data.ebook);
+  setLink("pyqBtn", data.pyq);
+  setLink("importantBtn", data.important);
+  setLink("quizBtn", data.quiz);
+  setLink("videoBtn", data.video);
+  setLink("updateBtn", data.updates);
+
+}
+
+// ----------------------
+// Link
+// ----------------------
+
+function setLink(id, url) {
+
+  const btn = document.getElementById(id);
+
+  if (!btn) return;
+
+  btn.href = url || "#";
 
 }
