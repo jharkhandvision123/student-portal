@@ -1,141 +1,53 @@
 // ==========================================
 // JharkhandVision123 Education
-// Dashboard Controller FINAL
+// Dashboard Controller (JSON Version)
 // ==========================================
 
+const params = new URLSearchParams(window.location.search);
 
-const urlParams = new URLSearchParams(window.location.search);
-
-
-const semester = urlParams.get("semester");
-const subject = urlParams.get("subject");
-const paper = urlParams.get("paper");
-
-
+const semester = params.get("semester");
+const subject = params.get("subject");
 
 const subjectName = document.getElementById("subjectName");
 const semesterName = document.getElementById("semesterName");
-const paperTitle = document.getElementById("paperTitle");
-const paperDashboard = document.getElementById("paperDashboard");
+const paperList = document.getElementById("paperList");
 
-
-
-
-// Display Information
-
-
-if(subjectName){
-
-    subjectName.textContent = subject || "Subject";
-
+if (subjectName) {
+    subjectName.textContent = (subject || "Subject")
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
 }
 
-
-if(semesterName){
-
-    semesterName.textContent =
-    "Semester " + (semester || "");
-
+if (semesterName) {
+    semesterName.textContent = "Semester " + semester;
 }
 
+async function loadPapers() {
 
-if(paperTitle){
+    const response = await fetch("syllabus.json");
+    const data = await response.json();
 
-    paperTitle.textContent =
-    paper || "Paper Dashboard";
+    const sem = data.semesters.find(s => s.semester == semester);
 
-}
-
-
-
-
-// Viewer URL
-
-
-function openViewer(type){
-
-
-    return (
-
-    "viewer.html?" +
-
-    "semester=" + encodeURIComponent(semester) +
-
-    "&subject=" + encodeURIComponent(subject) +
-
-    "&paper=" + encodeURIComponent(paper) +
-
-    "&type=" + encodeURIComponent(type)
-
-    );
-
-
-}
-
-
-
-
-
-
-// Buttons
-
-
-const buttons = {
-
-
-chaptersBtn: "chapters",
-
-notesBtn: "notes",
-
-ebookBtn: "ebook",
-
-pyqBtn: "pyq",
-
-importantBtn: "important",
-
-quizBtn: "quiz",
-
-videoBtn: "video",
-
-updateBtn: "update"
-
-
-};
-
-
-
-
-
-
-
-for(let id in buttons){
-
-
-    const btn = document.getElementById(id);
-
-
-
-    if(btn){
-
-
-        btn.setAttribute(
-        "href",
-        openViewer(buttons[id])
-        );
-
-
+    if (!sem) {
+        paperList.innerHTML = "<h3>Semester Not Found</h3>";
+        return;
     }
 
+    paperList.innerHTML = "";
+
+    sem.papers.forEach(paper => {
+
+        paperList.innerHTML += `
+            <a class="box"
+               href="dashboard.html?semester=${semester}&subject=${subject}&paper=${paper.code}">
+                <h3>${paper.code}</h3>
+                <p>${paper.title}</p>
+            </a>
+        `;
+
+    });
 
 }
 
-
-
-
-
-
-if(paperDashboard){
-
-    paperDashboard.style.display="block";
-
-}
+loadPapers();
