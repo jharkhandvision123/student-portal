@@ -1,0 +1,28 @@
+{
+  "papers": [
+    {
+      "id": "aec1",
+      "name": "AEC 1"
+    },
+    {
+      "id": "bsc1",
+      "name": "BSC 1"
+    },
+    {
+      "id": "sec1",
+      "name": "SEC 1"
+    },
+    {
+      "id": "mdc1",
+      "name": "MDC 1"
+    },
+    {
+      "id": "mn1a",
+      "name": "MN 1A"
+    },
+    {
+      "id": "mj1",
+      "name": "MJ 1"
+    }
+  ]
+}
