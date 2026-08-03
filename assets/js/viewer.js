@@ -452,29 +452,11 @@ async function loadContent(){
     try{
 
 
-        const response = await fetch(
+       const data = await response.json();
 
+showContent(data);
 
-        `data/semester${semester}/${subject}/${paper}.json`
-
-
-        );
-
-
-
-
-        if(!response.ok){
-
-
-            throw new Error(
-
-            "Content file not found"
-
-            );
-
-
-        }
-
+addBackButton();
 
 
 
