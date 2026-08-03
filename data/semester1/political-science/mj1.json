@@ -1,1 +1,19 @@
-data/semester1/political-science/mj1.json
+{
+  "title":"Political Science MJ1",
+
+  "notes":"<h2>MJ1 Notes</h2><p>Notes Coming Soon...</p>",
+
+  "ebook":"<h2>MJ1 E-Book</h2><p>E-Book Coming Soon...</p>",
+
+  "quiz":"<h2>MJ1 Quiz</h2><p>Quiz Coming Soon...</p>",
+
+  "chapters":"<h2>MJ1 Chapters</h2><p>Chapter List Coming Soon...</p>",
+
+  "pyq":"<h2>Previous Year Questions</h2><p>Coming Soon...</p>",
+
+  "important":"<h2>Important Questions</h2><p>Coming Soon...</p>",
+
+  "video":"<h2>Solution Video</h2><p>Coming Soon...</p>",
+
+  "updates":"<h2>Latest Updates</h2><p>Coming Soon...</p>"
+}
