@@ -40,7 +40,7 @@ async function loadPapers() {
 
         paperList.innerHTML += `
             <a class="box"
-               href="dashboard.html?semester=${semester}&subject=${subject}&paper=${paper.code}">
+               href="viewer.html?semester=${semester}&subject=${subject}&paper=${paper.code}&type=chapters">
                 <h3>${paper.code}</h3>
                 <p>${paper.title}</p>
             </a>
