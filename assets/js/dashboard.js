@@ -24,7 +24,7 @@ if (semesterName) {
 
 async function loadPapers() {
 
-    const response = await fetch("syllabus.json");
+    const response = await fetch("../../syllabus.json");
     const data = await response.json();
 
     const sem = data.semesters.find(s => s.semester == semester);
