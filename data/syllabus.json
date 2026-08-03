@@ -1,7 +1,267 @@
 {
   "university": "Nilamber Pitambar University",
   "program": "BA FYUGP NEP",
-  "semesters": [
+  "semesters": [{
+  "semester": 1,
+  "name": "Semester I",
+  "papers": [
+    {
+      "code": "AEC-1",
+      "title": "Language and Communication Skills (MIL-1 / Hindi / English)",
+      "category": "AEC"
+    },
+    {
+      "code": "VAC-1",
+      "title": "Value Added Course-1",
+      "category": "VAC"
+    },
+    {
+      "code": "SEC-1",
+      "title": "Skill Enhancement Course-1",
+      "category": "SEC"
+    },
+    {
+      "code": "MDC-1",
+      "title": "Multi-disciplinary Course-1",
+      "category": "MDC"
+    },
+    {
+      "code": "MN-1A",
+      "title": "Minor from Discipline-1",
+      "category": "MN"
+    },
+    {
+      "code": "MJ-1",
+      "title": "Major Paper-1 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    }
+  ]
+},
+{
+  "semester": 2,
+  "name": "Semester II",
+  "papers": [
+    {
+      "code": "AEC-2",
+      "title": "Language and Communication Skills (MIL-2 / English / Hindi)",
+      "category": "AEC"
+    },
+    {
+      "code": "SEC-2",
+      "title": "Skill Enhancement Course-2",
+      "category": "SEC"
+    },
+    {
+      "code": "MDC-2",
+      "title": "Multi-disciplinary Course-2",
+      "category": "MDC"
+    },
+    {
+      "code": "MN-2A",
+      "title": "Minor from Vocational Studies / Discipline-2",
+      "category": "MN"
+    },
+    {
+      "code": "MJ-2",
+      "title": "Major Paper-2 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-3",
+      "title": "Major Paper-3 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    }
+  ]
+}
     
+  ]
+}
+,
+{
+  "semester": 3,
+  "name": "Semester III",
+  "papers": [
+    {
+      "code": "AEC-3",
+      "title": "Language and Communication Skills (Language Elective-1 - Modern Indian Language including TRL)",
+      "category": "AEC"
+    },
+    {
+      "code": "SEC-3",
+      "title": "Skill Enhancement Course-3",
+      "category": "SEC"
+    },
+    {
+      "code": "MDC-3",
+      "title": "Multi-disciplinary Course-3",
+      "category": "MDC"
+    },
+    {
+      "code": "MN-1B",
+      "title": "Minor from Discipline-1",
+      "category": "MN"
+    },
+    {
+      "code": "MJ-4",
+      "title": "Major Paper-4 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-5",
+      "title": "Major Paper-5 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    }
+  ]
+},
+{
+  "semester": 4,
+  "name": "Semester IV",
+  "papers": [
+    {
+      "code": "AEC-3",
+      "title": "Language and Communication Skills (Language Elective-2 - Modern Indian Language including TRL)",
+      "category": "AEC"
+    },
+    {
+      "code": "VAC-2",
+      "title": "Value Added Course-2",
+      "category": "VAC"
+    },
+    {
+      "code": "MN-2B",
+      "title": "Minor from Vocational Studies / Discipline-2",
+      "category": "MN"
+    },
+    {
+      "code": "MJ-6",
+      "title": "Major Paper-6 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-7",
+      "title": "Major Paper-7 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-8",
+      "title": "Major Paper-8 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    }
+  ]
+}
+,
+{
+  "semester": 5,
+  "name": "Semester V",
+  "papers": [
+    {
+      "code": "MN-1C",
+      "title": "Minor from Discipline-1",
+      "category": "MN"
+    },
+    {
+      "code": "MJ-9",
+      "title": "Major Paper-9 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-10",
+      "title": "Major Paper-10 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-11",
+      "title": "Major Paper-11 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "IAP",
+      "title": "Internship / Apprenticeship / Field Work / Dissertation / Project",
+      "category": "IAP"
+    }
+  ]
+},
+{
+  "semester": 6,
+  "name": "Semester VI",
+  "papers": [
+    {
+      "code": "MN-2C",
+      "title": "Minor from Vocational Studies / Discipline-2",
+      "category": "MN"
+    },
+    {
+      "code": "MJ-12",
+      "title": "Major Paper-12 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-13",
+      "title": "Major Paper-13 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-14",
+      "title": "Major Paper-14 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-15",
+      "title": "Major Paper-15 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    }
+  ]
+}
+,
+{
+  "semester": 7,
+  "name": "Semester VII",
+  "papers": [
+    {
+      "code": "MJ-16",
+      "title": "Major Paper-16 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-17",
+      "title": "Major Paper-17 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-18",
+      "title": "Major Paper-18 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "Research",
+      "title": "Research Project / Dissertation",
+      "category": "Research"
+    }
+  ]
+},
+{
+  "semester": 8,
+  "name": "Semester VIII",
+  "papers": [
+    {
+      "code": "MJ-19",
+      "title": "Major Paper-19 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-20",
+      "title": "Major Paper-20 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "MJ-21",
+      "title": "Major Paper-21 (Disciplinary/Interdisciplinary Major)",
+      "category": "MJ"
+    },
+    {
+      "code": "Research",
+      "title": "Research Project / Dissertation / Viva-Voce",
+      "category": "Research"
+    }
   ]
 }
