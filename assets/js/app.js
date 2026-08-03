@@ -1,17 +1,15 @@
-// ===============================
+// ===================================================
 // JharkhandVision123 Education
-// Universal Dynamic Dashboard
-// Part 1
-// ===============================
+// Universal Dynamic Engine
+// Version 1
+// ===================================================
 
-// URL Parameters
 const params = new URLSearchParams(window.location.search);
 
 const semester = params.get("semester");
 const subject = params.get("subject");
 const paper = params.get("paper");
 
-// HTML Elements
 const pageTitle = document.getElementById("pageTitle");
 const subjectName = document.getElementById("subjectName");
 const semesterName = document.getElementById("semesterName");
@@ -19,101 +17,108 @@ const paperMenu = document.getElementById("paperMenu");
 const paperDashboard = document.getElementById("paperDashboard");
 const paperTitle = document.getElementById("paperTitle");
 
-// Subject Display Names
 const subjectNames = {
-
   "political-science": "Political Science",
-
   "history": "History",
-
   "geography": "Geography",
-
   "economics": "Economics",
-
   "hindi": "Hindi",
-
   "english": "English",
-
   "psychology": "Psychology",
-
   "home-science": "Home Science"
-
 };
 
-// Default Page
-if (semester && subject) {
+init();
 
-    pageTitle.innerText =
-        "Semester " + semester + " - " + subjectNames[subject];
+async function init() {
 
-    subjectName.innerText =
-        subjectNames[subject];
+  if (!semester || !subject) {
+    pageTitle.textContent = "Invalid Page";
+    subjectName.textContent = "Invalid Subject";
+    return;
+  }
 
-    semesterName.innerText =
-        "Semester " + semester;
+  pageTitle.textContent =
+    `Semester ${semester} - ${subjectNames[subject] || subject}`;
 
-}
-// ===============================
-// Part 2 : JSON Loader
-// ===============================
+  subjectName.textContent =
+    subjectNames[subject] || subject;
 
-let paperData = {};
+  semesterName.textContent =
+    `Semester ${semester}`;
 
-async function loadData() {
+  // Paper Selected
+  if (paper) {
+    openPaper(paper);
+  }
 
-    if (!semester || !subject) return;
-
-    const file =
-        `data/semester${semester}/${subject}/papers.json`;
-
-    try {
-
-        const response = await fetch(file);
-
-        if (!response.ok) {
-
-            paperMenu.innerHTML =
-            "<h3>Data Not Found</h3>";
-
-            return;
-        }
-
-        paperData = await response.json();
-
-        createPaperButtons();
-
-    }
-
-    catch (error) {
-
-        console.log(error);
-
-        paperMenu.innerHTML =
-        "<h3>Error Loading Data</h3>";
-
-    }
+  // Subject Selected
+  else {
+    loadPaperList();
+  }
 
 }
 
-loadData();
-// ===============================
-// Part 3 : Create Paper Buttons
-// ===============================
+async function loadPaperList() {
 
-function createPaperButtons() {
+  try {
 
-    paperMenu.innerHTML = "";
+    const response = await fetch(
+      `data/semester${semester}/${subject}/papers.json`
+    );
 
-    paperData.papers.forEach(item => {
+    if (!response.ok) {
+      paperMenu.innerHTML =
+      "<h3>No Papers Found</h3>";
+      return;
+    }
 
-        paperMenu.innerHTML += `
-            <a class="box"
-               href="dashboard.html?semester=${semester}&subject=${subject}&paper=${item.id}">
-               📘
-               <h3>${item.name}</h3>
-            </a>
-        `;
+    const data = await response.json();
 
-    });
+    createPaperButtons(data.papers);
+
+  }
+
+  catch (e) {
+
+    console.log(e);
+
+    paperMenu.innerHTML =
+    "<h3>Loading Error</h3>";
+
+  }
+
+}
+
+function createPaperButtons(papers) {
+
+  paperMenu.innerHTML = "";
+
+  papers.forEach(item => {
+
+    paperMenu.innerHTML += `
+
+    <a class="box"
+    href="dashboard.html?semester=${semester}&subject=${subject}&paper=${item.id}">
+
+    📘
+
+    <h3>${item.name}</h3>
+
+    </a>
+
+    `;
+
+  });
+
+}
+
+function openPaper(id){
+
+  paperMenu.style.display="none";
+
+  paperDashboard.style.display="block";
+
+  paperTitle.textContent=id.toUpperCase();
 
 }
