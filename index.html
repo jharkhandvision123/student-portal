@@ -1,733 +1,399 @@
-<!DOCTYPE html>
-<html lang="en">
+/* =========================================
+   REAL MIRROR EFFECT
+========================================= */
 
-<head>
+body{
+    background:
+        linear-gradient(
+            135deg,
+            #eef3f7 0%,
+            #b8c4cc 18%,
+            #ffffff 32%,
+            #8f9ca5 48%,
+            #f9fbfc 62%,
+            #aab6bf 78%,
+            #ffffff 100%
+        );
 
-    <meta charset="UTF-8">
+    background-attachment:fixed;
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    color:#18222b;
 
-    <title>JHARKHANDVISION123</title>
+    position:relative;
+}
 
-    <!-- ==============================
-         PWA SETTINGS
-    ============================== -->
 
-    <link rel="manifest" href="./manifest.json">
+/* MIRROR SHINE */
 
-    <meta name="theme-color" content="#ffffff">
+body::before{
+    content:"";
+    position:fixed;
 
-    <link
-        rel="apple-touch-icon"
-        href="images/imageslogo-192.png%20(1).jpeg"
-    >
+    top:0;
+    left:-120%;
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    width:70%;
+    height:100%;
 
-    <style>
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.65),
+        transparent
+    );
 
-        /* ==============================
-           MIRROR / GLASS DESIGN
-        ============================== */
+    transform:skewX(-18deg);
 
-        *{
-            box-sizing:border-box;
-        }
+    animation:mirrorShine 7s infinite;
 
-        body{
-            background:
-                linear-gradient(
-                    135deg,
-                    #e8f0f8,
-                    #ffffff,
-                    #dfeaf5,
-                    #f8fbff
-                );
+    pointer-events:none;
 
-            color:#222;
-        }
+    z-index:9999;
+}
 
 
-        /* ==============================
-           HEADER
-        ============================== */
+@keyframes mirrorShine{
 
-        .top-header{
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255,153,51,.90),
-                    rgba(255,255,255,.95),
-                    rgba(19,136,8,.85)
-                );
+    0%{
+        left:-120%;
+    }
 
-            backdrop-filter:blur(15px);
-            -webkit-backdrop-filter:blur(15px);
+    45%{
+        left:130%;
+    }
 
-            border-bottom:1px solid rgba(255,255,255,.8);
+    100%{
+        left:130%;
+    }
 
-            box-shadow:
-                0 8px 30px rgba(0,0,0,.15),
-                inset 0 1px 0 rgba(255,255,255,.8);
-        }
+}
 
 
-        .logo{
-            display:flex;
-            align-items:center;
-            gap:15px;
-        }
+/* HEADER */
 
+.top-header{
 
-        .portal-logo{
-            width:65px;
-            height:65px;
-            object-fit:cover;
-            border-radius:50%;
-            flex-shrink:0;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.75),
+            rgba(180,195,205,.55),
+            rgba(255,255,255,.85)
+        );
 
-            border:4px solid rgba(255,255,255,.9);
+    backdrop-filter:blur(8px);
 
-            box-shadow:
-                0 5px 18px rgba(0,0,0,.25),
-                inset 0 0 10px rgba(255,255,255,.8);
-        }
+    border-bottom:1px solid rgba(255,255,255,.9);
 
+    box-shadow:
+        inset 0 2px 5px rgba(255,255,255,.9),
+        inset 0 -4px 12px rgba(60,70,80,.18),
+        0 8px 25px rgba(0,0,0,.20);
+}
 
-        .logo h1{
-            margin:0;
-        }
 
+/* LOGO */
 
-        .logo p{
-            margin:3px 0 0;
-            font-weight:bold;
-        }
+.portal-logo{
 
+    border:4px solid rgba(255,255,255,.95);
 
-        /* ==============================
-           TRICOLOR TITLE
-        ============================== */
+    box-shadow:
+        inset 0 3px 8px rgba(255,255,255,.9),
+        0 5px 18px rgba(0,0,0,.35);
 
-        .tricolor-title{
-            background:linear-gradient(
-                to bottom,
-                #ff9933 0%,
-                #ff9933 33%,
-                #ffffff 33%,
-                #ffffff 66%,
-                #138808 66%,
-                #138808 100%
-            );
+}
 
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
 
-            font-weight:800;
+/* NAVIGATION */
 
-            text-shadow:
-                0 1px 2px rgba(0,0,0,.15);
-        }
+.navbar{
 
+    background:
+        linear-gradient(
+            180deg,
+            #26343e,
+            #111b22,
+            #34434d
+        );
 
-        /* ==============================
-           NAVIGATION
-        ============================== */
+    box-shadow:
+        inset 0 2px 4px rgba(255,255,255,.25),
+        inset 0 -3px 8px rgba(0,0,0,.6),
+        0 7px 20px rgba(0,0,0,.30);
+}
 
-        .navbar{
-            background:rgba(8,48,107,.88);
 
-            backdrop-filter:blur(12px);
-            -webkit-backdrop-filter:blur(12px);
+.navbar a{
 
-            box-shadow:
-                0 5px 20px rgba(0,0,0,.18);
-        }
+    text-shadow:
+        0 1px 2px #000;
 
+    transition:.3s;
+}
 
-        .navbar a{
-            transition:.25s;
-        }
 
+.navbar a:hover{
 
-        .navbar a:hover{
-            background:rgba(255,255,255,.16);
-            transform:translateY(-2px);
-        }
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.30),
+            rgba(255,255,255,.05)
+        );
 
+    box-shadow:
+        inset 0 2px 5px rgba(255,255,255,.25);
 
-        /* ==============================
-           SLIDER
-        ============================== */
+}
 
-        .slider{
-            width:100%;
-            max-width:1100px;
-            height:350px;
-            margin:25px auto;
 
-            overflow:hidden;
+/* SLIDER */
 
-            border-radius:20px;
+.slider{
 
-            border:1px solid rgba(255,255,255,.8);
+    border:5px solid rgba(255,255,255,.8);
 
-            box-shadow:
-                0 10px 35px rgba(0,0,0,.20),
-                inset 0 1px 0 rgba(255,255,255,.8);
+    box-shadow:
 
-            position:relative;
-        }
+        inset 0 4px 15px rgba(255,255,255,.75),
 
+        inset 0 -8px 20px rgba(0,0,0,.35),
 
-        .slider::after{
-            content:"";
-            position:absolute;
-            inset:0;
+        0 12px 35px rgba(0,0,0,.35);
 
-            background:
-                linear-gradient(
-                    120deg,
-                    rgba(255,255,255,.18),
-                    transparent 45%,
-                    rgba(255,255,255,.08)
-                );
+    position:relative;
+}
 
-            pointer-events:none;
-        }
 
+.slider::after{
 
-        .slides{
-            display:flex;
-            width:300%;
-            height:100%;
-            animation:slide 12s infinite;
-        }
+    content:"";
 
+    position:absolute;
 
-        .slides img{
-            width:33.3333%;
-            height:100%;
-            display:block;
-            object-fit:cover;
-        }
+    inset:0;
 
+    background:
 
-        @keyframes slide{
+        linear-gradient(
+            120deg,
+            rgba(255,255,255,.45),
+            transparent 30%,
+            transparent 65%,
+            rgba(255,255,255,.25)
+        );
 
-            0%{
-                transform:translateX(0);
-            }
+    pointer-events:none;
 
-            30%{
-                transform:translateX(0);
-            }
+}
 
-            35%{
-                transform:translateX(-33.3333%);
-            }
 
-            65%{
-                transform:translateX(-33.3333%);
-            }
+/* JOIN GROUP MIRROR */
 
-            70%{
-                transform:translateX(-66.6666%);
-            }
+.join-group-hero{
 
-            95%{
-                transform:translateX(-66.6666%);
-            }
+    padding:10px;
 
-            100%{
-                transform:translateX(0);
-            }
+    background:
+        linear-gradient(
+            135deg,
+            #ff9933,
+            #ffffff 35%,
+            #b9c4cb 50%,
+            #ffffff 65%,
+            #138808
+        );
 
-        }
+    border-radius:22px;
 
+    box-shadow:
 
-        /* ==============================
-           JOIN GROUP MIRROR CARD
-        ============================== */
+        inset 0 3px 8px rgba(255,255,255,.9),
 
-        .join-group-hero{
-            padding:12px;
+        inset 0 -6px 15px rgba(0,0,0,.20),
 
-            border-radius:22px;
+        0 12px 35px rgba(0,0,0,.30);
 
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255,153,51,.85),
-                    rgba(255,255,255,.95),
-                    rgba(19,136,8,.85)
-                );
+}
 
-            box-shadow:
-                0 12px 35px rgba(0,0,0,.18),
-                inset 0 1px 0 rgba(255,255,255,.9);
 
-            backdrop-filter:blur(15px);
-            -webkit-backdrop-filter:blur(15px);
-        }
+.join-group-link{
 
+    background:
 
-        .join-group-link{
-            display:flex;
-            align-items:center;
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.90),
+            rgba(190,200,207,.55),
+            rgba(255,255,255,.92)
+        );
 
-            gap:20px;
+    border:2px solid rgba(255,255,255,.9);
 
-            padding:20px 25px;
+    box-shadow:
 
-            text-decoration:none;
+        inset 0 3px 10px rgba(255,255,255,.95),
 
-            color:#08306b;
+        inset 0 -8px 15px rgba(0,0,0,.12),
 
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255,255,255,.92),
-                    rgba(255,255,255,.65)
-                );
+        0 7px 20px rgba(0,0,0,.25);
 
-            border-radius:16px;
+    position:relative;
 
-            border:1px solid rgba(255,255,255,.8);
+    overflow:hidden;
 
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,.9),
-                0 5px 20px rgba(0,0,0,.10);
+}
 
-            transition:.3s;
-        }
 
+/* REFLECTION ON CARD */
 
-        .join-group-link:hover{
-            transform:translateY(-4px);
+.join-group-link::after{
 
-            box-shadow:
-                0 12px 28px rgba(0,0,0,.20),
-                inset 0 1px 0 rgba(255,255,255,.9);
-        }
+    content:"";
 
+    position:absolute;
 
-        .join-group-logo{
-            width:90px;
-            height:90px;
-            min-width:90px;
+    top:-60%;
 
-            border-radius:50%;
+    left:-20%;
 
-            object-fit:cover;
+    width:140%;
 
-            border:5px solid white;
+    height:60%;
 
-            box-shadow:
-                0 0 0 3px #ff9933,
-                0 0 0 6px #ffffff,
-                0 0 0 9px #138808,
-                0 8px 20px rgba(0,0,0,.25);
-        }
+    background:
+        linear-gradient(
+            rgba(255,255,255,.65),
+            transparent
+        );
 
+    transform:rotate(-8deg);
 
-        .join-group-text{
-            flex:1;
-        }
+    pointer-events:none;
 
+}
 
-        .join-group-text h2{
-            margin:0 0 7px;
 
-            font-size:30px;
+/* GROUP LOGO */
 
-            font-weight:800;
+.join-group-logo{
 
-            color:#0d47a1;
-        }
+    border:6px solid white;
 
+    box-shadow:
 
-        .join-group-text p{
-            margin:0;
+        inset 0 4px 8px rgba(255,255,255,.8),
 
-            font-size:16px;
+        0 0 0 3px #ff9933,
 
-            line-height:1.5;
+        0 0 0 6px #ffffff,
 
-            color:#333;
-        }
+        0 0 0 9px #138808,
 
+        0 10px 25px rgba(0,0,0,.35);
 
-        /* ==============================
-           DASHBOARD GLASS CARDS
-        ============================== */
+}
 
-        .dashboard{
-            background:
-                rgba(255,255,255,.55);
 
-            backdrop-filter:blur(15px);
-            -webkit-backdrop-filter:blur(15px);
+/* DASHBOARD */
 
-            border:1px solid rgba(255,255,255,.8);
+.dashboard{
 
-            border-radius:22px;
+    background:
 
-            padding:25px;
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.78),
+            rgba(160,175,185,.45),
+            rgba(255,255,255,.85)
+        );
 
-            box-shadow:
-                0 10px 30px rgba(0,0,0,.12),
-                inset 0 1px 0 rgba(255,255,255,.9);
-        }
+    border:2px solid rgba(255,255,255,.85);
 
+    box-shadow:
 
-        .dashboard a{
-            text-decoration:none;
-        }
+        inset 0 3px 10px rgba(255,255,255,.95),
 
+        inset 0 -8px 20px rgba(0,0,0,.15),
 
-        .dashboard button{
-            border-radius:14px !important;
+        0 12px 35px rgba(0,0,0,.25);
 
-            border:1px solid rgba(255,255,255,.6) !important;
+    backdrop-filter:blur(7px);
 
-            box-shadow:
-                0 7px 18px rgba(0,0,0,.18),
-                inset 0 1px 0 rgba(255,255,255,.35);
+}
 
-            transition:.3s !important;
-        }
 
+/* DASHBOARD BUTTONS */
 
-        .dashboard button:hover{
-            transform:
-                translateY(-4px)
-                scale(1.02);
+.dashboard button{
 
-            box-shadow:
-                0 12px 25px rgba(0,0,0,.25),
-                inset 0 1px 0 rgba(255,255,255,.5);
-        }
+    border:2px solid rgba(255,255,255,.7) !important;
 
+    box-shadow:
 
-        /* ==============================
-           FOOTER
-        ============================== */
+        inset 0 3px 7px rgba(255,255,255,.35),
 
-        .copyright{
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255,153,51,.90),
-                    rgba(255,255,255,.95),
-                    rgba(19,136,8,.90)
-                );
+        inset 0 -5px 10px rgba(0,0,0,.25),
 
-            color:#08306b;
+        0 8px 18px rgba(0,0,0,.30);
 
-            font-weight:bold;
+    transition:.3s !important;
 
-            border-top:1px solid rgba(255,255,255,.8);
+}
 
-            box-shadow:
-                0 -8px 25px rgba(0,0,0,.12);
-        }
 
+.dashboard button:hover{
 
-        /* ==============================
-           MOBILE
-        ============================== */
+    transform:
+        translateY(-4px)
+        scale(1.03);
 
-        @media(max-width:600px){
+    box-shadow:
 
-            .join-group-link{
-                gap:15px;
-                padding:15px;
-            }
+        inset 0 3px 8px rgba(255,255,255,.55),
 
+        0 15px 28px rgba(0,0,0,.35);
 
-            .join-group-logo{
-                width:72px;
-                height:72px;
-                min-width:72px;
-            }
+}
 
 
-            .join-group-text h2{
-                font-size:22px;
-            }
+/* FOOTER */
 
+.copyright{
 
-            .join-group-text p{
-                font-size:14px;
-            }
+    background:
 
+        linear-gradient(
+            135deg,
+            #ff9933,
+            #ffffff 45%,
+            #138808
+        );
 
-            .slider{
-                height:230px;
-                width:94%;
-            }
+    color:#16222b;
 
+    box-shadow:
 
-            .logo{
-                gap:10px;
-            }
+        inset 0 3px 10px rgba(255,255,255,.9),
 
+        0 -8px 25px rgba(0,0,0,.25);
 
-            .portal-logo{
-                width:55px;
-                height:55px;
-            }
+}
 
 
-            .logo h1{
-                font-size:17px;
-            }
+/* MOBILE */
 
+@media(max-width:600px){
 
-            .logo p{
-                font-size:13px;
-            }
+    .join-group-logo{
 
-        }
+        width:72px;
 
-    </style>
+        height:72px;
 
-</head>
-
-
-<body>
-
-
-<!-- ==============================
-     HEADER
-================================ -->
-
-<header class="top-header">
-
-    <div class="logo">
-
-        <img
-            src="images/imageslogo-192.png%20(1).jpeg"
-            alt="Student Portal Logo"
-            class="portal-logo"
-        >
-
-        <div>
-
-            <h1 class="tricolor-title">
-                S. P. D. D. COLLAGE NAGAR UNTARI ----- STUDY BY JV123
-            </h1>
-
-            <p>Welcome to Student</p>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-<!-- ==============================
-     NAVIGATION
-================================ -->
-
-<nav class="navbar">
-
-    <a href="index.html">Home</a>
-
-    <a href="notification.html">
-        Notification
-    </a>
-
-    <a href="contact.html">
-        Contact
-    </a>
-
-    <a href="about.html">
-        About
-    </a>
-
-</nav>
-
-
-<!-- ==============================
-     SLIDER
-================================ -->
-
-<section class="slider">
-
-    <div class="slides">
-
-        <img
-            src="images/slide1.jpg"
-            alt="Slide 1"
-        >
-
-        <img
-            src="images/slide2.jpg"
-            alt="Slide 2"
-        >
-
-        <img
-            src="images/ChatGPT Image Aug 13, 2026, 06_05_15 PM.png"
-            alt="Slide 3"
-        >
-
-    </div>
-
-</section>
-
-
-<!-- ==============================
-     JOIN GROUP
-================================ -->
-
-<section class="hero join-group-hero">
-
-    <a
-        href="https://chat.whatsapp.com/J7gvIzaqjxz9WwknoOIdtu"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="join-group-link"
-    >
-
-        <img
-            src="images/group-logo.png.jpeg"
-            alt="Join Student Group"
-            class="join-group-logo"
-        >
-
-        <div class="join-group-text">
-
-            <h2>JOIN GROUP NOW</h2>
-
-            <p>
-                Access student information, courses,
-                notifications and other useful services
-                from one place.
-            </p>
-
-        </div>
-
-    </a>
-
-</section>
-
-
-<!-- ==============================
-     SEARCH SECTION
-================================ -->
-
-
-<!-- ==============================
-     MAIN DASHBOARD
-================================ -->
-
-<section class="dashboard">
-
-    <a href="ba-details.html">
-
-        <button type="button">
-            BA Details
-        </button>
-
-    </a>
-
-
-    <a href="#">
-
-        <button type="button">
-            Intermediate Details
-        </button>
-
-    </a>
-
-
-    <a href="#">
-
-        <button type="button">
-            Other Courses
-        </button>
-
-    </a>
-
-
-    <!-- Student CSC -->
-
-    <a href="student-csc.html">
-
-        <button type="button">
-            Student CSC
-        </button>
-
-    </a>
-
-</section>
-
-
-<!-- ==============================
-     FOOTER
-================================ -->
-
-<footer class="copyright">
-
-    <p>Student Portal</p>
-
-</footer>
-
-
-<!-- ==============================
-     JAVASCRIPT
-================================ -->
-
-<script src="script.js"></script>
-
-
-<!-- ==============================
-     PWA SERVICE WORKER
-================================ -->
-
-<script>
-
-    if ("serviceWorker" in navigator) {
-
-        window.addEventListener("load", function () {
-
-            navigator.serviceWorker
-                .register("./service-worker.js")
-
-                .then(function () {
-
-                    console.log(
-                        "JV 123 Service Worker registered successfully."
-                    );
-
-                })
-
-                .catch(function (error) {
-
-                    console.error(
-                        "Service Worker registration failed:",
-                        error
-                    );
-
-                });
-
-        });
+        min-width:72px;
 
     }
 
-</script>
-
-
-</body>
-
-</html>
+}
