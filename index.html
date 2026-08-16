@@ -1,125 +1,603 @@
-/* =========================================
-   SAFE MIRROR REFLECTION EFFECT
-   EXISTING FUNCTIONALITY UNCHANGED
-========================================= */
+<!DOCTYPE html>
+<html lang="en">
 
-body{
-    background:
-        linear-gradient(
-            135deg,
-            #d9e1e6 0%,
-            #ffffff 20%,
-            #aebbc4 40%,
-            #f8fafb 55%,
-            #b4c0c8 75%,
-            #ffffff 100%
-        );
+<head>
 
-    background-attachment:fixed;
-}
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>JHARKHANDVISION123</title>
 
 
-/* MIRROR SURFACE */
+    <!-- ==============================
+         PWA SETTINGS
+    ============================== -->
 
-.top-header,
-.slider,
-.join-group-hero,
-.dashboard,
-.copyright{
+    <link rel="manifest" href="./manifest.json">
 
-    position:relative;
+    <meta name="theme-color" content="#ffffff">
 
-    overflow:hidden;
-
-}
-
-
-/* REFLECTION / SHINE */
-
-.top-header::after,
-.slider::after,
-.join-group-hero::after,
-.dashboard::after,
-.copyright::after{
-
-    content:"";
-
-    position:absolute;
-
-    top:-100%;
-    left:-60%;
-
-    width:45%;
-    height:300%;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.45),
-            transparent
-        );
-
-    transform:rotate(20deg);
-
-    pointer-events:none;
-
-    animation:mirrorReflection 6s linear infinite;
-
-}
+    <link
+        rel="apple-touch-icon"
+        href="images/imageslogo-192.png%20(1).jpeg"
+    >
 
 
-/* REFLECTION MOVEMENT */
+    <!-- MAIN CSS -->
 
-@keyframes mirrorReflection{
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
-    0%{
-        left:-70%;
+
+    <style>
+
+
+        /* ==============================
+           LOGO
+        ============================== */
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+
+        .portal-logo {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+
+        .logo h1 {
+            margin: 0;
+        }
+
+
+        .logo p {
+            margin: 3px 0 0;
+        }
+
+
+
+        /* ==============================
+           TRICOLOR TITLE
+        ============================== */
+
+        .tricolor-title {
+
+            background: linear-gradient(
+                to bottom,
+                #ff9933 0%,
+                #ff9933 33%,
+                #ffffff 33%,
+                #ffffff 66%,
+                #138808 66%,
+                #138808 100%
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            font-weight: 800;
+
+            text-shadow:
+                0 1px 1px rgba(0,0,0,0.08);
+        }
+
+
+
+        /* ==============================
+           SLIDER
+        ============================== */
+
+        .slider {
+
+            width: 100%;
+            max-width: 1100px;
+            height: 350px;
+
+            margin: 20px auto;
+
+            overflow: hidden;
+
+            border-radius: 12px;
+        }
+
+
+        .slides {
+
+            display: flex;
+
+            width: 300%;
+            height: 100%;
+
+            animation: slide 12s infinite;
+        }
+
+
+        .slides img {
+
+            width: 33.3333%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+        }
+
+
+        @keyframes slide {
+
+            0% {
+                transform: translateX(0);
+            }
+
+            30% {
+                transform: translateX(0);
+            }
+
+            35% {
+                transform: translateX(-33.3333%);
+            }
+
+            65% {
+                transform: translateX(-33.3333%);
+            }
+
+            70% {
+                transform: translateX(-66.6666%);
+            }
+
+            95% {
+                transform: translateX(-66.6666%);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+
+        }
+
+
+
+        /* ==============================
+           JOIN GROUP TRICOLOR SECTION
+        ============================== */
+
+        .join-group-hero {
+
+            padding: 12px;
+
+            border-radius: 18px;
+
+            background: linear-gradient(
+                90deg,
+                #ff9933 0%,
+                #ffffff 50%,
+                #138808 100%
+            );
+
+            box-shadow:
+                0 5px 16px rgba(0,0,0,.15);
+        }
+
+
+        .join-group-link {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 18px 22px;
+
+            text-decoration: none;
+
+            color: #08306b;
+
+            background: white;
+
+            border-radius: 14px;
+        }
+
+
+        .join-group-logo {
+
+            width: 90px;
+            height: 90px;
+
+            min-width: 90px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            border: 5px solid white;
+
+            box-shadow:
+
+                0 0 0 3px #ff9933,
+
+                0 0 0 6px #ffffff,
+
+                0 0 0 9px #138808;
+        }
+
+
+        .join-group-text {
+
+            flex: 1;
+        }
+
+
+        .join-group-text h2 {
+
+            margin: 0 0 7px;
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            color: #0d47a1;
+        }
+
+
+        .join-group-text p {
+
+            margin: 0;
+
+            font-size: 16px;
+
+            line-height: 1.5;
+
+            color: #333;
+        }
+
+
+        .join-group-link:hover {
+
+            transform: translateY(-2px);
+        }
+
+
+
+        /* ==============================
+           MOBILE JOIN GROUP
+        ============================== */
+
+        @media(max-width:600px) {
+
+            .join-group-link {
+
+                gap: 15px;
+
+                padding: 15px;
+            }
+
+
+            .join-group-logo {
+
+                width: 72px;
+                height: 72px;
+
+                min-width: 72px;
+            }
+
+
+            .join-group-text h2 {
+
+                font-size: 22px;
+            }
+
+
+            .join-group-text p {
+
+                font-size: 14px;
+            }
+
+        }
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+<!-- ==============================
+     HEADER
+================================ -->
+
+<header class="top-header">
+
+
+    <div class="logo">
+
+
+        <img
+            src="images/imageslogo-192.png%20(1).jpeg"
+            alt="Student Portal Logo"
+            class="portal-logo"
+        >
+
+
+        <div>
+
+
+            <h1 class="tricolor-title">
+
+                S. P. D. D. COLLAGE NAGAR UNTARI -----
+                STUDY BY JV123
+
+            </h1>
+
+
+            <p>
+                Welcome to Student
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</header>
+
+
+
+<!-- ==============================
+     NAVIGATION
+================================ -->
+
+<nav class="navbar">
+
+
+    <a href="index.html">
+        Home
+    </a>
+
+
+    <a href="notification.html">
+        Notification
+    </a>
+
+
+    <a href="contact.html">
+        Contact
+    </a>
+
+
+    <a href="about.html">
+        About
+    </a>
+
+
+</nav>
+
+
+
+<!-- ==============================
+     SLIDER
+================================ -->
+
+<section class="slider">
+
+
+    <div class="slides">
+
+
+        <img
+            src="images/slide1.jpg"
+            alt="Slide 1"
+        >
+
+
+        <img
+            src="images/slide2.jpg"
+            alt="Slide 2"
+        >
+
+
+        <img
+            src="images/ChatGPT Image Aug 13, 2026, 06_05_15 PM.png"
+            alt="Slide 3"
+        >
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ==============================
+     JOIN GROUP
+================================ -->
+
+<section class="hero join-group-hero">
+
+
+    <a
+        href="https://chat.whatsapp.com/J7gvIzaqjxz9WwknoOIdtu"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="join-group-link"
+    >
+
+
+        <img
+            src="images/group-logo.png.jpeg"
+            alt="Join Student Group"
+            class="join-group-logo"
+        >
+
+
+        <div class="join-group-text">
+
+
+            <h2>
+                JOIN GROUP NOW
+            </h2>
+
+
+            <p>
+
+                Access student information,
+                courses, notifications and other
+                useful services from one place.
+
+            </p>
+
+
+        </div>
+
+
+    </a>
+
+
+</section>
+
+
+
+<!-- ==============================
+     SEARCH SECTION
+================================ -->
+
+
+
+
+<!-- ==============================
+     MAIN DASHBOARD
+================================ -->
+
+<section class="dashboard">
+
+
+    <a href="ba-details.html">
+
+        <button type="button">
+            BA Details
+        </button>
+
+    </a>
+
+
+
+    <a href="#">
+
+        <button type="button">
+            Intermediate Details
+        </button>
+
+    </a>
+
+
+
+    <a href="#">
+
+        <button type="button">
+            Other Courses
+        </button>
+
+    </a>
+
+
+
+    <!-- Student CSC -->
+
+    <a href="student-csc.html">
+
+        <button type="button">
+            Student CSC
+        </button>
+
+    </a>
+
+
+</section>
+
+
+
+<!-- ==============================
+     FOOTER
+================================ -->
+
+<footer class="copyright">
+
+
+    <p>
+        Student Portal
+    </p>
+
+
+</footer>
+
+
+
+<!-- ==============================
+     JAVASCRIPT
+================================ -->
+
+<script src="script.js"></script>
+
+
+
+<!-- ==============================
+     PWA SERVICE WORKER
+================================ -->
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener("load", function () {
+
+            navigator.serviceWorker
+
+                .register("./service-worker.js")
+
+                .then(function () {
+
+                    console.log(
+                        "JV 123 Service Worker registered successfully."
+                    );
+
+                })
+
+                .catch(function (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                });
+
+        });
+
     }
 
-    100%{
-        left:140%;
-    }
-
-}
+</script>
 
 
-/* MIRROR DEPTH */
+</body>
 
-.top-header{
-    box-shadow:
-        inset 0 2px 8px rgba(255,255,255,.9),
-        inset 0 -5px 12px rgba(0,0,0,.12),
-        0 8px 25px rgba(0,0,0,.18);
-}
-
-
-.slider{
-    box-shadow:
-        inset 0 3px 12px rgba(255,255,255,.75),
-        inset 0 -8px 15px rgba(0,0,0,.20),
-        0 10px 30px rgba(0,0,0,.25);
-}
-
-
-.join-group-hero{
-    box-shadow:
-        inset 0 3px 10px rgba(255,255,255,.85),
-        inset 0 -6px 12px rgba(0,0,0,.15),
-        0 10px 30px rgba(0,0,0,.20);
-}
-
-
-.dashboard{
-    box-shadow:
-        inset 0 3px 10px rgba(255,255,255,.85),
-        inset 0 -6px 15px rgba(0,0,0,.15),
-        0 10px 30px rgba(0,0,0,.20);
-}
-
-
-.copyright{
-    box-shadow:
-        inset 0 3px 10px rgba(255,255,255,.8),
-        0 -8px 25px rgba(0,0,0,.15);
-}
+</html>
