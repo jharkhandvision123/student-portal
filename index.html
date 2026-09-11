@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,6 +25,7 @@
         rel="apple-touch-icon"
         href="images/imageslogo-192.png%20(1).jpeg"
     >
+
 
     <link
         rel="stylesheet"
@@ -72,157 +74,161 @@
             border-radius: 12px;
         }
 
-        .slides {
-            display: flex;
-            width: 300%;
-            height: 100%;
-            animation: slide 12s infinite;
-        }
+       .slides {
+    display: flex;
+    width: 400%;
+    height: 100%;
+    animation: slide 16s infinite;
+}
 
-        .slides img {
-            width: 33.3333%;
-            height: 100%;
-            display: block;
-            object-fit: cover;
-        }
+.slides img {
+    width: 25%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
 
-        @keyframes slide {
+@keyframes slide {
 
-            0% {
-                transform: translateX(0);
-            }
+    0% {
+        transform: translateX(0);
+    }
 
-            30% {
-                transform: translateX(0);
-            }
+    20% {
+        transform: translateX(0);
+    }
 
-            35% {
-                transform: translateX(-33.3333%);
-            }
+    25% {
+        transform: translateX(-25%);
+    }
 
-            65% {
-                transform: translateX(-33.3333%);
-            }
+    45% {
+        transform: translateX(-25%);
+    }
 
-            70% {
-                transform: translateX(-66.6666%);
-            }
+    50% {
+        transform: translateX(-50%);
+    }
 
-            95% {
-                transform: translateX(-66.6666%);
-            }
+    70% {
+        transform: translateX(-50%);
+    }
 
-            100% {
-                transform: translateX(0);
-            }
+    75% {
+        transform: translateX(-75%);
+    }
 
-        }
+    95% {
+        transform: translateX(-75%);
+    }
 
+    100% {
+        transform: translateX(0);
+    }
 
-        /* ==============================
-           JOIN GROUP TRICOLOR SECTION
-        ============================== */
+}
+/* ==============================
+   JOIN GROUP TRICOLOR SECTION
+============================== */
 
-        .join-group-hero{
-            padding:12px;
-            border-radius:18px;
-            background:linear-gradient(
-                90deg,
-                #ff9933 0%,
-                #ffffff 50%,
-                #138808 100%
-            );
-            box-shadow:0 5px 16px rgba(0,0,0,.15);
-        }
+.join-group-hero{
+    padding:12px;
+    border-radius:18px;
+    background:linear-gradient(
+        90deg,
+        #ff9933 0%,
+        #ffffff 50%,
+        #138808 100%
+    );
+    box-shadow:0 5px 16px rgba(0,0,0,.15);
+}
 
-        .join-group-link{
-            display:flex;
-            align-items:center;
-            gap:20px;
-            padding:18px 22px;
-            text-decoration:none;
-            color:#08306b;
-            background:white;
-            border-radius:14px;
-        }
+.join-group-link{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding:18px 22px;
+    text-decoration:none;
+    color:#08306b;
+    background:white;
+    border-radius:14px;
+}
 
-        .join-group-logo{
-            width:90px;
-            height:90px;
-            min-width:90px;
-            border-radius:50%;
-            object-fit:cover;
-            border:5px solid white;
-            box-shadow:
-                0 0 0 3px #ff9933,
-                0 0 0 6px #ffffff,
-                0 0 0 9px #138808;
-        }
+.join-group-logo{
+    width:90px;
+    height:90px;
+    min-width:90px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid white;
+    box-shadow:
+        0 0 0 3px #ff9933,
+        0 0 0 6px #ffffff,
+        0 0 0 9px #138808;
+}
 
-        .join-group-text{
-            flex:1;
-        }
+.join-group-text{
+    flex:1;
+}
 
-        .join-group-text h2{
-            margin:0 0 7px;
-            font-size:30px;
-            font-weight:800;
-            color:#0d47a1;
-        }
+.join-group-text h2{
+    margin:0 0 7px;
+    font-size:30px;
+    font-weight:800;
+    color:#0d47a1;
+}
 
-        .join-group-text p{
-            margin:0;
-            font-size:16px;
-            line-height:1.5;
-            color:#333;
-        }
+.join-group-text p{
+    margin:0;
+    font-size:16px;
+    line-height:1.5;
+    color:#333;
+}
 
-        .join-group-link:hover{
-            transform:translateY(-2px);
-        }
+.join-group-link:hover{
+    transform:translateY(-2px);
+}
 
-        @media(max-width:600px){
+@media(max-width:600px){
 
-            .join-group-link{
-                gap:15px;
-                padding:15px;
-            }
+    .join-group-link{
+        gap:15px;
+        padding:15px;
+    }
 
-            .join-group-logo{
-                width:72px;
-                height:72px;
-                min-width:72px;
-            }
+    .join-group-logo{
+        width:72px;
+        height:72px;
+        min-width:72px;
+    }
 
-            .join-group-text h2{
-                font-size:22px;
-            }
+    .join-group-text h2{
+        font-size:22px;
+    }
 
-            .join-group-text p{
-                font-size:14px;
-            }
+    .join-group-text p{
+        font-size:14px;
+    }
 
-        }
+}
+.tricolor-title{
+    background:linear-gradient(
+        to bottom,
+        #ff9933 0%,
+        #ff9933 33%,
+        #ffffff 33%,
+        #ffffff 66%,
+        #138808 66%,
+        #138808 100%
+    );
 
-        .tricolor-title{
-            background:linear-gradient(
-                to bottom,
-                #ff9933 0%,
-                #ff9933 33%,
-                #ffffff 33%,
-                #ffffff 66%,
-                #138808 66%,
-                #138808 100%
-            );
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
 
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-
-            font-weight:800;
-            text-shadow:0 1px 1px rgba(0,0,0,0.08);
-        }
-
+    font-weight:800;
+    text-shadow:0 1px 1px rgba(0,0,0,0.08);
+}    
     </style>
 
 </head>
@@ -247,9 +253,7 @@
 
         <div>
 
-            <h1 class="tricolor-title">
-                S. P. D. D. COLLAGE NAGAR UNTARI ----- STUDY BY JV123
-            </h1>
+            <h1 class="tricolor-title">     S. P. D. D. COLLAGE NAGAR UNTARI ----- STUDY BY JV123 </h1>
 
             <p>Welcome to Student </p>
 
@@ -306,6 +310,11 @@
             alt="Slide 3"
         >
 
+        <img
+            src="images/slide4.jpg"
+            alt="Slide 4"
+        >
+        
     </div>
 
 </section>
@@ -320,7 +329,7 @@
    <section class="hero join-group-hero">
 
     <a
-        href="https://chat.whatsapp.com/J7gvIzaqjxz9WwknoOIdtu"
+        href="https://chat.whatsapp.com/FKA6o4eNNXC0GYzvkzm3O8"
         target="_blank"
         rel="noopener noreferrer"
         class="join-group-link"
@@ -352,6 +361,8 @@
 <!-- ==============================
      SEARCH SECTION
 ================================ -->
+
+ 
 
 
 <!-- ==============================
@@ -397,8 +408,6 @@
         </button>
 
     </a>
-
-
     <!-- NPU Result -->
 
     <a
@@ -412,7 +421,6 @@
         </button>
 
     </a>
-
 
 </section>
 
