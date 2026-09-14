@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>Chat</title>
 
@@ -113,19 +116,32 @@ body{
 
 </head>
 
+
 <body>
+
 
 <div class="header">
     💬 Chat
 </div>
 
+
 <div class="chat-box">
 
-    <div class="status" id="status">
+
+    <div
+        class="status"
+        id="status"
+    >
         Connecting...
     </div>
 
-    <div class="messages" id="messages"></div>
+
+    <div
+        class="messages"
+        id="messages"
+    >
+    </div>
+
 
     <div class="input-area">
 
@@ -136,16 +152,22 @@ body{
             autocomplete="off"
         >
 
-        <button id="sendBtn">
+
+        <button
+            id="sendBtn"
+            type="button"
+        >
             ➤
         </button>
 
     </div>
 
+
 </div>
 
 
 <script>
+
 
 /* =========================================
    SUPABASE CONFIG
@@ -154,8 +176,10 @@ body{
 const SUPABASE_URL =
     "https://aghizlgvrhunpuxvohep.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_gpc7KUqUIykO3WM1aCzRfg_Myo8AKyx";
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -165,13 +189,14 @@ const supabaseClient =
 
 
 /* =========================================
-   UNIQUE TEMPORARY CHAT ROOM
+   TEMPORARY ROOM ID
 ========================================= */
 
 let roomId =
     sessionStorage.getItem(
         "temporary_chat_room"
     );
+
 
 if(!roomId){
 
@@ -187,10 +212,10 @@ if(!roomId){
 
 
 /* =========================================
-   CHAT CHANNEL
+   USER CHAT CHANNEL
 ========================================= */
 
-const channel =
+const chatChannel =
     supabaseClient.channel(
         "temporary-chat-" + roomId,
         {
@@ -204,14 +229,34 @@ const channel =
 
 
 /* =========================================
-   CONNECT
+   USER PRESENCE / ONLINE LIST
 ========================================= */
 
-channel
+const lobbyChannel =
+    supabaseClient.channel(
+        "chat-online-users",
+        {
+            config:{
+                presence:{
+                    key:roomId
+                }
+            }
+        }
+    );
+
+
+/* =========================================
+   CHAT CONNECTION
+========================================= */
+
+chatChannel
 .subscribe(function(status){
 
     const statusBox =
-        document.getElementById("status");
+        document.getElementById(
+            "status"
+        );
+
 
     if(status === "SUBSCRIBED"){
 
@@ -230,10 +275,10 @@ channel
 
 
 /* =========================================
-   RECEIVE ADMIN MESSAGE
+   ADMIN REPLY RECEIVE
 ========================================= */
 
-channel.on(
+chatChannel.on(
     "broadcast",
     {
         event:"admin-message"
@@ -258,7 +303,34 @@ channel.on(
 
 
 /* =========================================
-   SEND MESSAGE
+   USER ONLINE
+========================================= */
+
+lobbyChannel
+.subscribe(async function(status){
+
+    if(status === "SUBSCRIBED"){
+
+        await lobbyChannel.track({
+
+            roomId:roomId,
+
+            type:"user",
+
+            online:true,
+
+            joinedAt:
+                new Date().toISOString()
+
+        });
+
+    }
+
+});
+
+
+/* =========================================
+   SEND USER MESSAGE
 ========================================= */
 
 async function sendMessage(){
@@ -268,8 +340,10 @@ async function sendMessage(){
             "messageInput"
         );
 
+
     const message =
         input.value.trim();
+
 
     if(!message){
 
@@ -287,19 +361,36 @@ async function sendMessage(){
     input.value = "";
 
 
-    await channel.send({
+    try{
 
-        type:"broadcast",
+        await chatChannel.send({
 
-        event:"user-message",
+            type:"broadcast",
 
-        payload:{
-            roomId:roomId,
-            message:message,
-            time:new Date().toISOString()
-        }
+            event:"user-message",
 
-    });
+            payload:{
+
+                roomId:roomId,
+
+                message:message,
+
+                time:
+                    new Date().toISOString()
+
+            }
+
+        });
+
+    }
+    catch(error){
+
+        console.error(
+            "Message Send Error:",
+            error
+        );
+
+    }
 
 }
 
@@ -318,8 +409,11 @@ function addMessage(
             "messages"
         );
 
+
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     div.className =
@@ -345,7 +439,9 @@ function addMessage(
         `<span class="time">${time}</span>`;
 
 
-    messages.appendChild(div);
+    messages.appendChild(
+        div
+    );
 
 
     messages.scrollTop =
@@ -355,28 +451,7 @@ function addMessage(
 
 
 /* =========================================
-   HTML SECURITY
-========================================= */
-
-function escapeHtml(value){
-
-    return String(value)
-
-        .replace(/&/g,"&amp;")
-
-        .replace(/</g,"&lt;")
-
-        .replace(/>/g,"&gt;")
-
-        .replace(/"/g,"&quot;")
-
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================
-   BUTTON
+   SEND BUTTON
 ========================================= */
 
 document
@@ -408,7 +483,68 @@ document
     }
 );
 
+
+/* =========================================
+   SECURITY
+========================================= */
+
+function escapeHtml(value){
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================
+   CLEAN UP WHEN PAGE CLOSES
+========================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function(){
+
+        try{
+
+            lobbyChannel.untrack();
+
+        }
+        catch(error){
+
+            console.log(error);
+
+        }
+
+    }
+);
+
 </script>
 
+
 </body>
+
 </html>
