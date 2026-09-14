@@ -73,6 +73,7 @@ body{
 .online{
     color:green;
     font-size:12px;
+    margin-top:4px;
 }
 
 .chat{
@@ -101,6 +102,7 @@ body{
     margin:7px 0;
     border-radius:10px;
     word-wrap:break-word;
+    line-height:1.4;
 }
 
 .user-message{
@@ -148,10 +150,9 @@ body{
     cursor:pointer;
 }
 
-.no-user{
-    padding:25px;
-    text-align:center;
-    color:#777;
+.input-area button:disabled{
+    background:#999;
+    cursor:not-allowed;
 }
 
 .status{
@@ -159,12 +160,31 @@ body{
     text-align:center;
     font-size:12px;
     background:#f5f5f5;
+    color:#777;
+}
+
+.no-user{
+    padding:25px;
+    text-align:center;
+    color:#777;
+}
+
+.user-id{
+    font-size:11px;
+    color:#777;
+    margin-top:4px;
+    word-break:break-all;
 }
 
 @media(max-width:650px){
 
     .users{
-        width:120px;
+        width:125px;
+    }
+
+    .users-title{
+        font-size:13px;
+        padding:12px;
     }
 
     .user{
@@ -172,11 +192,20 @@ body{
         font-size:12px;
     }
 
+    .user-id{
+        font-size:9px;
+    }
+
+    .message{
+        max-width:85%;
+    }
+
 }
 
 </style>
 
 </head>
+
 
 <body>
 
@@ -189,12 +218,14 @@ body{
 <div class="container">
 
 
-    <!-- USERS -->
+    <!-- ============================
+         ONLINE USERS
+    ============================= -->
 
     <div class="users">
 
         <div class="users-title">
-            Users
+            🟢 Online Users
         </div>
 
         <div id="usersList">
@@ -208,7 +239,9 @@ body{
     </div>
 
 
-    <!-- CHAT -->
+    <!-- ============================
+         CHAT AREA
+    ============================= -->
 
     <div class="chat">
 
@@ -242,10 +275,13 @@ body{
                 id="messageInput"
                 placeholder="Type reply..."
                 autocomplete="off"
+                disabled
             >
 
             <button
                 id="sendBtn"
+                type="button"
+                disabled
             >
                 ➤
             </button>
@@ -261,7 +297,7 @@ body{
 
 
 /* =========================================
-   SUPABASE
+   SUPABASE CONFIG
 ========================================= */
 
 const SUPABASE_URL =
@@ -280,23 +316,6 @@ const supabaseClient =
 
 
 /* =========================================
-   ADMIN CHANNEL
-========================================= */
-
-const adminChannel =
-    supabaseClient.channel(
-        "chat-admin-control",
-        {
-            config:{
-                presence:{
-                    key:"admin"
-                }
-            }
-        }
-    );
-
-
-/* =========================================
    VARIABLES
 ========================================= */
 
@@ -304,21 +323,97 @@ let selectedRoomId = null;
 
 let selectedChannel = null;
 
+let onlineUsers = {};
+
 
 /* =========================================
-   ADMIN CONNECT
+   ONLINE USERS CHANNEL
 ========================================= */
 
-adminChannel.subscribe(
-    async function(status){
+const usersChannel =
+    supabaseClient.channel(
+        "chat-online-users",
+        {
+            config:{
+                presence:{
+                    key:
+                        "admin-" +
+                        crypto.randomUUID()
+                }
+            }
+        }
+    );
+
+
+/* =========================================
+   PRESENCE SYNC
+========================================= */
+
+usersChannel.on(
+    "presence",
+    {
+        event:"sync"
+    },
+    function(){
+
+        updateUsersList();
+
+    }
+);
+
+
+/* =========================================
+   PRESENCE JOIN
+========================================= */
+
+usersChannel.on(
+    "presence",
+    {
+        event:"join"
+    },
+    function(){
+
+        updateUsersList();
+
+    }
+);
+
+
+/* =========================================
+   PRESENCE LEAVE
+========================================= */
+
+usersChannel.on(
+    "presence",
+    {
+        event:"leave"
+    },
+    function(){
+
+        updateUsersList();
+
+    }
+);
+
+
+/* =========================================
+   CONNECT ADMIN
+========================================= */
+
+usersChannel.subscribe(
+    function(status){
 
         const statusBox =
-            document.getElementById("status");
+            document.getElementById(
+                "status"
+            );
 
         if(status === "SUBSCRIBED"){
 
             statusBox.textContent =
                 "🟢 Admin Connected";
+
+            updateUsersList();
 
         }
         else{
@@ -333,91 +428,145 @@ adminChannel.subscribe(
 
 
 /* =========================================
-   MESSAGE SEND
+   UPDATE USERS LIST
 ========================================= */
 
-document
-.getElementById("sendBtn")
-.addEventListener(
-    "click",
-    sendAdminMessage
-);
+function updateUsersList(){
 
-
-document
-.getElementById("messageInput")
-.addEventListener(
-    "keydown",
-    function(event){
-
-        if(event.key === "Enter"){
-
-            event.preventDefault();
-
-            sendAdminMessage();
-
-        }
-
-    }
-);
-
-
-async function sendAdminMessage(){
-
-    if(!selectedChannel){
-
-        alert(
-            "पहले किसी user को select करें।"
-        );
-
-        return;
-
-    }
-
-
-    const input =
+    const usersList =
         document.getElementById(
-            "messageInput"
+            "usersList"
         );
 
 
-    const message =
-        input.value.trim();
+    const state =
+        usersChannel.presenceState();
 
 
-    if(!message){
-
-        return;
-
-    }
+    onlineUsers = state;
 
 
-    await selectedChannel.send({
+    usersList.innerHTML = "";
 
-        type:"broadcast",
 
-        event:"admin-message",
+    const rooms = [];
 
-        payload:{
 
-            roomId:selectedRoomId,
+    Object.keys(state).forEach(
+        function(key){
 
-            message:message,
+            const entries =
+                state[key];
 
-            time:new Date().toISOString()
+
+            if(
+                entries &&
+                entries.length
+            ){
+
+                entries.forEach(
+                    function(user){
+
+                        if(
+                            user.type === "user" &&
+                            user.roomId
+                        ){
+
+                            if(
+                                !rooms.includes(
+                                    user.roomId
+                                )
+                            ){
+
+                                rooms.push(
+                                    user.roomId
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            }
 
         }
-
-    });
-
-
-    addMessage(
-        message,
-        "admin-message"
     );
 
 
-    input.value = "";
+    if(rooms.length === 0){
+
+        usersList.innerHTML = `
+            <div class="no-user">
+                कोई user online नहीं है।
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    rooms.forEach(
+        function(roomId){
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "user";
+
+
+            if(
+                roomId === selectedRoomId
+            ){
+
+                div.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            div.innerHTML = `
+
+                <div>
+                    💬 User
+                </div>
+
+                <div class="online">
+                    🟢 Online
+                </div>
+
+                <div class="user-id">
+                    ${escapeHtml(roomId)}
+                </div>
+
+            `;
+
+
+            div.addEventListener(
+                "click",
+                function(){
+
+                    openUserChat(
+                        roomId
+                    );
+
+                }
+            );
+
+
+            usersList.appendChild(
+                div
+            );
+
+        }
+    );
 
 }
 
@@ -426,7 +575,9 @@ async function sendAdminMessage(){
    OPEN USER CHAT
 ========================================= */
 
-function openUser(roomId){
+async function openUserChat(
+    roomId
+){
 
     selectedRoomId =
         roomId;
@@ -443,9 +594,20 @@ function openUser(roomId){
     .innerHTML = "";
 
 
+    document
+    .getElementById("messageInput")
+    .disabled = false;
+
+
+    document
+    .getElementById("sendBtn")
+    .disabled = false;
+
+
     if(selectedChannel){
 
-        supabaseClient.removeChannel(
+        await supabaseClient
+        .removeChannel(
             selectedChannel
         );
 
@@ -454,7 +616,8 @@ function openUser(roomId){
 
     selectedChannel =
         supabaseClient.channel(
-            "temporary-chat-" + roomId,
+            "temporary-chat-" +
+            roomId,
             {
                 config:{
                     broadcast:{
@@ -504,11 +667,144 @@ function openUser(roomId){
         }
     );
 
+
+    updateUsersList();
+
 }
 
 
 /* =========================================
-   SHOW MESSAGE
+   SEND ADMIN MESSAGE
+========================================= */
+
+document
+.getElementById("sendBtn")
+.addEventListener(
+    "click",
+    sendAdminMessage
+);
+
+
+document
+.getElementById("messageInput")
+.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            sendAdminMessage();
+
+        }
+
+    }
+);
+
+
+async function sendAdminMessage(){
+
+    if(
+        !selectedChannel ||
+        !selectedRoomId
+    ){
+
+        alert(
+            "पहले किसी user को select करें।"
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
+
+
+    const message =
+        input.value.trim();
+
+
+    if(!message){
+
+        return;
+
+    }
+
+
+    try{
+
+        const result =
+            await selectedChannel.send({
+
+                type:"broadcast",
+
+                event:"admin-message",
+
+                payload:{
+
+                    roomId:
+                        selectedRoomId,
+
+                    message:
+                        message,
+
+                    time:
+                        new Date()
+                        .toISOString()
+
+                }
+
+            });
+
+
+        if(
+            result &&
+            result !== "ok" &&
+            result !== "OK"
+        ){
+
+            console.log(
+                "Broadcast result:",
+                result
+            );
+
+        }
+
+
+        addMessage(
+            message,
+            "admin-message"
+        );
+
+
+        input.value = "";
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Admin Message Error:",
+            error
+        );
+
+
+        alert(
+            "Reply send नहीं हो पाया।"
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   ADD MESSAGE
 ========================================= */
 
 function addMessage(
@@ -532,12 +828,15 @@ function addMessage(
         "message " + type;
 
 
-    div.innerHTML =
-        escapeHtml(message) +
-        `
+    div.innerHTML = `
+
+        ${escapeHtml(message)}
+
         <span class="time">
+
             ${
-                new Date().toLocaleTimeString(
+                new Date()
+                .toLocaleTimeString(
                     "en-IN",
                     {
                         hour:"2-digit",
@@ -545,8 +844,10 @@ function addMessage(
                     }
                 )
             }
+
         </span>
-        `;
+
+    `;
 
 
     messages.appendChild(
@@ -594,6 +895,41 @@ function escapeHtml(value){
         );
 
 }
+
+
+/* =========================================
+   CLEANUP
+========================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function(){
+
+        try{
+
+            if(selectedChannel){
+
+                supabaseClient
+                .removeChannel(
+                    selectedChannel
+                );
+
+            }
+
+            supabaseClient
+            .removeChannel(
+                usersChannel
+            );
+
+        }
+        catch(error){
+
+            console.log(error);
+
+        }
+
+    }
+);
 
 
 </script>
