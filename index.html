@@ -3,18 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>PAN PDF Maker</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
 
-html,body{
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
     margin:0;
     min-height:100%;
     font-family:Arial,Helvetica,sans-serif;
@@ -46,7 +53,8 @@ h1{
     margin-top:3px;
 }
 
-button,.fileBtn{
+button,
+.fileBtn{
     display:flex;
     align-items:center;
     justify-content:center;
@@ -80,8 +88,6 @@ input[type=file]{
     display:none;
 }
 
-/* MAIN LAYOUT */
-
 .appLayout{
     display:grid;
     grid-template-columns:250px minmax(0,1fr);
@@ -91,8 +97,6 @@ input[type=file]{
     padding:0 14px;
     align-items:start;
 }
-
-/* LEFT SIDEBAR */
 
 .sidebar{
     background:#fff;
@@ -123,8 +127,6 @@ input[type=file]{
     flex-direction:column;
     gap:8px;
 }
-
-/* RIGHT WORKSPACE */
 
 .workspace{
     min-width:0;
@@ -157,11 +159,30 @@ input[type=file]{
     margin-top:10px;
 }
 
+.notice{
+    background:#fff8e1;
+    border:1px solid #f0c36d;
+    padding:10px;
+    border-radius:8px;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.success{
+    background:#e8f5e9;
+    border-color:#9ad29e;
+}
+
+/* =========================
+   PAGE PREVIEW
+========================= */
+
 .pages{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
-    gap:16px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
     align-items:start;
+    width:100%;
 }
 
 .pageCard{
@@ -170,6 +191,7 @@ input[type=file]{
     border-radius:12px;
     padding:10px;
     box-shadow:0 2px 8px rgba(0,0,0,.04);
+    min-width:0;
 }
 
 .pageCard.selected{
@@ -199,6 +221,7 @@ input[type=file]{
     display:block;
     width:100%;
     height:auto;
+    background:#fff;
 }
 
 .overlay{
@@ -206,7 +229,7 @@ input[type=file]{
     display:none;
     touch-action:none;
     cursor:move;
-    outline:1px dashed rgba(11,87,208,.5);
+    outline:1px dashed rgba(11,87,208,.65);
     z-index:5;
 }
 
@@ -254,6 +277,10 @@ input[type=file]{
     pointer-events:none;
 }
 
+/* =========================
+   EDITOR
+========================= */
+
 #editorModal{
     position:fixed;
     inset:0;
@@ -267,7 +294,7 @@ input[type=file]{
 
 .modal{
     background:#fff;
-    width:min(980px,100%);
+    width:min(1050px,100%);
     max-height:95vh;
     overflow:auto;
     border-radius:12px;
@@ -281,7 +308,7 @@ input[type=file]{
 
 #cropImage{
     max-width:100%;
-    max-height:60vh;
+    max-height:55vh;
     display:block;
     margin:auto;
 }
@@ -309,18 +336,39 @@ input[type=file]{
     width:220px;
 }
 
-.notice{
-    background:#fff8e1;
-    border:1px solid #f0c36d;
+.signaturePreviewBox{
+    margin-top:12px;
     padding:10px;
+    border:1px solid #ddd;
     border-radius:8px;
-    font-size:13px;
-    margin-top:10px;
+    background:
+        linear-gradient(45deg,#eee 25%,transparent 25%),
+        linear-gradient(-45deg,#eee 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,#eee 75%),
+        linear-gradient(-45deg,transparent 75%,#eee 75%);
+    background-size:20px 20px;
+    background-position:0 0,0 10px,10px -10px,-10px 0;
 }
 
-.success{
-    background:#e8f5e9;
-    border-color:#9ad29e;
+.signaturePreviewBox strong{
+    display:block;
+    margin-bottom:8px;
+    font-size:13px;
+}
+
+#signaturePreview{
+    display:block;
+    max-width:100%;
+    max-height:180px;
+    margin:auto;
+}
+
+@media(max-width:1000px){
+
+    .pages{
+        grid-template-columns:1fr;
+    }
+
 }
 
 @media(max-width:900px){
@@ -329,9 +377,6 @@ input[type=file]{
         grid-template-columns:210px minmax(0,1fr);
     }
 
-    .pages{
-        grid-template-columns:1fr;
-    }
 }
 
 @media(max-width:650px){
@@ -367,250 +412,226 @@ input[type=file]{
     .controls button{
         width:100%;
     }
+
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
-    <h1>PAN PDF Maker</h1>
 
-    <div class="sub">
-        Photo + Signature + 2 अतिरिक्त A4 पेज • अधिकतम 4 पेज
-        • Final PDF 1.50 MB से 1.70 MB
-    </div>
+<h1>PAN PDF Maker</h1>
+
+<div class="sub">
+Photo + Signature + 2 अतिरिक्त A4 पेज • अधिकतम 4 पेज
+</div>
+
 </header>
 
 
 <div class="appLayout">
 
-<!-- LEFT CONTROL PANEL -->
-
 <aside class="sidebar">
 
-    <div class="sidebarTitle">
-        Controls
-    </div>
+<div class="sidebarTitle">
+Controls
+</div>
 
-    <div class="subTitle">
-        बाईं तरफ से काम करें और दाईं तरफ live PDF preview में
-        हर बदलाव तुरंत देखें।
-    </div>
+<div class="subTitle">
+बाईं तरफ से काम करें और दाईं तरफ सभी pages का live preview देखें।
+</div>
 
-    <div class="toolGroup">
+<div class="toolGroup">
 
-        <label class="fileBtn">
-            PAN Template PDF
-
-            <input
-                id="templateInput"
-                type="file"
-                accept="application/pdf"
-            >
-        </label>
+<label class="fileBtn">
+PAN Template PDF
+<input id="templateInput"
+       type="file"
+       accept="application/pdf">
+</label>
 
 
-        <label class="fileBtn">
-            Add Photo
-
-            <input
-                id="photoInput"
-                type="file"
-                accept="image/*"
-            >
-        </label>
+<label class="fileBtn">
+Add Photo
+<input id="photoInput"
+       type="file"
+       accept="image/*">
+</label>
 
 
-        <label class="fileBtn">
-            Add Signature
-
-            <input
-                id="signatureInput"
-                type="file"
-                accept="image/*"
-            >
-        </label>
+<label class="fileBtn">
+Add Signature
+<input id="signatureInput"
+       type="file"
+       accept="image/*">
+</label>
 
 
-        <button id="addPageBtn">
-            Add A4 Page
-        </button>
+<button id="addPageBtn">
+Add A4 Page
+</button>
 
 
-        <button
-            id="addDocumentBtn"
-            class="secondary"
-        >
-            Add Document
-        </button>
+<button id="addDocumentBtn"
+        class="secondary">
+Add Document
+</button>
 
 
-        <input
-            id="documentInput"
-            type="file"
-            accept="image/*,application/pdf"
-            hidden
-        >
+<input id="documentInput"
+       type="file"
+       accept="image/*,application/pdf"
+       hidden>
 
 
-        <button id="makePdfBtn">
-            Final PDF बनाएं
-        </button>
+<button id="makePdfBtn">
+Final PDF बनाएं
+</button>
 
 
-        <button
-            id="downloadBtn"
-            class="success"
-            disabled
-        >
-            PDF Download
-        </button>
+<button id="downloadBtn"
+        class="success"
+        disabled>
+PDF Download
+</button>
 
-    </div>
+</div>
 
 </aside>
 
 
-<!-- RIGHT WORKSPACE -->
-
 <main class="workspace">
 
-    <div class="workspaceHead">
+<div class="workspaceHead">
 
-        <h2>
-            Live PDF Preview
-        </h2>
+<h2>
+Live PDF Preview
+</h2>
 
-        <p>
-            यहाँ PAN template, Photo, Signature और नए A4 page
-            पर लगाए गए documents की वास्तविक स्थिति दिखाई देगी।
-        </p>
+<p>
+सभी pages यहाँ साफ दिखाई देंगे। Photo, Signature और Document को drag करके move तथा resize किया जा सकता है।
+</p>
 
-        <div
-            id="status"
-            class="status"
-        >
-            पहले अपना 2-page PAN template PDF चुनें।
-            GitHub पर इसे <b>pan-template.pdf</b> नाम से इसी
-            folder में रखने पर यह auto-load हो सकता है।
-        </div>
+<div id="status"
+     class="status">
+पहले अपना 2-page PAN template PDF चुनें।
+</div>
 
-        <div class="notice">
+<div class="notice">
 
-            <b>Template:</b>
+<b>ध्यान दें:</b>
+पहले 2 pages PAN template के रहेंगे। Photo Page 1 पर दो जगह और Signature Page 1 तथा Page 2 पर अपने निर्धारित स्थान पर लगाया जाएगा।
 
-            App template PDF के पहले 2 pages को PAN pages मानेगा।
-            Photo Page 1 पर दो जगह और Signature Page 1 + Page 2
-            पर रखा जाता है।
+</div>
 
-        </div>
-
-    </div>
+</div>
 
 
-    <div id="pages" class="pages"></div>
+<div id="pages"
+     class="pages">
+</div>
 
 </main>
 
 </div>
 
 
-<!-- IMAGE EDITOR -->
+<!-- =========================
+     EDITOR MODAL
+========================= -->
 
 <div id="editorModal">
 
-    <div class="modal">
+<div class="modal">
 
-        <h2 id="editorTitle">
-            Image Editor
-        </h2>
-
-
-        <div
-            class="row"
-            id="signatureTools"
-            style="display:none"
-        >
-
-            <label>
-
-                Background हटाने की सीमा:
-
-                <input
-                    id="threshold"
-                    class="range"
-                    type="range"
-                    min="150"
-                    max="250"
-                    value="235"
-                >
-
-            </label>
-
-            <span id="thresholdValue">
-                235
-            </span>
+<h2 id="editorTitle">
+Image Editor
+</h2>
 
 
-            <button
-                id="previewBgBtn"
-                class="secondary"
-            >
-                Preview Background
-            </button>
+<div class="row"
+     id="signatureTools"
+     style="display:none">
 
-        </div>
+<label>
 
+Background Threshold:
 
-        <div
-            style="margin-top:10px;overflow:hidden"
-        >
+<input id="threshold"
+       class="range"
+       type="range"
+       min="80"
+       max="240"
+       value="150">
 
-            <img
-                id="cropImage"
-                alt="crop"
-            >
+</label>
 
-        </div>
+<span id="thresholdValue">
+150
+</span>
 
-
-        <div
-            class="small"
-            style="margin-top:8px"
-        >
-            Crop box को drag/resize करके सही हिस्सा चुनें।
-        </div>
+</div>
 
 
-        <div class="modalActions">
+<div style="margin-top:10px;overflow:hidden">
 
-            <button
-                id="cancelEditor"
-                class="secondary"
-            >
-                Cancel
-            </button>
+<img id="cropImage"
+     alt="crop">
+
+</div>
 
 
-            <button id="applyEditor">
-                Done
-            </button>
+<div id="signaturePreviewBox"
+     class="signaturePreviewBox"
+     style="display:none">
 
-        </div>
+<strong>
+Background Removed Preview
+</strong>
 
-    </div>
+<canvas id="signaturePreview">
+</canvas>
+
+</div>
+
+
+<div class="small"
+     style="margin-top:8px">
+
+Crop box को drag/resize करके सही हिस्सा चुनें।
+
+</div>
+
+
+<div class="modalActions">
+
+<button id="cancelEditor"
+        class="secondary">
+Cancel
+</button>
+
+<button id="applyEditor">
+Done
+</button>
+
+</div>
+
+</div>
 
 </div>
 
 
 <script type="module">
 
-const pdfjsLib =
-    await import(
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
-    );
+/* =========================================================
+   LIBRARIES
+========================================================= */
 
+const pdfjsLib = await import(
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+);
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
@@ -621,26 +642,86 @@ const {
 } = PDFLib;
 
 
+/* =========================================================
+   CONSTANTS
+========================================================= */
+
 const A4 = {
     w:595.28,
     h:841.89
 };
 
-
 const MAX_PAGES = 4;
 
+const BASE_PAGES = 2;
+
+
+/*
+    PAN TEMPLATE में वास्तविक दिखाई देने वाली जगह के अनुसार
+    Photo और Signature coordinates
+*/
+
+const PAN_POSITIONS = {
+
+    photo1:{
+        x:10,
+        y:109,
+        w:106,
+        h:127
+    },
+
+    photo2:{
+        x:479,
+        y:109,
+        w:96,
+        h:127
+    },
+
+    signature1:{
+        x:75,
+        y:183,
+        w:82,
+        h:34
+    },
+
+    signature2:{
+        x:378,
+        y:727,
+        w:91,
+        h:38
+    }
+
+};
+
+
+/* =========================================================
+   STATE
+========================================================= */
 
 let templatePdfBytes = null;
+
 let templatePdf = null;
+
+let templateSourcePdf = null;
+
 let pageData = [];
+
 let selectedA4 = -1;
 
 let cropper = null;
+
 let editorMode = "";
-let editorFile = null;
+
+let editorDone = null;
 
 let finalPdfBytes = null;
 
+let currentEditorSource = null;
+
+
+/* =========================================================
+   DOM
+========================================================= */
 
 const statusEl =
     document.getElementById("status");
@@ -660,72 +741,106 @@ const signatureInput =
 const documentInput =
     document.getElementById("documentInput");
 
+const editorModal =
+    document.getElementById("editorModal");
 
-function status(
-    text,
-    ok = false
-){
+const cropImage =
+    document.getElementById("cropImage");
 
-    statusEl.innerHTML =
-        text;
+const thresholdInput =
+    document.getElementById("threshold");
+
+const thresholdValue =
+    document.getElementById("thresholdValue");
+
+const signatureTools =
+    document.getElementById("signatureTools");
+
+const signaturePreviewBox =
+    document.getElementById("signaturePreviewBox");
+
+const signaturePreview =
+    document.getElementById("signaturePreview");
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function status(text,success=false){
+
+    statusEl.innerHTML = text;
 
     statusEl.className =
-        "status" +
-        (
-            ok
-            ? " success"
-            : ""
-        );
+        "status" + (success ? " success" : "");
+
 }
 
+
+/* =========================================================
+   FILE READER
+========================================================= */
 
 function readFile(file){
 
-    return new Promise(
-        (resolve,reject)=>{
+    return new Promise((resolve,reject)=>{
 
-            const reader =
-                new FileReader();
+        const reader =
+            new FileReader();
 
-            reader.onload =
-                () =>
-                resolve(
-                    reader.result
-                );
+        reader.onload = () =>
+            resolve(reader.result);
 
-            reader.onerror =
-                reject;
+        reader.onerror = reject;
 
-            reader.readAsArrayBuffer(
-                file
-            );
+        reader.readAsArrayBuffer(file);
 
-        }
-    );
+    });
 
 }
 
 
-/* TEMPLATE */
+/* =========================================================
+   IMAGE LOADER
+========================================================= */
 
-async function loadTemplate(
-    bytes
-){
+function loadImage(src){
 
-    templatePdfBytes =
-        bytes;
+    return new Promise((resolve,reject)=>{
+
+        const img = new Image();
+
+        img.onload = () =>
+            resolve(img);
+
+        img.onerror = reject;
+
+        img.src = src;
+
+    });
+
+}
+
+
+/* =========================================================
+   TEMPLATE LOAD
+========================================================= */
+
+async function loadTemplate(bytes){
+
+    templatePdfBytes = bytes.slice(0);
+
+    /*
+        PDF.js preview document
+    */
 
     templatePdf =
-        await pdfjsLib
-        .getDocument({
+        await pdfjsLib.getDocument({
             data:bytes.slice(0)
-        })
-        .promise;
+        }).promise;
 
 
-    if(
-        templatePdf.numPages < 2
-    ){
+    if(templatePdf.numPages < 2){
 
         throw new Error(
             "Template PDF में कम-से-कम 2 pages होने चाहिए।"
@@ -734,45 +849,71 @@ async function loadTemplate(
     }
 
 
+    /*
+        pdf-lib original PDF
+        final PDF के लिए
+    */
+
+    templateSourcePdf =
+        await PDFDocument.load(
+            bytes.slice(0)
+        );
+
+
     pageData = [];
 
 
-    for(
-        let i=0;
-        i<2;
-        i++
-    ){
+    /*
+        Preview को high-resolution में render करें।
+        इससे preview भी साफ दिखाई देगा।
+    */
+
+    for(let i=0;i<2;i++){
 
         const pdfPage =
-            await templatePdf
-            .getPage(i+1);
+            await templatePdf.getPage(i+1);
 
 
         const viewport =
             pdfPage.getViewport({
-                scale:1
+                scale:2.2
             });
 
 
         const canvas =
-            document.createElement(
-                "canvas"
-            );
+            document.createElement("canvas");
 
 
         canvas.width =
-            viewport.width;
+            Math.ceil(viewport.width);
 
         canvas.height =
-            viewport.height;
+            Math.ceil(viewport.height);
+
+
+        const context =
+            canvas.getContext("2d",{
+                alpha:false
+            });
+
+
+        context.fillStyle="#fff";
+
+        context.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
 
 
         await pdfPage.render({
 
-            canvasContext:
-                canvas.getContext("2d"),
+            canvasContext:context,
 
-            viewport
+            viewport:viewport,
+
+            intent:"display"
 
         }).promise;
 
@@ -781,12 +922,14 @@ async function loadTemplate(
 
             type:"base",
 
-            canvas,
+            canvas:canvas,
 
             photo1:null,
+
             photo2:null,
 
             sig1:null,
+
             sig2:null
 
         });
@@ -794,35 +937,37 @@ async function loadTemplate(
     }
 
 
-    selectedA4 = -1;
-
-
     renderPages();
 
 
     status(
-        "2 PAN pages तैयार हैं। अब Add Photo और Add Signature करें।",
+        "2 PAN pages तैयार हैं। अब Photo और Signature जोड़ें।",
         true
     );
 
 }
 
 
+/* =========================================================
+   TEMPLATE INPUT
+========================================================= */
+
 templateInput.addEventListener(
     "change",
-    async event=>{
+    async e=>{
 
         const file =
-            event.target.files[0];
+            e.target.files[0];
 
         if(!file)return;
 
 
         try{
 
-            await loadTemplate(
-                await readFile(file)
-            );
+            const bytes =
+                await readFile(file);
+
+            await loadTemplate(bytes);
 
         }
         catch(error){
@@ -830,8 +975,8 @@ templateInput.addEventListener(
             console.error(error);
 
             status(
-                "Template load नहीं हुआ: " +
-                error.message
+                "Template load नहीं हुआ: "
+                + error.message
             );
 
         }
@@ -840,7 +985,9 @@ templateInput.addEventListener(
 );
 
 
-/* AUTO TEMPLATE */
+/* =========================================================
+   AUTO LOAD pan-template.pdf
+========================================================= */
 
 async function autoLoadTemplate(){
 
@@ -858,16 +1005,19 @@ async function autoLoadTemplate(){
         if(!response.ok)return;
 
 
-        await loadTemplate(
-            await response.arrayBuffer()
-        );
+        const bytes =
+            await response.arrayBuffer();
+
+
+        await loadTemplate(bytes);
 
     }
     catch(error){
 
-        console.log(
-            "Auto template नहीं मिला।"
-        );
+        /*
+            File मौजूद नहीं होने पर
+            कोई error दिखाने की जरूरत नहीं।
+        */
 
     }
 
@@ -877,56 +1027,53 @@ async function autoLoadTemplate(){
 autoLoadTemplate();
 
 
-/* PAGE CARD */
+/* =========================================================
+   PAGE CARD
+========================================================= */
 
-function makePageCard(i){
+function makePageCard(index){
 
-    const p =
-        pageData[i];
+    const page =
+        pageData[index];
 
 
     const card =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     card.className =
-        "pageCard" +
-        (
-            i === selectedA4
+        "pageCard"
+        + (index===selectedA4
             ? " selected"
-            : ""
-        );
+            : "");
 
 
     const title =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     title.className =
         "pageTitle";
 
 
-    title.innerHTML =
-        `<span>
-            Page ${i+1}
-            ${
-                i < 2
-                ? " • PAN"
-                : " • A4 Added"
-            }
-        </span>`;
+    const titleText =
+        document.createElement("span");
 
 
-    if(i >= 2){
+    titleText.textContent =
+        `Page ${index+1}`
+        + (index<2
+            ? " • PAN"
+            : " • A4 Added");
+
+
+    title.appendChild(titleText);
+
+
+    if(index>=2){
 
         const remove =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
 
         remove.textContent =
@@ -941,22 +1088,41 @@ function makePageCard(i){
             "auto";
 
 
+        remove.style.padding =
+            "7px 10px";
+
+
         remove.onclick =
-            () => {
+            e=>{
+
+                e.stopPropagation();
 
                 pageData.splice(
-                    i,
+                    index,
                     1
                 );
 
 
-                selectedA4 =
-                    pageData.length > 2
-                    ? Math.min(
-                        i,
-                        pageData.length-1
-                    )
-                    : -1;
+                if(pageData.length<=2){
+
+                    selectedA4=-1;
+
+                }
+                else{
+
+                    selectedA4 =
+                        Math.min(
+                            index,
+                            pageData.length-1
+                        );
+
+                    if(selectedA4<2){
+
+                        selectedA4=-1;
+
+                    }
+
+                }
 
 
                 renderPages();
@@ -964,22 +1130,20 @@ function makePageCard(i){
             };
 
 
-        title.appendChild(
-            remove
-        );
+        title.appendChild(remove);
 
     }
 
 
-    card.appendChild(
-        title
-    );
+    card.appendChild(title);
 
+
+    /*
+        Canvas Preview
+    */
 
     const wrap =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     wrap.className =
@@ -987,292 +1151,294 @@ function makePageCard(i){
 
 
     const canvas =
-        document.createElement(
-            "canvas"
-        );
+        document.createElement("canvas");
 
 
     canvas.width =
-        p.canvas.width;
+        page.canvas.width;
 
     canvas.height =
-        p.canvas.height;
+        page.canvas.height;
 
 
-    canvas.getContext("2d")
-        .drawImage(
-            p.canvas,
-            0,
-            0
-        );
+    const context =
+        canvas.getContext("2d");
 
 
-    wrap.appendChild(
-        canvas
+    context.drawImage(
+        page.canvas,
+        0,
+        0
     );
 
 
-    if(
-        i === 0 ||
-        i === 1
-    ){
-
-        addOverlay(
-            wrap,
-            p.photo1,
-            i
-        );
+    wrap.appendChild(canvas);
 
 
-        if(i === 0){
+    /*
+        PAN overlays
+    */
+
+    if(index<2){
+
+        if(page.photo1){
 
             addOverlay(
                 wrap,
-                p.photo2,
-                i
+                page.photo1,
+                index
             );
 
         }
 
 
-        if(i === 0){
+        if(index===0 && page.photo2){
 
             addOverlay(
                 wrap,
-                p.sig1,
-                i
+                page.photo2,
+                index
             );
 
         }
 
 
-        if(i === 1){
+        if(index===0 && page.sig1){
 
             addOverlay(
                 wrap,
-                p.sig2,
-                i
+                page.sig1,
+                index
             );
 
         }
 
 
-        const controls =
-            document.createElement(
-                "div"
-            );
+        if(index===1 && page.sig2){
 
-
-        controls.className =
-            "controls";
-
-
-        if(i === 0){
-
-            const photo1 =
-                document.createElement(
-                    "button"
-                );
-
-
-            photo1.textContent =
-                "Photo 1 adjust";
-
-
-            photo1.className =
-                "secondary";
-
-
-            photo1.onclick =
-                () =>
-                adjustOverlay(
-                    p.photo1
-                );
-
-
-            const photo2 =
-                document.createElement(
-                    "button"
-                );
-
-
-            photo2.textContent =
-                "Photo 2 adjust";
-
-
-            photo2.className =
-                "secondary";
-
-
-            photo2.onclick =
-                () =>
-                adjustOverlay(
-                    p.photo2
-                );
-
-
-            const sig =
-                document.createElement(
-                    "button"
-                );
-
-
-            sig.textContent =
-                "Signature adjust";
-
-
-            sig.className =
-                "secondary";
-
-
-            sig.onclick =
-                () =>
-                adjustOverlay(
-                    p.sig1
-                );
-
-
-            controls.append(
-                photo1,
-                photo2,
-                sig
+            addOverlay(
+                wrap,
+                page.sig2,
+                index
             );
 
         }
-        else{
-
-            const sig =
-                document.createElement(
-                    "button"
-                );
-
-
-            sig.textContent =
-                "Signature adjust";
-
-
-            sig.className =
-                "secondary";
-
-
-            sig.onclick =
-                () =>
-                adjustOverlay(
-                    p.sig2
-                );
-
-
-            controls.appendChild(
-                sig
-            );
-
-        }
-
-
-        card.appendChild(
-            controls
-        );
 
     }
 
 
+    /*
+        Added A4 page
+    */
+
     else{
 
-        wrap.onclick =
-            () => {
-
-                selectedA4 =
-                    i;
-
-
-                renderPages();
-
-
-                status(
-                    `Page ${i+1} selected. अब Add Document दबाएँ।`
-                );
-
-            };
-
-
-        const controls =
-            document.createElement(
-                "div"
-            );
-
-
-        controls.className =
-            "controls";
-
-
-        const add =
-            document.createElement(
-                "button"
-            );
-
-
-        add.textContent =
-            "Add / Replace Document";
-
-
-        add.onclick =
-            event => {
-
-                event.stopPropagation();
-
-
-                selectedA4 =
-                    i;
-
-
-                renderPages();
-
-
-                documentInput.click();
-
-            };
-
-
-        controls.appendChild(
-            add
-        );
-
-
-        card.appendChild(
-            controls
-        );
-
-
-        if(p.doc){
+        if(page.doc){
 
             addOverlay(
                 wrap,
-                p.doc,
-                i
+                page.doc,
+                index
             );
 
         }
         else{
 
             const empty =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             empty.className =
                 "empty";
 
-
             empty.textContent =
                 "Add Document दबाएँ";
 
-
-            wrap.appendChild(
-                empty
-            );
+            wrap.appendChild(empty);
 
         }
+
+
+        wrap.onclick =
+            e=>{
+
+                if(
+                    e.target.closest(".overlay")
+                ){
+                    return;
+                }
+
+
+                selectedA4=index;
+
+                renderPages();
+
+                status(
+                    `Page ${index+1} selected। अब Add Document दबाएँ।`
+                );
+
+            };
+
+    }
+
+
+    card.appendChild(wrap);
+
+
+    /*
+        Controls
+    */
+
+    const controls =
+        document.createElement("div");
+
+
+    controls.className =
+        "controls";
+
+
+    if(index===0){
+
+        if(page.photo1){
+
+            const button =
+                document.createElement("button");
+
+            button.textContent =
+                "Photo 1 adjust";
+
+            button.className =
+                "secondary";
+
+            button.onclick =
+                e=>{
+
+                    e.stopPropagation();
+
+                    adjustOverlay(
+                        page.photo1
+                    );
+
+                };
+
+            controls.appendChild(button);
+
+        }
+
+
+        if(page.photo2){
+
+            const button =
+                document.createElement("button");
+
+            button.textContent =
+                "Photo 2 adjust";
+
+            button.className =
+                "secondary";
+
+            button.onclick =
+                e=>{
+
+                    e.stopPropagation();
+
+                    adjustOverlay(
+                        page.photo2
+                    );
+
+                };
+
+            controls.appendChild(button);
+
+        }
+
+
+        if(page.sig1){
+
+            const button =
+                document.createElement("button");
+
+            button.textContent =
+                "Signature adjust";
+
+            button.className =
+                "secondary";
+
+            button.onclick =
+                e=>{
+
+                    e.stopPropagation();
+
+                    adjustOverlay(
+                        page.sig1
+                    );
+
+                };
+
+            controls.appendChild(button);
+
+        }
+
+    }
+
+
+    if(index===1 && page.sig2){
+
+        const button =
+            document.createElement("button");
+
+        button.textContent =
+            "Signature adjust";
+
+        button.className =
+            "secondary";
+
+        button.onclick =
+            e=>{
+
+                e.stopPropagation();
+
+                adjustOverlay(
+                    page.sig2
+                );
+
+            };
+
+        controls.appendChild(button);
+
+    }
+
+
+    if(index>=2){
+
+        const button =
+            document.createElement("button");
+
+        button.textContent =
+            "Add / Replace Document";
+
+
+        button.onclick =
+            e=>{
+
+                e.stopPropagation();
+
+                selectedA4=index;
+
+                documentInput.click();
+
+            };
+
+
+        controls.appendChild(button);
+
+    }
+
+
+    if(controls.children.length){
+
+        card.appendChild(
+            controls
+        );
 
     }
 
@@ -1282,39 +1448,40 @@ function makePageCard(i){
 }
 
 
-/* RENDER */
+/* =========================================================
+   RENDER ALL PAGES
+========================================================= */
 
 function renderPages(){
 
-    pagesEl.innerHTML =
-        "";
+    pagesEl.innerHTML="";
 
 
     pageData.forEach(
-        (_,i) =>
-        pagesEl.appendChild(
-            makePageCard(i)
-        )
+        (_,index)=>{
+
+            pagesEl.appendChild(
+                makePageCard(index)
+            );
+
+        }
     );
 
 }
 
 
-/* OVERLAY */
+/* =========================================================
+   OVERLAY
+========================================================= */
 
 function addOverlay(
     wrap,
-    obj,
+    object,
     pageIndex
 ){
 
-    if(!obj)return;
-
-
     const overlay =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     overlay.className =
@@ -1326,209 +1493,252 @@ function addOverlay(
 
 
     const image =
-        document.createElement(
-            "img"
-        );
+        document.createElement("img");
 
 
     image.src =
-        obj.url;
+        object.url;
 
 
-    overlay.appendChild(
-        image
-    );
+    overlay.appendChild(image);
 
 
     const handle =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     handle.className =
         "handle";
 
 
-    overlay.appendChild(
-        handle
-    );
+    overlay.appendChild(handle);
 
+
+    const pageCanvas =
+        pageData[pageIndex].canvas;
+
+
+    /*
+        Preview canvas का वास्तविक
+        PDF point ratio
+    */
 
     const pxPerPt =
-        pageData[pageIndex]
-        .canvas.width /
-        A4.w;
+        pageCanvas.width / A4.w;
 
 
-    const update =
-        () => {
+    function update(){
 
-            const scale =
-                wrap.clientWidth /
-                pageData[pageIndex]
-                .canvas.width;
+        const displayScale =
+            wrap.clientWidth /
+            pageCanvas.width;
 
 
-            overlay.style.left =
-                (
-                    obj.x *
-                    pxPerPt *
-                    scale
-                ) + "px";
+        overlay.style.left =
+            (
+                object.x *
+                pxPerPt *
+                displayScale
+            ) + "px";
 
 
-            overlay.style.top =
-                (
-                    obj.y *
-                    pxPerPt *
-                    scale
-                ) + "px";
+        overlay.style.top =
+            (
+                object.y *
+                pxPerPt *
+                displayScale
+            ) + "px";
 
 
-            overlay.style.width =
-                (
-                    obj.w *
-                    pxPerPt *
-                    scale
-                ) + "px";
+        overlay.style.width =
+            (
+                object.w *
+                pxPerPt *
+                displayScale
+            ) + "px";
 
 
-            overlay.style.height =
-                (
-                    obj.h *
-                    pxPerPt *
-                    scale
-                ) + "px";
+        overlay.style.height =
+            (
+                object.h *
+                pxPerPt *
+                displayScale
+            ) + "px";
 
-        };
+    }
 
 
-    let moving = false;
-    let resizing = false;
+    let moving=false;
 
-    let startX = 0;
-    let startY = 0;
+    let resizing=false;
 
-    let originalX = 0;
-    let originalY = 0;
+    let startX=0;
 
-    let originalW = 0;
-    let originalH = 0;
+    let startY=0;
+
+    let originalX=0;
+
+    let originalY=0;
+
+    let originalW=0;
+
+    let originalH=0;
 
 
     overlay.onpointerdown =
-        event => {
+        e=>{
 
-            event.preventDefault();
+            e.preventDefault();
 
+            e.stopPropagation();
 
             overlay.setPointerCapture(
-                event.pointerId
+                e.pointerId
             );
 
 
-            if(
-                event.target ===
-                handle
-            ){
+            if(e.target===handle){
 
-                resizing = true;
+                resizing=true;
 
             }
             else{
 
-                moving = true;
+                moving=true;
 
             }
 
 
-            startX =
-                event.clientX;
+            startX=e.clientX;
 
-            startY =
-                event.clientY;
+            startY=e.clientY;
 
+            originalX=object.x;
 
-            originalX =
-                obj.x;
+            originalY=object.y;
 
-            originalY =
-                obj.y;
+            originalW=object.w;
 
-            originalW =
-                obj.w;
-
-            originalH =
-                obj.h;
+            originalH=object.h;
 
         };
 
 
     overlay.onpointermove =
-        event => {
+        e=>{
 
             if(
                 !moving &&
                 !resizing
-            )return;
+            ){
+
+                return;
+
+            }
 
 
-            const scale =
+            const displayScale =
                 wrap.clientWidth /
-                pageData[pageIndex]
-                .canvas.width;
+                pageCanvas.width;
 
 
             const factor =
                 pxPerPt *
-                scale;
+                displayScale;
 
 
             const dx =
                 (
-                    event.clientX -
-                    startX
+                    e.clientX-startX
                 ) / factor;
 
 
             const dy =
                 (
-                    event.clientY -
-                    startY
+                    e.clientY-startY
                 ) / factor;
 
 
             if(moving){
 
-                obj.x =
+                object.x =
                     Math.max(
                         0,
-                        originalX + dx
+                        originalX+dx
                     );
 
 
-                obj.y =
+                object.y =
                     Math.max(
                         0,
-                        originalY + dy
+                        originalY+dy
                     );
 
             }
             else{
 
-                obj.w =
-                    Math.max(
-                        10,
-                        originalW + dx
-                    );
+                /*
+                    Signature और photo का
+                    resize natural ratio
+                    बिगाड़े बिना
+                */
+
+                if(object.keepRatio){
+
+                    const ratio =
+                        originalW /
+                        originalH;
 
 
-                obj.h =
-                    Math.max(
-                        10,
-                        originalH + dy
-                    );
+                    let newW =
+                        Math.max(
+                            10,
+                            originalW+dx
+                        );
+
+
+                    let newH =
+                        newW/ratio;
+
+
+                    if(
+                        originalH+dy >
+                        newH
+                    ){
+
+                        newH =
+                            Math.max(
+                                10,
+                                originalH+dy
+                            );
+
+                        newW =
+                            newH*ratio;
+
+                    }
+
+
+                    object.w=newW;
+
+                    object.h=newH;
+
+                }
+                else{
+
+                    object.w =
+                        Math.max(
+                            10,
+                            originalW+dx
+                        );
+
+
+                    object.h =
+                        Math.max(
+                            10,
+                            originalH+dy
+                        );
+
+                }
 
             }
 
@@ -1539,10 +1749,21 @@ function addOverlay(
 
 
     overlay.onpointerup =
-        () => {
+        ()=>{
 
-            moving = false;
-            resizing = false;
+            moving=false;
+
+            resizing=false;
+
+        };
+
+
+    overlay.onpointercancel =
+        ()=>{
+
+            moving=false;
+
+            resizing=false;
 
         };
 
@@ -1557,11 +1778,11 @@ function addOverlay(
 }
 
 
-/* MANUAL POSITION */
+/* =========================================================
+   MANUAL POSITION ADJUST
+========================================================= */
 
-function adjustOverlay(
-    object
-){
+function adjustOverlay(object){
 
     if(!object)return;
 
@@ -1578,29 +1799,24 @@ function adjustOverlay(
 
     const values =
         value
-        .split(",")
-        .map(Number);
+            .split(",")
+            .map(Number);
 
 
     if(
-        values.length === 4 &&
+        values.length===4 &&
         values.every(
             Number.isFinite
         )
     ){
 
-        object.x =
-            values[0];
+        object.x=values[0];
 
-        object.y =
-            values[1];
+        object.y=values[1];
 
-        object.w =
-            values[2];
+        object.w=values[2];
 
-        object.h =
-            values[3];
-
+        object.h=values[3];
 
         renderPages();
 
@@ -1609,129 +1825,129 @@ function adjustOverlay(
 }
 
 
-/* ADD A4 */
+/* =========================================================
+   ADD A4 PAGE
+========================================================= */
 
-document
-.getElementById(
+document.getElementById(
     "addPageBtn"
-)
-.onclick =
-    () => {
+).onclick=()=>{
 
-        if(
-            pageData.length >=
-            MAX_PAGES
-        ){
+    if(pageData.length>=MAX_PAGES){
 
-            alert(
-                "अधिकतम 4 pages ही रखे जा सकते हैं।"
-            );
-
-            return;
-
-        }
-
-
-        const canvas =
-            document.createElement(
-                "canvas"
-            );
-
-
-        canvas.width =
-            1240;
-
-        canvas.height =
-            1754;
-
-
-        const context =
-            canvas.getContext(
-                "2d"
-            );
-
-
-        context.fillStyle =
-            "#fff";
-
-
-        context.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
+        alert(
+            "अधिकतम 4 pages ही रखे जा सकते हैं।"
         );
 
+        return;
 
-        pageData.push({
-
-            type:"a4",
-
-            canvas,
-
-            doc:null
-
-        });
+    }
 
 
-        selectedA4 =
-            pageData.length - 1;
+    const canvas =
+        document.createElement("canvas");
 
 
-        renderPages();
+    /*
+        High-resolution A4 preview
+    */
+
+    canvas.width=1785;
+
+    canvas.height=2526;
 
 
-        status(
-            `Page ${pageData.length} जोड़ा गया। अब Add Document करें।`,
-            true
-        );
-
-    };
+    const context =
+        canvas.getContext("2d");
 
 
-/* ADD DOCUMENT */
+    context.fillStyle="#fff";
 
-document
-.getElementById(
+
+    context.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    pageData.push({
+
+        type:"a4",
+
+        canvas:canvas,
+
+        doc:null
+
+    });
+
+
+    selectedA4 =
+        pageData.length-1;
+
+
+    renderPages();
+
+
+    status(
+        `Page ${pageData.length} जोड़ा गया। अब Add Document करें।`,
+        true
+    );
+
+};
+
+
+/* =========================================================
+   ADD DOCUMENT
+========================================================= */
+
+document.getElementById(
     "addDocumentBtn"
-)
-.onclick =
-    () => {
+).onclick=()=>{
 
-        if(
-            selectedA4 < 2
-        ){
+    if(selectedA4<2){
 
-            alert(
-                "पहले Add A4 Page करें और उस page को select करें।"
-            );
+        alert(
+            "पहले Add A4 Page करें और उस page को select करें।"
+        );
 
-            return;
+        return;
 
-        }
+    }
 
 
-        documentInput.click();
+    documentInput.click();
 
-    };
+};
 
 
-/* DOCUMENT */
+/* =========================================================
+   DOCUMENT INPUT
+========================================================= */
 
 documentInput.addEventListener(
     "change",
-    async event => {
+    async e=>{
 
         const file =
-            event.target.files[0];
+            e.target.files[0];
 
 
         if(!file)return;
 
 
-        if(
-            selectedA4 < 2
-        )return;
+        if(selectedA4<2){
+
+            documentInput.value="";
+
+            return;
+
+        }
+
+
+        const targetPage =
+            selectedA4;
 
 
         try{
@@ -1739,62 +1955,64 @@ documentInput.addEventListener(
             let url;
 
 
+            /*
+                PDF का पहला page
+                high-resolution image में
+            */
+
             if(
-                file.type ===
-                "application/pdf"
+                file.type==="application/pdf"
             ){
 
                 const bytes =
-                    await readFile(
-                        file
-                    );
+                    await readFile(file);
 
 
                 const pdf =
                     await pdfjsLib
-                    .getDocument({
-                        data:bytes
-                    })
-                    .promise;
+                        .getDocument({
+                            data:bytes
+                        })
+                        .promise;
 
 
-                const page =
+                const pg =
                     await pdf.getPage(1);
 
 
-                const viewport =
-                    page.getViewport({
-                        scale:1.5
+                const vp =
+                    pg.getViewport({
+                        scale:2.0
                     });
 
 
-                const canvas =
+                const c =
                     document.createElement(
                         "canvas"
                     );
 
 
-                canvas.width =
-                    viewport.width;
+                c.width =
+                    Math.ceil(vp.width);
 
-                canvas.height =
-                    viewport.height;
+                c.height =
+                    Math.ceil(vp.height);
 
 
-                await page.render({
+                await pg.render({
 
                     canvasContext:
-                        canvas.getContext("2d"),
+                        c.getContext("2d"),
 
-                    viewport
+                    viewport:vp
 
                 }).promise;
 
 
                 url =
-                    canvas.toDataURL(
+                    c.toDataURL(
                         "image/jpeg",
-                        .82
+                        .94
                     );
 
             }
@@ -1811,33 +2029,64 @@ documentInput.addEventListener(
             openEditor(
                 url,
                 "document",
-                async dataUrl => {
+                async dataUrl=>{
 
-                    const image =
+                    const img =
                         await loadImage(
                             dataUrl
                         );
 
 
                     const page =
-                        pageData[
-                            selectedA4
-                        ];
+                        pageData[targetPage];
 
 
-                    page.doc = {
+                    const maxW=555;
+
+                    const maxH=700;
+
+
+                    let w=maxW;
+
+                    let h=
+                        w /
+                        (
+                            img.width /
+                            img.height
+                        );
+
+
+                    if(h>maxH){
+
+                        h=maxH;
+
+                        w=
+                            h *
+                            (
+                                img.width /
+                                img.height
+                            );
+
+                    }
+
+
+                    page.doc={
 
                         url:dataUrl,
 
                         x:20,
+
                         y:20,
 
-                        w:555,
-                        h:400,
+                        w:w,
+
+                        h:h,
 
                         ratio:
-                            image.width /
-                            image.height
+                            img.width /
+                            img.height,
+
+                        keepRatio:true
 
                     };
 
@@ -1846,7 +2095,7 @@ documentInput.addEventListener(
 
 
                     status(
-                        `Page ${selectedA4+1} पर document लगा दिया गया। उसे drag/resize कर सकते हैं।`,
+                        `Page ${targetPage+1} पर document लगा दिया गया।`,
                         true
                     );
 
@@ -1856,65 +2105,70 @@ documentInput.addEventListener(
         }
         catch(error){
 
+            console.error(error);
+
             alert(
-                "Document load नहीं हुआ: " +
-                error.message
+                "Document load नहीं हुआ: "
+                + error.message
             );
 
         }
 
 
-        documentInput.value =
-            "";
+        documentInput.value="";
 
     }
 );
 
 
-/* PHOTO */
+/* =========================================================
+   PHOTO
+========================================================= */
 
 photoInput.addEventListener(
     "change",
-    event => {
+    e=>{
 
         const file =
-            event.target.files[0];
+            e.target.files[0];
 
 
         if(!file)return;
 
 
+        const url =
+            URL.createObjectURL(
+                file
+            );
+
+
         openEditor(
-            URL.createObjectURL(file),
+            url,
             "photo",
-            async dataUrl => {
+            async dataUrl=>{
 
                 const page =
                     pageData[0];
 
 
-                page.photo1 = {
+                page.photo1={
 
                     url:dataUrl,
 
-                    x:10,
-                    y:109,
+                    ...PAN_POSITIONS.photo1,
 
-                    w:106,
-                    h:127
+                    keepRatio:false
 
                 };
 
 
-                page.photo2 = {
+                page.photo2={
 
                     url:dataUrl,
 
-                    x:479,
-                    y:109,
+                    ...PAN_POSITIONS.photo2,
 
-                    w:96,
-                    h:127
+                    keepRatio:false
 
                 };
 
@@ -1931,30 +2185,37 @@ photoInput.addEventListener(
         );
 
 
-        photoInput.value =
-            "";
+        photoInput.value="";
 
     }
 );
 
 
-/* SIGNATURE */
+/* =========================================================
+   SIGNATURE
+========================================================= */
 
 signatureInput.addEventListener(
     "change",
-    event => {
+    e=>{
 
         const file =
-            event.target.files[0];
+            e.target.files[0];
 
 
         if(!file)return;
 
 
+        const url =
+            URL.createObjectURL(
+                file
+            );
+
+
         openEditor(
-            URL.createObjectURL(file),
+            url,
             "signature",
-            async dataUrl => {
+            async dataUrl=>{
 
                 const page1 =
                     pageData[0];
@@ -1963,28 +2224,24 @@ signatureInput.addEventListener(
                     pageData[1];
 
 
-                page1.sig1 = {
+                page1.sig1={
 
                     url:dataUrl,
 
-                    x:75,
-                    y:183,
+                    ...PAN_POSITIONS.signature1,
 
-                    w:82,
-                    h:34
+                    keepRatio:true
 
                 };
 
 
-                page2.sig2 = {
+                page2.sig2={
 
                     url:dataUrl,
 
-                    x:378,
-                    y:727,
+                    ...PAN_POSITIONS.signature2,
 
-                    w:91,
-                    h:38
+                    keepRatio:true
 
                 };
 
@@ -1993,7 +2250,7 @@ signatureInput.addEventListener(
 
 
                 status(
-                    "Signature Page 1 और Page 2 दोनों में लगा दी गई है।",
+                    "Signature Page 1 और Page 2 में सही निर्धारित स्थान पर लगा दी गई है।",
                     true
                 );
 
@@ -2001,14 +2258,15 @@ signatureInput.addEventListener(
         );
 
 
-        signatureInput.value =
-            "";
+        signatureInput.value="";
 
     }
 );
 
 
-/* EDITOR */
+/* =========================================================
+   OPEN EDITOR
+========================================================= */
 
 function openEditor(
     url,
@@ -2016,64 +2274,55 @@ function openEditor(
     done
 ){
 
-    editorMode =
-        mode;
+    editorMode=mode;
 
-    editorFile =
-        done;
+    editorDone=done;
+
+    currentEditorSource=url;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "editorTitle"
-    )
-    .textContent =
-        mode === "signature"
-        ? "Signature Crop + Background"
-        : "Crop";
+    ).textContent =
+        mode==="signature"
+            ? "Signature Crop + Background Removal"
+            : "Crop";
 
 
-    document
-    .getElementById(
-        "signatureTools"
-    )
-    .style.display =
-        mode === "signature"
-        ? "flex"
-        : "none";
+    signatureTools.style.display =
+        mode==="signature"
+            ? "flex"
+            : "none";
 
 
-    const image =
-        document.getElementById(
-            "cropImage"
-        );
+    signaturePreviewBox.style.display =
+        mode==="signature"
+            ? "block"
+            : "none";
 
 
-    image.src =
-        url;
+    cropImage.src=url;
 
 
-    document
-    .getElementById(
-        "editorModal"
-    )
-    .style.display =
+    editorModal.style.display =
         "flex";
 
 
-    image.onload =
-        () => {
+    cropImage.onload =
+        ()=>{
 
             if(cropper){
 
                 cropper.destroy();
+
+                cropper=null;
 
             }
 
 
             cropper =
                 new Cropper(
-                    image,
+                    cropImage,
                     {
 
                         viewMode:1,
@@ -2086,425 +2335,665 @@ function openEditor(
 
                         zoomable:true,
 
-                        scalable:false
+                        scalable:false,
+
+                        responsive:true,
+
+                        restore:false
 
                     }
                 );
+
+
+            if(mode==="signature"){
+
+                updateSignaturePreview();
+
+            }
 
         };
 
 }
 
 
-/* CANCEL */
+/* =========================================================
+   CANCEL
+========================================================= */
 
-document
-.getElementById(
+document.getElementById(
     "cancelEditor"
-)
-.onclick =
-    () => {
+).onclick=()=>{
 
-        if(cropper){
+    if(cropper){
 
-            cropper.destroy();
+        cropper.destroy();
+
+        cropper=null;
+
+    }
+
+
+    editorModal.style.display =
+        "none";
+
+
+    signaturePreviewBox.style.display =
+        "none";
+
+
+    currentEditorSource=null;
+
+};
+
+
+/* =========================================================
+   SIGNATURE BACKGROUND REMOVAL
+========================================================= */
+
+function removeSignatureBackground(
+    sourceCanvas,
+    threshold
+){
+
+    const output =
+        document.createElement(
+            "canvas"
+        );
+
+
+    output.width =
+        sourceCanvas.width;
+
+    output.height =
+        sourceCanvas.height;
+
+
+    const ctx =
+        output.getContext(
+            "2d",
+            {
+                willReadFrequently:true
+            }
+        );
+
+
+    ctx.drawImage(
+        sourceCanvas,
+        0,
+        0
+    );
+
+
+    const imageData =
+        ctx.getImageData(
+            0,
+            0,
+            output.width,
+            output.height
+        );
+
+
+    const data =
+        imageData.data;
+
+
+    const width =
+        output.width;
+
+    const height =
+        output.height;
+
+
+    const t =
+        Math.max(
+            80,
+            Math.min(
+                240,
+                threshold
+            )
+        );
+
+
+    /*
+        Background color corners से
+        estimate किया जा रहा है।
+    */
+
+    const samples=[];
+
+
+    const sampleSize =
+        Math.max(
+            2,
+            Math.floor(
+                Math.min(
+                    width,
+                    height
+                ) * .05
+            )
+        );
+
+
+    function sampleArea(
+        startX,
+        startY
+    ){
+
+        let r=0;
+
+        let g=0;
+
+        let b=0;
+
+        let count=0;
+
+
+        for(
+            let y=startY;
+            y<startY+sampleSize &&
+            y<height;
+            y++
+        ){
+
+            for(
+                let x=startX;
+                x<startX+sampleSize &&
+                x<width;
+                x++
+            ){
+
+                const index =
+                    (y*width+x)*4;
+
+
+                r+=data[index];
+
+                g+=data[index+1];
+
+                b+=data[index+2];
+
+                count++;
+
+            }
 
         }
 
 
-        cropper = null;
+        if(count){
 
+            samples.push({
 
-        document
-        .getElementById(
-            "editorModal"
-        )
-        .style.display =
-            "none";
+                r:r/count,
 
-    };
+                g:g/count,
 
-
-/* APPLY */
-
-document
-.getElementById(
-    "applyEditor"
-)
-.onclick =
-    async () => {
-
-        if(!cropper)return;
-
-
-        const canvas =
-            cropper.getCroppedCanvas({
-
-                maxWidth:1800,
-                maxHeight:1800,
-
-                imageSmoothingEnabled:true,
-
-                imageSmoothingQuality:
-                    "high"
+                b:b/count
 
             });
 
+        }
 
-        let dataUrl =
-            canvas.toDataURL(
-                "image/png"
+    }
+
+
+    sampleArea(0,0);
+
+    sampleArea(
+        Math.max(
+            0,
+            width-sampleSize
+        ),
+        0
+    );
+
+    sampleArea(
+        0,
+        Math.max(
+            0,
+            height-sampleSize
+        )
+    );
+
+    sampleArea(
+        Math.max(
+            0,
+            width-sampleSize
+        ),
+        Math.max(
+            0,
+            height-sampleSize
+        )
+    );
+
+
+    let bgR=255;
+
+    let bgG=255;
+
+    let bgB=255;
+
+
+    if(samples.length){
+
+        bgR =
+            samples.reduce(
+                (sum,s)=>sum+s.r,
+                0
+            ) / samples.length;
+
+
+        bgG =
+            samples.reduce(
+                (sum,s)=>sum+s.g,
+                0
+            ) / samples.length;
+
+
+        bgB =
+            samples.reduce(
+                (sum,s)=>sum+s.b,
+                0
+            ) / samples.length;
+
+    }
+
+
+    /*
+        Threshold का अर्थ:
+        कम value = ज्यादा aggressive removal
+        ज्यादा value = ज्यादा conservative
+    */
+
+    const neutralLimit=48;
+
+
+    /*
+        Gray background हटाने के लिए
+        threshold के आधार पर tolerance।
+    */
+
+    const colorTolerance =
+        30 +
+        ((240-t) * .45);
+
+
+    for(
+        let i=0;
+        i<data.length;
+        i+=4
+    ){
+
+        const r=data[i];
+
+        const g=data[i+1];
+
+        const b=data[i+2];
+
+
+        const brightness =
+            (r+g+b)/3;
+
+
+        const spread =
+            Math.max(r,g,b) -
+            Math.min(r,g,b);
+
+
+        const bgDistance =
+            Math.sqrt(
+                Math.pow(r-bgR,2) +
+                Math.pow(g-bgG,2) +
+                Math.pow(b-bgB,2)
             );
 
 
+        const neutral =
+            spread<=neutralLimit;
+
+
+        let alpha=255;
+
+
+        /*
+            मुख्य gray/white background removal
+        */
+
         if(
-            editorMode ===
-            "signature"
+            neutral &&
+            brightness>=t
         ){
 
-            dataUrl =
-                await removeWhiteBackground(
-                    dataUrl,
-                    Number(
-                        document
-                        .getElementById(
-                            "threshold"
-                        )
-                        .value
+            alpha=0;
+
+        }
+
+
+        /*
+            Corner background के
+            बहुत करीब pixels भी हटाएँ।
+        */
+
+        else if(
+            bgDistance<=colorTolerance &&
+            brightness>55
+        ){
+
+            alpha=0;
+
+        }
+
+
+        /*
+            Soft edge:
+            signature के आसपास हल्का
+            gray halo हटाने में मदद करता है।
+        */
+
+        else if(
+            neutral &&
+            brightness >= t-35
+        ){
+
+            const ratio =
+                (
+                    brightness-(t-35)
+                ) / 35;
+
+
+            alpha =
+                Math.round(
+                    255 *
+                    (
+                        1-ratio
                     )
                 );
 
         }
 
 
-        const callback =
-            editorFile;
+        data[i+3]=
+            Math.max(
+                0,
+                Math.min(
+                    255,
+                    alpha
+                )
+            );
+
+    }
 
 
-        document
-        .getElementById(
-            "editorModal"
-        )
-        .style.display =
-            "none";
+    ctx.putImageData(
+        imageData,
+        0,
+        0
+    );
 
 
-        cropper.destroy();
+    return output;
 
-        cropper = null;
+}
 
 
-        await callback(
-            dataUrl
+/* =========================================================
+   SIGNATURE PREVIEW
+========================================================= */
+
+async function updateSignaturePreview(){
+
+    if(
+        editorMode!=="signature" ||
+        !cropper
+    ){
+
+        return;
+
+    }
+
+
+    const cropped =
+        cropper.getCroppedCanvas({
+
+            maxWidth:1800,
+
+            maxHeight:1800,
+
+            imageSmoothingEnabled:true,
+
+            imageSmoothingQuality:"high"
+
+        });
+
+
+    const processed =
+        removeSignatureBackground(
+            cropped,
+            Number(
+                thresholdInput.value
+            )
         );
 
+
+    signaturePreview.width =
+        processed.width;
+
+    signaturePreview.height =
+        processed.height;
+
+
+    const ctx =
+        signaturePreview.getContext(
+            "2d"
+        );
+
+
+    ctx.clearRect(
+        0,
+        0,
+        signaturePreview.width,
+        signaturePreview.height
+    );
+
+
+    ctx.drawImage(
+        processed,
+        0,
+        0
+    );
+
+}
+
+
+/* =========================================================
+   THRESHOLD
+========================================================= */
+
+thresholdInput.oninput =
+    async e=>{
+
+        thresholdValue.textContent =
+            e.target.value;
+
+
+        await updateSignaturePreview();
+
     };
 
 
-/* THRESHOLD */
+/* =========================================================
+   APPLY EDITOR
+========================================================= */
 
-document
-.getElementById(
-    "threshold"
-)
-.oninput =
-    event => {
+document.getElementById(
+    "applyEditor"
+).onclick=async()=>{
 
-        document
-        .getElementById(
-            "thresholdValue"
-        )
-        .textContent =
-            event.target.value;
-
-    };
+    if(!cropper)return;
 
 
-/* PREVIEW BACKGROUND */
+    const cropped =
+        cropper.getCroppedCanvas({
 
-document
-.getElementById(
-    "previewBgBtn"
-)
-.onclick =
-    async () => {
+            maxWidth:1800,
 
-        if(!cropper)return;
+            maxHeight:1800,
 
+            imageSmoothingEnabled:true,
 
-        const canvas =
-            cropper.getCroppedCanvas({
+            imageSmoothingQuality:"high"
 
-                maxWidth:1800,
-
-                maxHeight:1800
-
-            });
+        });
 
 
-        const output =
-            await removeWhiteBackground(
-                canvas.toDataURL(
-                    "image/png"
-                ),
+    let dataUrl;
+
+
+    if(editorMode==="signature"){
+
+        const processed =
+            removeSignatureBackground(
+                cropped,
                 Number(
-                    document
-                    .getElementById(
-                        "threshold"
-                    )
-                    .value
+                    thresholdInput.value
                 )
             );
 
 
-        document
-        .getElementById(
-            "cropImage"
-        )
-        .src =
-            output;
+        dataUrl =
+            processed.toDataURL(
+                "image/png"
+            );
+
+    }
+    else{
+
+        /*
+            Photo/Document को JPEG में
+            रखा जा रहा है ताकि final PDF
+            unnecessary बड़ा न हो।
+        */
+
+        dataUrl =
+            cropped.toDataURL(
+                "image/jpeg",
+                .95
+            );
+
+    }
 
 
-        if(cropper){
-
-            cropper.destroy();
-
-            cropper = null;
-
-        }
+    const done =
+        editorDone;
 
 
-        document
-        .getElementById(
-            "cropImage"
-        )
-        .onload =
-            () => {
+    if(cropper){
 
-                cropper =
-                    new Cropper(
-                        document
-                        .getElementById(
-                            "cropImage"
-                        ),
-                        {
+        cropper.destroy();
 
-                            viewMode:1,
+        cropper=null;
 
-                            autoCropArea:.9,
-
-                            background:false
-
-                        }
-                    );
-
-            };
-
-    };
+    }
 
 
-/* SIGNATURE BACKGROUND REMOVAL */
+    editorModal.style.display =
+        "none";
 
-function removeWhiteBackground(
-    dataUrl,
-    threshold
+
+    signaturePreviewBox.style.display =
+        "none";
+
+
+    currentEditorSource=null;
+
+
+    await done(dataUrl);
+
+};
+
+
+/* =========================================================
+   FINAL PAGE SIZE
+========================================================= */
+
+function pdfPointY(
+    topY,
+    height
 ){
 
-    return new Promise(
-        resolve => {
+    return (
+        A4.h -
+        topY -
+        height
+    );
 
-            const image =
-                new Image();
-
-
-            image.onload =
-                () => {
-
-                    const canvas =
-                        document
-                        .createElement(
-                            "canvas"
-                        );
+}
 
 
-                    canvas.width =
-                        image.width;
+/* =========================================================
+   ADD IMAGE TO VECTOR PDF PAGE
+========================================================= */
 
-                    canvas.height =
-                        image.height;
+async function drawObjectOnPdfPage(
+    pdfPage,
+    object
+){
 
-
-                    const context =
-                        canvas.getContext(
-                            "2d",
-                            {
-                                willReadFrequently:true
-                            }
-                        );
+    if(!object)return;
 
 
-                    context.drawImage(
-                        image,
-                        0,
-                        0
-                    );
+    if(
+        !object.url
+    ){
+
+        return;
+
+    }
 
 
-                    const imageData =
-                        context.getImageData(
-                            0,
-                            0,
-                            canvas.width,
-                            canvas.height
-                        );
+    /*
+        Signature PNG = transparency
+        Photo/Document JPEG = smaller size
+    */
+
+    let image;
 
 
-                    const data =
-                        imageData.data;
+    if(
+        object.url.startsWith(
+            "data:image/png"
+        )
+    ){
+
+        image =
+            await templateOutput.embedPng(
+                object.url
+            );
+
+    }
+    else{
+
+        image =
+            await templateOutput.embedJpg(
+                object.url
+            );
+
+    }
 
 
-                    const limit =
-                        Math.max(
-                            150,
-                            Math.min(
-                                255,
-                                threshold
-                            )
-                        );
+    pdfPage.drawImage(
+        image,
+        {
 
+            x:object.x,
 
-                    /*
-                     * सफेद/हल्के background को
-                     * transparent बनाया जाता है।
-                     *
-                     * Dark signature ink को रखा जाता है।
-                     */
+            y:pdfPointY(
+                object.y,
+                object.h
+            ),
 
-                    for(
-                        let i=0;
-                        i<data.length;
-                        i+=4
-                    ){
+            width:object.w,
 
-                        const r =
-                            data[i];
-
-                        const g =
-                            data[i+1];
-
-                        const b =
-                            data[i+2];
-
-
-                        const brightness =
-                            (
-                                r +
-                                g +
-                                b
-                            ) / 3;
-
-
-                        const maximum =
-                            Math.max(
-                                r,
-                                g,
-                                b
-                            );
-
-
-                        const minimum =
-                            Math.min(
-                                r,
-                                g,
-                                b
-                            );
-
-
-                        const colorSpread =
-                            maximum -
-                            minimum;
-
-
-                        /*
-                         * सफेद और लगभग सफेद
-                         * pixels पूरी तरह transparent।
-                         */
-
-                        if(
-                            brightness >=
-                            limit
-                        ){
-
-                            data[i+3] =
-                                0;
-
-                        }
-
-                        /*
-                         * बहुत हल्के pixels
-                         * smooth transparent edge।
-                         */
-
-                        else if(
-                            brightness >=
-                            limit - 35 &&
-                            colorSpread < 35
-                        ){
-
-                            const alpha =
-                                Math.round(
-                                    (
-                                        limit -
-                                        brightness
-                                    ) /
-                                    35 *
-                                    255
-                                );
-
-
-                            data[i+3] =
-                                Math.max(
-                                    0,
-                                    Math.min(
-                                        255,
-                                        alpha
-                                    )
-                                );
-
-                        }
-
-                        else{
-
-                            /*
-                             * Signature ink सुरक्षित।
-                             */
-
-                            data[i+3] =
-                                255;
-
-                        }
-
-                    }
-
-
-                    context.putImageData(
-                        imageData,
-                        0,
-                        0
-                    );
-
-
-                    resolve(
-                        canvas.toDataURL(
-                            "image/png"
-                        )
-                    );
-
-                };
-
-
-            image.src =
-                dataUrl;
+            height:object.h
 
         }
     );
@@ -2512,106 +3001,88 @@ function removeWhiteBackground(
 }
 
 
-/* IMAGE */
+/* =========================================================
+   FINAL PDF
+========================================================= */
 
-function loadImage(src){
-
-    return new Promise(
-        (resolve,reject) => {
-
-            const image =
-                new Image();
+let templateOutput=null;
 
 
-            image.onload =
-                () =>
-                resolve(image);
+/* =========================================================
+   RENDER A PAGE FOR RASTER PDF
+========================================================= */
 
-
-            image.onerror =
-                reject;
-
-
-            image.src =
-                src;
-
-        }
-    );
-
-}
-
-
-/* FINAL PAGE */
-
-async function renderFinalPage(
+async function renderFinalRasterPage(
     pageIndex,
     scale
 ){
 
     const page =
-        pageData[
-            pageIndex
-        ];
+        pageData[pageIndex];
+
+
+    const width =
+        Math.round(
+            A4.w*scale
+        );
+
+
+    const height =
+        Math.round(
+            A4.h*scale
+        );
 
 
     const canvas =
-        document
-        .createElement(
+        document.createElement(
             "canvas"
         );
 
 
-    canvas.width =
-        Math.round(
-            A4.w *
-            scale *
-            1.333
-        );
+    canvas.width=width;
+
+    canvas.height=height;
 
 
-    canvas.height =
-        Math.round(
-            A4.h *
-            scale *
-            1.333
-        );
-
-
-    const context =
+    const ctx =
         canvas.getContext(
-            "2d"
+            "2d",
+            {
+                alpha:false
+            }
         );
 
 
-    context.fillStyle =
-        "#fff";
+    ctx.fillStyle="#fff";
 
 
-    context.fillRect(
+    ctx.fillRect(
         0,
         0,
-        canvas.width,
-        canvas.height
+        width,
+        height
     );
 
 
-    context.drawImage(
+    /*
+        Base page
+    */
+
+    ctx.drawImage(
         page.canvas,
         0,
         0,
-        canvas.width,
-        canvas.height
+        width,
+        height
     );
 
 
     const sx =
-        canvas.width /
-        A4.w;
+        width/A4.w;
 
 
     const sy =
-        canvas.height /
-        A4.h;
+        height/A4.h;
 
 
     async function addObject(
@@ -2621,20 +3092,24 @@ async function renderFinalPage(
         if(!object)return;
 
 
-        const image =
+        const img =
             await loadImage(
                 object.url
             );
 
 
-        context.drawImage(
-            image,
+        ctx.drawImage(
 
-            object.x * sx,
-            object.y * sy,
+            img,
 
-            object.w * sx,
-            object.h * sy
+            object.x*sx,
+
+            object.y*sy,
+
+            object.w*sx,
+
+            object.h*sy
+
         );
 
     }
@@ -2670,18 +3145,37 @@ async function renderFinalPage(
 }
 
 
-/* JPEG */
+/* =========================================================
+   JPEG BLOB
+========================================================= */
 
-function jpegBlob(
+function canvasToJpegBlob(
     canvas,
     quality
 ){
 
     return new Promise(
-        resolve => {
+        (resolve,reject)=>{
 
             canvas.toBlob(
-                resolve,
+                blob=>{
+
+                    if(blob){
+
+                        resolve(blob);
+
+                    }
+                    else{
+
+                        reject(
+                            new Error(
+                                "JPEG conversion failed"
+                            )
+                        );
+
+                    }
+
+                },
                 "image/jpeg",
                 quality
             );
@@ -2692,149 +3186,181 @@ function jpegBlob(
 }
 
 
-/*
- * PDF के अंदर harmless comment padding।
- *
- * इसका उद्देश्य केवल छोटे PDF को
- * 1.50 MB minimum सीमा तक लाना है।
- */
+/* =========================================================
+   CREATE RASTER PDF
+========================================================= */
 
-function padPdfToMinimum(
-    bytes,
-    minimumBytes,
-    maximumBytes
+async function createRasterPdf(
+    scale,
+    quality
 ){
 
-    if(
-        bytes.length >
-        maximumBytes
+    const pdf =
+        await PDFDocument.create();
+
+
+    for(
+        let i=0;
+        i<pageData.length;
+        i++
     ){
 
-        throw new Error(
-            "PDF 1.70 MB से बड़ा है।"
+        const canvas =
+            await renderFinalRasterPage(
+                i,
+                scale
+            );
+
+
+        const blob =
+            await canvasToJpegBlob(
+                canvas,
+                quality
+            );
+
+
+        const bytes =
+            new Uint8Array(
+                await blob.arrayBuffer()
+            );
+
+
+        const jpg =
+            await pdf.embedJpg(
+                bytes
+            );
+
+
+        const page =
+            pdf.addPage([
+                A4.w,
+                A4.h
+            ]);
+
+
+        page.drawImage(
+            jpg,
+            {
+
+                x:0,
+
+                y:0,
+
+                width:A4.w,
+
+                height:A4.h
+
+            }
         );
 
     }
 
 
-    if(
-        bytes.length >=
-        minimumBytes
-    ){
+    return await pdf.save({
+        useObjectStreams:true
+    });
+
+}
+
+
+/* =========================================================
+   SAFE PDF PADDING
+========================================================= */
+
+function padPdfAfterEOF(
+    bytes,
+    targetBytes,
+    maxBytes
+){
+
+    if(bytes.length>=targetBytes){
 
         return bytes;
 
     }
 
 
-    const target =
-        minimumBytes;
+    if(bytes.length>maxBytes){
+
+        throw new Error(
+            "PDF maximum size exceeded"
+        );
+
+    }
 
 
     const extra =
-        target -
+        targetBytes -
         bytes.length;
 
 
     /*
-     * PDF comment के रूप में
-     * padding बनाया जाता है।
-     */
+        PDF के EOF के बाद
+        harmless comment bytes।
+        इससे xref offsets नहीं बदलते।
+    */
+
+    const text =
+        "\n% PAN PDF SIZE PADDING\n";
+
+
+    const textBytes =
+        new TextEncoder().encode(
+            text
+        );
+
+
+    const repetitions =
+        Math.ceil(
+            extra /
+            textBytes.length
+        );
+
 
     const padding =
         new Uint8Array(
-            extra
+            repetitions *
+            textBytes.length
         );
-
-
-    padding.fill(
-        37
-    );
 
 
     for(
-        let i=1;
-        i<extra;
-        i+=2
+        let i=0;
+        i<repetitions;
+        i++
     ){
 
-        padding[i] =
-            10;
+        padding.set(
+            textBytes,
+            i*textBytes.length
+        );
 
     }
 
 
-    if(
-        extra > 0
-    ){
-
-        padding[
-            extra - 1
-        ] =
-            10;
-
-    }
-
-
-    const eof =
-        findLastEOF(
-            bytes
+    const finalPadding =
+        padding.slice(
+            0,
+            extra
         );
-
-
-    if(
-        eof < 0
-    ){
-
-        const output =
-            new Uint8Array(
-                bytes.length +
-                extra
-            );
-
-
-        output.set(
-            bytes,
-            0
-        );
-
-
-        output.set(
-            padding,
-            bytes.length
-        );
-
-
-        return output;
-
-    }
 
 
     const output =
         new Uint8Array(
-            bytes.length +
-            extra
+            bytes.length+
+            finalPadding.length
         );
 
 
     output.set(
-        bytes.slice(
-            0,
-            eof
-        ),
+        bytes,
         0
     );
 
 
     output.set(
-        padding,
-        eof
-    );
-
-
-    output.set(
-        bytes.slice(eof),
-        eof + extra
+        finalPadding,
+        bytes.length
     );
 
 
@@ -2843,488 +3369,385 @@ function padPdfToMinimum(
 }
 
 
-/* PDF EOF */
+/* =========================================================
+   MB
+========================================================= */
 
-function findLastEOF(
-    bytes
-){
-
-    for(
-        let i =
-            bytes.length - 5;
-
-        i >= 0;
-
-        i--
-    ){
-
-        if(
-
-            bytes[i] === 37 &&
-
-            bytes[i+1] === 37 &&
-
-            bytes[i+2] === 69 &&
-
-            bytes[i+3] === 79 &&
-
-            bytes[i+4] === 70
-
-        ){
-
-            return i;
-
-        }
-
-    }
-
-
-    return -1;
-
-}
-
-
-/* MB */
-
-function getMB(
-    bytes
-){
+function mb(bytes){
 
     return (
-        bytes.length /
+        bytes /
         1048576
     );
 
 }
 
 
-/* FINAL PDF */
+/* =========================================================
+   FINAL PDF BUTTON
+========================================================= */
 
-document
-.getElementById(
+document.getElementById(
     "makePdfBtn"
-)
-.onclick =
-    async () => {
+).onclick=async()=>{
 
-        try{
+    try{
 
-            if(
-                pageData.length < 2
-            ){
+        if(pageData.length<2){
 
-                alert(
-                    "पहले 2-page PAN template load करें।"
-                );
+            alert(
+                "पहले 2-page PAN template load करें।"
+            );
 
-                return;
+            return;
 
-            }
+        }
 
 
-            if(
-                pageData.length !== 4
-            ){
+        if(pageData.length!==4){
 
-                alert(
-                    "Final PDF के लिए 2 PAN + 2 A4 = कुल 4 pages रखें।"
-                );
+            alert(
+                "Final PDF के लिए 2 PAN + 2 A4 = कुल 4 pages रखें।"
+            );
 
-                return;
+            return;
 
-            }
+        }
 
 
-            status(
-                "Final PDF तैयार हो रहा है… कृपया प्रतीक्षा करें।"
+        finalPdfBytes=null;
+
+
+        document.getElementById(
+            "downloadBtn"
+        ).disabled=true;
+
+
+        status(
+            "High-quality PDF तैयार हो रहा है… कृपया प्रतीक्षा करें।"
+        );
+
+
+        /*
+            User की exact सीमा
+        */
+
+        const MIN_BYTES =
+            Math.ceil(
+                1.50 *
+                1048576
             );
 
 
-            /*
-             * Exact allowed range:
-             *
-             * Minimum = 1.50 MB
-             * Maximum = 1.70 MB
-             */
+        const MAX_BYTES =
+            Math.floor(
+                1.70 *
+                1048576
+            );
 
-            const MIN_BYTES =
-                Math.ceil(
-                    1.50 *
-                    1024 *
-                    1024
+
+        /*
+            पहले high-quality setting।
+            जरूरत पड़ने पर compression।
+        */
+
+        const attempts=[
+
+            {scale:3.0, quality:.96},
+
+            {scale:3.0, quality:.95},
+
+            {scale:3.0, quality:.94},
+
+            {scale:3.0, quality:.93},
+
+            {scale:3.0, quality:.92},
+
+            {scale:2.8, quality:.94},
+
+            {scale:2.8, quality:.92},
+
+            {scale:2.7, quality:.92},
+
+            {scale:2.6, quality:.92},
+
+            {scale:2.5, quality:.92},
+
+            {scale:2.5, quality:.90},
+
+            {scale:2.4, quality:.90},
+
+            {scale:2.3, quality:.90},
+
+            {scale:2.2, quality:.90},
+
+            {scale:2.1, quality:.90}
+
+        ];
+
+
+        let bestUnderMax=null;
+
+        let bestUnderMaxSize=0;
+
+
+        for(
+            let i=0;
+            i<attempts.length;
+            i++
+        ){
+
+            const setting =
+                attempts[i];
+
+
+            status(
+                `PDF quality तैयार हो रही है… ${i+1}/${attempts.length}`
+            );
+
+
+            const pdfBytes =
+                await createRasterPdf(
+                    setting.scale,
+                    setting.quality
                 );
 
 
-            const MAX_BYTES =
-                Math.floor(
-                    1.70 *
-                    1024 *
-                    1024
-                );
+            const size =
+                pdfBytes.length;
 
 
             /*
-             * पहले 1.55 MB के आसपास
-             * वास्तविक PDF बनाने की कोशिश।
-             */
+                Maximum के अंदर सबसे अच्छी
+                quality वाला PDF save रखें।
+            */
 
-            const PAD_TARGET =
-                Math.ceil(
-                    1.55 *
-                    1024 *
-                    1024
-                );
-
-
-            let quality =
-                0.82;
-
-
-            let scale =
-                1.00;
-
-
-            let validPdf =
-                null;
-
-
-            /*
-             * Compression attempts.
-             */
-
-            for(
-                let attempt=0;
-                attempt<16;
-                attempt++
+            if(
+                size<=MAX_BYTES &&
+                size>bestUnderMaxSize
             ){
 
-                const images =
-                    [];
+                bestUnderMax =
+                    pdfBytes;
+
+                bestUnderMaxSize =
+                    size;
+
+            }
 
 
-                for(
-                    let i=0;
-                    i<4;
-                    i++
-                ){
+            /*
+                अगर minimum और maximum
+                के बीच आ गया तो यही लें।
+            */
 
-                    const canvas =
-                        await renderFinalPage(
-                            i,
-                            scale
-                        );
+            if(
+                size>=MIN_BYTES &&
+                size<=MAX_BYTES
+            ){
+
+                finalPdfBytes =
+                    pdfBytes;
+
+                break;
+
+            }
+
+        }
 
 
-                    const blob =
-                        await jpegBlob(
-                            canvas,
-                            quality
-                        );
+        /*
+            अगर generated PDF minimum से छोटा है,
+            तो valid trailing padding से
+            1.50 MB तक बढ़ाएँ।
+        */
 
+        if(!finalPdfBytes){
 
-                    images.push(
-                        blob
+            if(
+                bestUnderMax &&
+                bestUnderMaxSize<MIN_BYTES
+            ){
+
+                const target =
+                    Math.ceil(
+                        1.55 *
+                        1048576
                     );
 
-                }
 
-
-                const pdf =
-                    await PDFDocument
-                    .create();
-
-
-                for(
-                    const imageBlob
-                    of images
-                ){
-
-                    const bytes =
-                        new Uint8Array(
-                            await imageBlob
-                            .arrayBuffer()
-                        );
-
-
-                    const jpg =
-                        await pdf
-                        .embedJpg(
-                            bytes
-                        );
-
-
-                    const page =
-                        pdf.addPage(
-                            [
-                                A4.w,
-                                A4.h
-                            ]
-                        );
-
-
-                    page.drawImage(
-                        jpg,
-                        {
-                            x:0,
-                            y:0,
-
-                            width:A4.w,
-                            height:A4.h
-                        }
-                    );
-
-                }
-
-
-                const pdfBytes =
-                    await pdf.save({
-                        useObjectStreams:true
-                    });
-
-
-                /*
-                 * अगर वास्तविक PDF
-                 * 1.70 MB के अंदर है,
-                 * तो minimum size तक padding करें।
-                 */
-
-                if(
-                    pdfBytes.length <=
-                    MAX_BYTES
-                ){
-
-                    try{
-
-                        const padded =
-                            padPdfToMinimum(
-                                pdfBytes,
-                                PAD_TARGET,
-                                MAX_BYTES
-                            );
-
-
-                        if(
-                            padded.length >=
-                            MIN_BYTES &&
-
-                            padded.length <=
+                const padded =
+                    padPdfAfterEOF(
+                        bestUnderMax,
+                        Math.min(
+                            target,
                             MAX_BYTES
-                        ){
+                        ),
+                        MAX_BYTES
+                    );
 
-                            validPdf =
-                                padded;
-
-                            break;
-
-                        }
-
-                    }
-                    catch(error){
-
-                        console.log(
-                            error
-                        );
-
-                    }
-
-                }
-
-
-                /*
-                 * PDF अभी बड़ा है,
-                 * इसलिए quality/resolution कम करें।
-                 */
 
                 if(
-                    quality > 0.35
+                    padded.length>=MIN_BYTES &&
+                    padded.length<=MAX_BYTES
                 ){
 
-                    quality =
-                        Math.max(
-                            0.35,
-                            quality - 0.05
-                        );
-
-                }
-                else{
-
-                    scale =
-                        Math.max(
-                            0.55,
-                            scale - 0.07
-                        );
+                    finalPdfBytes =
+                        padded;
 
                 }
 
             }
 
-
-            if(!validPdf){
-
-                throw new Error(
-                    "Final PDF को 1.50 MB से 1.70 MB की निर्धारित सीमा में तैयार नहीं किया जा सका।"
-                );
-
-            }
+        }
 
 
-            /*
-             * अंतिम size check।
-             */
+        /*
+            Final fallback
+        */
 
-            const finalSize =
-                validPdf.length;
-
+        if(!finalPdfBytes){
 
             if(
-                finalSize <
-                MIN_BYTES
+                bestUnderMax &&
+                bestUnderMaxSize>=MIN_BYTES &&
+                bestUnderMaxSize<=MAX_BYTES
             ){
 
-                throw new Error(
-                    "Final PDF 1.50 MB से छोटा है।"
-                );
+                finalPdfBytes =
+                    bestUnderMax;
 
             }
-
-
-            if(
-                finalSize >
-                MAX_BYTES
-            ){
-
-                throw new Error(
-                    "Final PDF 1.70 MB से बड़ा है।"
-                );
-
-            }
-
-
-            finalPdfBytes =
-                validPdf;
-
-
-            document
-            .getElementById(
-                "downloadBtn"
-            )
-            .disabled =
-                false;
-
-
-            status(
-                `PDF तैयार है • 4 Pages • Size ${getMB(finalSize).toFixed(2)} MB • 1.50–1.70 MB सीमा में`,
-                true
-            );
 
         }
-        catch(error){
-
-            console.error(
-                error
-            );
 
 
-            finalPdfBytes =
-                null;
+        if(!finalPdfBytes){
 
-
-            document
-            .getElementById(
-                "downloadBtn"
-            )
-            .disabled =
-                true;
-
-
-            status(
-                "PDF बनाने में Error: " +
-                error.message
+            throw new Error(
+                "इस सामग्री को 1.50–1.70 MB सीमा में रखते हुए पर्याप्त quality के साथ PDF बनाना संभव नहीं हुआ।"
             );
 
         }
 
-    };
+
+        const finalSize =
+            finalPdfBytes.length;
 
 
-/* DOWNLOAD */
+        if(
+            finalSize<MIN_BYTES ||
+            finalSize>MAX_BYTES
+        ){
 
-document
-.getElementById(
+            throw new Error(
+                "Final PDF 1.50–1.70 MB सीमा में नहीं है।"
+            );
+
+        }
+
+
+        document.getElementById(
+            "downloadBtn"
+        ).disabled=false;
+
+
+        status(
+            `PDF तैयार है • 4 pages • ${mb(finalSize).toFixed(2)} MB • 1.50–1.70 MB सीमा में`,
+            true
+        );
+
+
+    }
+    catch(error){
+
+        console.error(error);
+
+
+        finalPdfBytes=null;
+
+
+        document.getElementById(
+            "downloadBtn"
+        ).disabled=true;
+
+
+        status(
+            "PDF बनाने में error: "
+            + error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+document.getElementById(
     "downloadBtn"
-)
-.onclick =
-    () => {
+).onclick=()=>{
 
-        if(!finalPdfBytes)return;
+    if(!finalPdfBytes)return;
 
 
-        const blob =
-            new Blob(
-                [
-                    finalPdfBytes
-                ],
-                {
-                    type:
-                        "application/pdf"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const link =
-            document.createElement(
-                "a"
-            );
-
-
-        link.href =
-            url;
-
-
-        link.download =
-            "PAN_Application_Final.pdf";
-
-
-        document.body.appendChild(
-            link
+    const blob =
+        new Blob(
+            [finalPdfBytes],
+            {
+                type:"application/pdf"
+            }
         );
 
 
-        link.click();
-
-
-        link.remove();
-
-
-        setTimeout(
-            () => {
-
-                URL.revokeObjectURL(
-                    url
-                );
-
-            },
-            1000
+    const url =
+        URL.createObjectURL(
+            blob
         );
 
-    };
+
+    const link =
+        document.createElement("a");
 
 
-/* RESIZE */
+    link.href=url;
+
+    link.download =
+        "PAN_Application_Final.pdf";
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+    setTimeout(
+        ()=>{
+            URL.revokeObjectURL(url);
+        },
+        1500
+    );
+
+};
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
 
 window.addEventListener(
     "resize",
-    () => {
+    ()=>{
 
-        if(
-            pageData.length
-        ){
+        if(pageData.length){
 
             renderPages();
 
