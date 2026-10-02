@@ -222,7 +222,7 @@ input[type=file]{
 
 .overlay{
     position:absolute;
-    display:none;
+    display:block;
     touch-action:none;
     cursor:move;
     outline:1px dashed rgba(11,87,208,.65);
@@ -638,9 +638,6 @@ const MAX_PAGES = 4;
 
 const BASE_PAGES = 2;
 
-/*
-   एक A4 page पर अधिकतम 2 documents.
-*/
 const MAX_DOCUMENTS_PER_A4 = 2;
 
 
@@ -694,6 +691,9 @@ let cropper = null;
 let editorMode = "";
 
 let editorDone = null;
+
+/* Final PDF bytes */
+let finalPdfBytes = null;
 
 
 /* =========================================================
@@ -811,7 +811,6 @@ async function loadTemplate(bytes){
 
     templatePdfBytes =
         bytes.slice(0);
-
 
     templatePdf =
         await pdfjsLib.getDocument({
@@ -1189,11 +1188,6 @@ function makePageCard(index){
 
     else{
 
-        /*
-           अब page.doc नहीं है।
-           page.docs array है।
-        */
-
         if(
             page.docs &&
             page.docs.length
@@ -1476,6 +1470,7 @@ function makePageCard(index){
 
                 e.stopPropagation();
 
+
                 selectedA4=index;
 
 
@@ -1559,6 +1554,7 @@ function addOverlay(
         "overlay";
 
 
+    /* हमेशा visible */
     overlay.style.display =
         "block";
 
@@ -1942,11 +1938,6 @@ document.getElementById(
 
         canvas:canvas,
 
-        /*
-           सबसे महत्वपूर्ण बदलाव:
-           एक document के बजाय array.
-        */
-
         docs:[]
 
     });
@@ -2040,11 +2031,6 @@ documentInput.addEventListener(
         const page =
             pageData[targetPage];
 
-
-        /*
-           दूसरा upload पहले document को
-           replace नहीं करेगा।
-        */
 
         if(
             !page.docs
@@ -2153,11 +2139,6 @@ documentInput.addEventListener(
                         );
 
 
-                    /*
-                       2 documents को A4 page पर
-                       default अलग-अलग जगह रखा जाएगा।
-                    */
-
                     const docNumber =
                         page.docs.length;
 
@@ -2197,10 +2178,6 @@ documentInput.addEventListener(
 
 
                     if(docNumber===1){
-
-                        /*
-                           दूसरा document नीचे।
-                        */
 
                         y =
                             Math.max(
@@ -2258,11 +2235,6 @@ documentInput.addEventListener(
 
         }
 
-
-        /*
-           Input reset जरूरी है ताकि
-           अगली बार वही file भी select की जा सके।
-        */
 
         documentInput.value="";
 
@@ -3132,12 +3104,6 @@ async function renderFinalRasterPage(
     );
 
 
-    /*
-       मुख्य बदलाव:
-       A4 के सभी documents PDF में
-       अलग-अलग draw होंगे।
-    */
-
     if(
         page.docs &&
         page.docs.length
@@ -3446,12 +3412,6 @@ document.getElementById(
             );
 
 
-        /*
-           पहले से थोड़ा ज्यादा quality।
-           अगर size सीमा से ऊपर जाए तो
-           धीरे-धीरे compression होगी।
-        */
-
         const attempts=[
 
             {scale:3.20,quality:.97},
@@ -3542,11 +3502,6 @@ document.getElementById(
 
         }
 
-
-        /*
-           यदि quality वाला PDF 1.50 MB से छोटा है,
-           तो उसे 1.55 MB तक safely बढ़ाएँ।
-        */
 
         if(!finalPdfBytes){
 
