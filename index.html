@@ -1,1117 +1,2667 @@
-```html
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Photo Print System</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            color: #222;
-        }
-
-        /* HEADER */
-        header {
-            background: linear-gradient(
-                to right,
-                #ff9933,
-                #ffffff,
-                #138808
-            );
-
-            padding: 22px 15px;
-            text-align: center;
-
-            border-bottom: 1px solid #ddd;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-
-        /* MAIN */
-        .container {
-            width: 95%;
-            max-width: 900px;
-            margin: 25px auto;
-        }
-
-        /* SEARCH */
-        .search-area {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        #searchInput {
-            flex: 1;
-
-            height: 52px;
-
-            padding: 0 15px;
-
-            border: 1px solid #aaa;
-            border-radius: 8px;
-
-            font-size: 17px;
-
-            outline: none;
-        }
-
-        #searchInput:focus {
-            border-color: #2563eb;
-        }
-
-        #searchButton {
-            height: 52px;
-
-            padding: 0 25px;
-
-            border: none;
-            border-radius: 8px;
-
-            background: #2563eb;
-            color: white;
-
-            font-size: 17px;
-            font-weight: bold;
-
-            cursor: pointer;
-        }
-
-        #searchButton:hover {
-            background: #1d4ed8;
-        }
-
-        /* SEARCH RESULT */
-        #results {
-            margin-top: 15px;
-        }
-
-        .result-card {
-            background: white;
-
-            border: 1px solid #ddd;
-            border-radius: 10px;
-
-            padding: 16px;
-
-            margin-bottom: 10px;
-
-            cursor: pointer;
-        }
-
-        .result-card:hover {
-            background: #eff6ff;
-            border-color: #2563eb;
-        }
-
-        .result-title {
-            font-size: 19px;
-            font-weight: bold;
-        }
-
-        .result-size {
-            margin-top: 6px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .no-result {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-
-            padding: 16px;
-
-            color: #dc2626;
-        }
-
-        /* EDITOR */
-        #editor {
-            display: none;
-
-            margin-top: 20px;
-
-            background: white;
-
-            padding: 20px;
-
-            border-radius: 12px;
-
-            border: 1px solid #ddd;
-        }
-
-        #editorTitle {
-            margin-top: 0;
-        }
-
-        .details {
-            background: #f8fafc;
-
-            padding: 12px;
-
-            border-radius: 8px;
-
-            line-height: 1.8;
-
-            margin-bottom: 20px;
-        }
-
-        /* UPLOAD */
-        .upload-section {
-            text-align: center;
-
-            border: 2px dashed #2563eb;
-
-            border-radius: 10px;
-
-            background: #eff6ff;
-
-            padding: 25px 15px;
-        }
-
-        #uploadButton {
-            display: inline-block;
-
-            background: #2563eb;
-
-            color: white;
-
-            padding: 13px 22px;
-
-            border-radius: 8px;
-
-            cursor: pointer;
-
-            font-size: 17px;
-
-            font-weight: bold;
-        }
-
-        #photoInput {
-            display: none;
-        }
-
-        #fileName {
-            margin-top: 12px;
-
-            color: #555;
-
-            word-break: break-word;
-        }
-
-        /* PREVIEW */
-        #previewHeading {
-            margin-top: 25px;
-        }
-
-        #a4Page {
-            width: 210mm;
-            height: 297mm;
-
-            background: white;
-
-            position: relative;
-
-            overflow: hidden;
-
-            margin: 0 auto;
-
-            box-shadow:
-                0 0 10px rgba(0, 0, 0, 0.20);
-        }
-
-        .placed-photo {
-            position: absolute;
-
-            object-fit: cover;
-
-            display: block;
-        }
-
-        /* PRINT */
-        #printButton {
-            width: 100%;
-
-            margin-top: 18px;
-
-            padding: 14px;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background: #16a34a;
-
-            color: white;
-
-            font-size: 18px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-        }
-
-        #printButton:hover {
-            background: #15803d;
-        }
-
-        /* MOBILE */
-        @media (max-width: 700px) {
-
-            .search-area {
-                flex-direction: column;
-            }
-
-            #searchButton {
-                width: 100%;
-            }
-
-            #a4Page {
-                transform-origin: top left;
-                transform: scale(0.42);
-
-                margin-bottom: -170mm;
-            }
-        }
-
-        /* PRINT */
-        @media print {
-
-            @page {
-                size: A4 portrait;
-                margin: 0;
-            }
-
-            html,
-            body {
-                margin: 0;
-                padding: 0;
-
-                background: white;
-            }
-
-            header,
-            .search-area,
-            #results,
-            #editor > h2,
-            .details,
-            .upload-section,
-            #previewHeading,
-            #printButton {
-                display: none !important;
-            }
-
-            .container {
-                width: 210mm;
-                max-width: none;
-
-                margin: 0;
-                padding: 0;
-            }
-
-            #editor {
-                display: block !important;
-
-                margin: 0;
-                padding: 0;
-
-                border: none;
-            }
-
-            #a4Page {
-                width: 210mm;
-                height: 297mm;
-
-                margin: 0;
-
-                box-shadow: none;
-
-                transform: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAN PDF Maker</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#eef1f5;
+    color:#111;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+header{
+    background:#fff;
+    border-bottom:1px solid #ddd;
+    padding:12px 16px;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+h1{
+    margin:0;
+    font-size:20px;
+}
+
+.sub{
+    font-size:12px;
+    color:#666;
+    margin-top:3px;
+}
+
+button,.fileBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    border:0;
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:14px;
+    cursor:pointer;
+    background:#0b57d0;
+    color:#fff;
+    text-align:center;
+}
+
+button.secondary{
+    background:#fff;
+    color:#111;
+    border:1px solid #ccc;
+}
+
+button.danger{
+    background:#c62828;
+}
+
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+input[type=file]{
+    display:none;
+}
+
+/* MAIN LAYOUT */
+.appLayout{
+    display:grid;
+    grid-template-columns:250px minmax(0,1fr);
+    gap:14px;
+    max-width:1500px;
+    margin:14px auto;
+    padding:0 14px;
+    align-items:start;
+}
+
+/* LEFT SIDEBAR */
+.sidebar{
+    background:#fff;
+    border:1px solid #d8dce1;
+    border-radius:12px;
+    padding:12px;
+    position:sticky;
+    top:82px;
+    z-index:10;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.sidebarTitle{
+    font-size:16px;
+    font-weight:700;
+    margin:2px 0 10px;
+}
+
+.sidebar .subTitle{
+    font-size:12px;
+    color:#666;
+    line-height:1.4;
+    margin-bottom:10px;
+}
+
+.toolGroup{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+/* RIGHT WORKSPACE */
+.workspace{
+    min-width:0;
+}
+
+.workspaceHead{
+    background:#fff;
+    border:1px solid #d8dce1;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+}
+
+.workspaceHead h2{
+    font-size:17px;
+    margin:0 0 4px;
+}
+
+.workspaceHead p{
+    font-size:12px;
+    color:#666;
+    margin:0;
+}
+
+.status{
+    font-size:13px;
+    padding:9px 10px;
+    background:#f7f7f7;
+    border-radius:8px;
+    margin-top:10px;
+}
+
+/* PAGES */
+.pages{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+    gap:16px;
+    align-items:start;
+}
+
+.pageCard{
+    background:#fff;
+    border:2px solid #d2d6db;
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.pageCard.selected{
+    border-color:#0b57d0;
+    box-shadow:0 0 0 2px rgba(11,87,208,.08);
+}
+
+.pageTitle{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-weight:bold;
+    margin-bottom:8px;
+    gap:8px;
+}
+
+.canvasWrap{
+    position:relative;
+    width:100%;
+    background:#ddd;
+    overflow:hidden;
+    border:1px solid #bbb;
+    cursor:default;
+}
+
+.canvasWrap canvas{
+    display:block;
+    width:100%;
+    height:auto;
+}
+
+.overlay{
+    position:absolute;
+    display:none;
+    touch-action:none;
+    cursor:move;
+    outline:1px dashed rgba(11,87,208,.5);
+}
+
+.overlay img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:fill;
+    pointer-events:none;
+}
+
+.handle{
+    position:absolute;
+    right:-7px;
+    bottom:-7px;
+    width:16px;
+    height:16px;
+    background:#0b57d0;
+    border:2px solid #fff;
+    border-radius:50%;
+    cursor:nwse-resize;
+}
+
+.controls{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+
+.controls button{
+    width:auto;
+    flex:1 1 auto;
+}
+
+.small{
+    font-size:12px;
+    color:#666;
+}
+
+.empty{
+    padding:35px;
+    text-align:center;
+    color:#777;
+    pointer-events:none;
+}
+
+/* EDITOR */
+#editorModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal{
+    background:#fff;
+    width:min(980px,100%);
+    max-height:95vh;
+    overflow:auto;
+    border-radius:12px;
+    padding:14px;
+}
+
+.modal h2{
+    margin:0 0 10px;
+    font-size:18px;
+}
+
+#cropImage{
+    max-width:100%;
+    max-height:60vh;
+    display:block;
+    margin:auto;
+}
+
+.modalActions{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.modalActions button{
+    width:auto;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.range{
+    width:220px;
+}
+
+.notice{
+    background:#fff8e1;
+    border:1px solid #f0c36d;
+    padding:10px;
+    border-radius:8px;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.success{
+    background:#e8f5e9;
+    border-color:#9ad29e;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+
+    .appLayout{
+        grid-template-columns:210px minmax(0,1fr);
+    }
+
+    .pages{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    header{
+        position:relative;
+    }
+
+    .appLayout{
+        grid-template-columns:1fr;
+        margin-top:10px;
+    }
+
+    .sidebar{
+        position:relative;
+        top:auto;
+    }
+
+    .toolGroup{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .toolGroup button,
+    .toolGroup .fileBtn{
+        width:100%;
+    }
+
+    .pages{
+        grid-template-columns:1fr;
+    }
+
+    .controls button{
+        width:100%;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <header>
-        <h1>Photo Print System</h1>
-    </header>
+<header>
+    <h1>PAN PDF Maker</h1>
+    <div class="sub">
+        Photo + Signature + 2 अतिरिक्त A4 पेज • अधिकतम 4 पेज • PDF को 2 MB से कम रखने की कोशिश
+    </div>
+</header>
+
+<div class="appLayout">
+
+<!-- LEFT CONTROL PANEL -->
+<aside class="sidebar">
+
+    <div class="sidebarTitle">
+        Controls
+    </div>
+
+    <div class="subTitle">
+        बाईं तरफ से काम करें और दाईं तरफ live PDF preview में हर बदलाव तुरंत देखें।
+    </div>
+
+    <div class="toolGroup">
+
+        <label class="fileBtn">
+            PAN Template PDF
+            <input id="templateInput" type="file" accept="application/pdf">
+        </label>
+
+        <label class="fileBtn">
+            Add Photo
+            <input id="photoInput" type="file" accept="image/*">
+        </label>
+
+        <label class="fileBtn">
+            Add Signature
+            <input id="signatureInput" type="file" accept="image/*">
+        </label>
+
+        <button id="addPageBtn">
+            Add A4 Page
+        </button>
+
+        <button id="addDocumentBtn" class="secondary">
+            Add Document
+        </button>
+
+        <input
+            id="documentInput"
+            type="file"
+            accept="image/*,application/pdf"
+            hidden
+        >
+
+        <button id="makePdfBtn">
+            Final PDF बनाएं
+        </button>
+
+        <button id="downloadBtn" class="success" disabled>
+            PDF Download
+        </button>
+
+    </div>
+
+</aside>
 
 
-    <div class="container">
+<!-- RIGHT WORKSPACE -->
+<main class="workspace">
 
-        <!-- SEARCH -->
-        <div class="search-area">
+    <div class="workspaceHead">
 
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Aadhaar Card / Passport Size Photo / PAN Card"
-                autocomplete="off"
-            >
+        <h2>
+            Live PDF Preview
+        </h2>
+
+        <p>
+            यहाँ PAN template, Photo, Signature और नए A4 page पर लगाए गए documents की वास्तविक स्थिति दिखाई देगी।
+            किसी object को drag करके move और नीचे वाले handle से resize करें।
+        </p>
+
+        <div id="status" class="status">
+            पहले अपना 2-page PAN template PDF चुनें।
+            GitHub पर इसे <b>pan-template.pdf</b> नाम से इसी folder में रखने पर यह auto-load हो सकता है।
+        </div>
+
+        <div class="notice">
+            <b>Template:</b>
+            app template PDF के पहले 2 pages को PAN pages मानेगा।
+            Photo Page 1 पर दो जगह और Signature Page 1 + Page 2 पर रखा जाता है।
+        </div>
+
+    </div>
+
+    <div id="pages" class="pages"></div>
+
+</main>
+
+</div>
+
+
+<!-- IMAGE EDITOR -->
+<div id="editorModal">
+
+    <div class="modal">
+
+        <h2 id="editorTitle">
+            Image Editor
+        </h2>
+
+        <div
+            class="row"
+            id="signatureTools"
+            style="display:none"
+        >
+
+            <label>
+                Background हटाने की सीमा:
+
+                <input
+                    id="threshold"
+                    class="range"
+                    type="range"
+                    min="150"
+                    max="250"
+                    value="235"
+                >
+            </label>
+
+            <span id="thresholdValue">
+                235
+            </span>
 
             <button
-                type="button"
-                id="searchButton"
+                id="previewBgBtn"
+                class="secondary"
             >
-                Search
+                Preview Background
             </button>
 
         </div>
 
+        <div style="margin-top:10px;overflow:hidden">
 
-        <!-- RESULTS -->
-        <div id="results"></div>
-
-
-        <!-- EDITOR -->
-        <div id="editor">
-
-            <h2 id="editorTitle"></h2>
-
-
-            <div class="details">
-
-                <div>
-                    <strong>Official Size:</strong>
-                    <span id="sizeText"></span>
-                </div>
-
-                <div>
-                    <strong>A4 में फोटो:</strong>
-                    <span id="countText"></span>
-                </div>
-
-            </div>
-
-
-            <!-- UPLOAD -->
-            <div class="upload-section">
-
-                <label
-                    for="photoInput"
-                    id="uploadButton"
-                >
-                    📷 फोटो Upload करें
-                </label>
-
-                <input
-                    type="file"
-                    id="photoInput"
-                    accept="image/jpeg,image/png,image/webp,image/*"
-                >
-
-                <div id="fileName">
-                    अभी कोई फोटो नहीं चुनी गई।
-                </div>
-
-            </div>
-
-
-            <!-- PREVIEW -->
-            <h3 id="previewHeading">
-                A4 Print Preview
-            </h3>
-
-            <div id="a4Page"></div>
-
-
-            <!-- PRINT -->
-            <button
-                type="button"
-                id="printButton"
+            <img
+                id="cropImage"
+                alt="crop"
             >
-                🖨️ Print करें
+
+        </div>
+
+        <div
+            class="small"
+            style="margin-top:8px"
+        >
+            Crop box को drag/resize करके सही हिस्सा चुनें।
+        </div>
+
+        <div class="modalActions">
+
+            <button
+                id="cancelEditor"
+                class="secondary"
+            >
+                Cancel
+            </button>
+
+            <button id="applyEditor">
+                Done
             </button>
 
         </div>
 
     </div>
 
-
-    <script>
-
-        /*
-         * DOCUMENT SETTINGS
-         */
-
-        const documentList = [
-
-            {
-                id: "aadhaar",
-                name: "Aadhaar Card",
-                searchWords: [
-                    "aadhaar",
-                    "aadhar",
-                    "आधार",
-                    "आधार कार्ड"
-                ],
-                width: 86,
-                height: 54
-            },
-
-            {
-                id: "passport",
-                name: "Passport Size Photo",
-                searchWords: [
-                    "passport",
-                    "passport photo",
-                    "passport size",
-                    "passport size photo",
-                    "पासपोर्ट",
-                    "पासपोर्ट फोटो",
-                    "पासपोर्ट साइज",
-                    "पासपोर्ट साइज फोटो"
-                ],
-                width: 35,
-                height: 45
-            },
-
-            {
-                id: "pan",
-                name: "PAN Card",
-                searchWords: [
-                    "pan",
-                    "pan card",
-                    "पैन",
-                    "पैन कार्ड"
-                ],
-                width: 85.60,
-                height: 53.98
-            }
-
-        ];
+</div>
 
 
-        /*
-         * ELEMENTS
-         */
+<script type="module">
 
-        const searchInput =
-            document.getElementById("searchInput");
+const pdfjsLib = await import(
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+);
 
-        const searchButton =
-            document.getElementById("searchButton");
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
 
-        const results =
-            document.getElementById("results");
-
-        const editor =
-            document.getElementById("editor");
-
-        const editorTitle =
-            document.getElementById("editorTitle");
-
-        const sizeText =
-            document.getElementById("sizeText");
-
-        const countText =
-            document.getElementById("countText");
-
-        const photoInput =
-            document.getElementById("photoInput");
-
-        const fileName =
-            document.getElementById("fileName");
-
-        const a4Page =
-            document.getElementById("a4Page");
-
-        const printButton =
-            document.getElementById("printButton");
+const {
+    PDFDocument,
+    rgb
+} = PDFLib;
 
 
-        /*
-         * SELECTED DOCUMENT
-         */
+/* BASIC SETTINGS */
 
-        let selectedDocument = null;
+const A4 = {
+    w:595.28,
+    h:841.89
+};
+
+const MAX_PAGES = 4;
+const BASE_PAGES = 2;
 
 
-        /*
-         * SEARCH BUTTON
-         */
+/* STATE */
 
-        searchButton.addEventListener(
-            "click",
-            function () {
+let templatePdfBytes = null;
+let templatePdf = null;
+let pageData = [];
+let selectedA4 = -1;
 
-                performSearch();
+let cropper = null;
+let editorMode = "";
+let editorFile = null;
 
-            }
+let signatureProcessed = false;
+let finalPdfBytes = null;
+
+
+/* ELEMENTS */
+
+const statusEl =
+    document.getElementById("status");
+
+const pagesEl =
+    document.getElementById("pages");
+
+const templateInput =
+    document.getElementById("templateInput");
+
+const photoInput =
+    document.getElementById("photoInput");
+
+const signatureInput =
+    document.getElementById("signatureInput");
+
+const documentInput =
+    document.getElementById("documentInput");
+
+
+/* STATUS */
+
+function status(t,ok=false){
+
+    statusEl.innerHTML = t;
+
+    statusEl.className =
+        "status" + (ok ? " success" : "");
+}
+
+
+/* FILE READER */
+
+function readFile(file){
+
+    return new Promise((resolve,reject)=>{
+
+        const r =
+            new FileReader();
+
+        r.onload = () =>
+            resolve(r.result);
+
+        r.onerror =
+            reject;
+
+        r.readAsArrayBuffer(file);
+
+    });
+
+}
+
+
+/* TEMPLATE LOAD */
+
+async function loadTemplate(bytes){
+
+    templatePdfBytes = bytes;
+
+    templatePdf =
+        await pdfjsLib
+        .getDocument({
+            data:bytes.slice(0)
+        })
+        .promise;
+
+    if(templatePdf.numPages < 2){
+
+        throw new Error(
+            "Template PDF में कम-से-कम 2 pages होने चाहिए।"
         );
 
+    }
 
-        /*
-         * ENTER KEY SEARCH
-         */
+    pageData = [];
 
-        searchInput.addEventListener(
-            "keydown",
-            function (event) {
+    for(let i=0;i<2;i++){
 
-                if (event.key === "Enter") {
+        const pdfPage =
+            await templatePdf.getPage(i+1);
 
-                    event.preventDefault();
+        const viewport =
+            pdfPage.getViewport({
+                scale:1
+            });
 
-                    performSearch();
+        const canvas =
+            document.createElement("canvas");
 
+        canvas.width =
+            viewport.width;
+
+        canvas.height =
+            viewport.height;
+
+        await pdfPage.render({
+
+            canvasContext:
+                canvas.getContext("2d"),
+
+            viewport
+
+        }).promise;
+
+        pageData.push({
+
+            type:"base",
+
+            canvas,
+
+            photo1:null,
+            photo2:null,
+
+            sig1:null,
+            sig2:null
+
+        });
+
+    }
+
+    selectedA4 = -1;
+
+    renderPages();
+
+    status(
+        "2 PAN pages तैयार हैं। अब Add Photo और Add Signature करें।",
+        true
+    );
+
+}
+
+
+/* MANUAL TEMPLATE */
+
+templateInput.addEventListener(
+    "change",
+    async e=>{
+
+        const f =
+            e.target.files[0];
+
+        if(!f)return;
+
+        try{
+
+            await loadTemplate(
+                await readFile(f)
+            );
+
+        }
+        catch(err){
+
+            console.error(err);
+
+            status(
+                "Template load नहीं हुआ: "
+                + err.message
+            );
+
+        }
+
+    }
+);
+
+
+/* AUTO TEMPLATE */
+
+async function autoLoadTemplate(){
+
+    try{
+
+        const r =
+            await fetch(
+                "./pan-template.pdf",
+                {
+                    cache:"no-store"
                 }
+            );
 
-            }
+        if(!r.ok)return;
+
+        await loadTemplate(
+            await r.arrayBuffer()
         );
 
+    }
+    catch(e){
 
-        /*
-         * SEARCH FUNCTION
-         */
+        console.log(
+            "Auto template नहीं मिला।"
+        );
 
-        function performSearch() {
+    }
 
-            const searchText =
-                searchInput.value
-                    .trim()
-                    .toLowerCase();
+}
 
-
-            results.innerHTML = "";
-
-            editor.style.display = "none";
-
-            selectedDocument = null;
-
-            a4Page.innerHTML = "";
-
-            photoInput.value = "";
-
-            fileName.textContent =
-                "अभी कोई फोटो नहीं चुनी गई।";
+autoLoadTemplate();
 
 
-            if (searchText === "") {
+/* PAGE CARD */
 
-                results.innerHTML = `
-                    <div class="no-result">
-                        कृपया Aadhaar Card, Passport Size Photo
-                        या PAN Card लिखें।
-                    </div>
-                `;
+function makePageCard(i){
 
-                return;
-            }
+    const p =
+        pageData[i];
 
+    const card =
+        document.createElement("div");
 
-            const foundDocuments =
-                documentList.filter(function (item) {
-
-                    return item.searchWords.some(
-                        function (word) {
-
-                            return word
-                                .toLowerCase()
-                                .includes(searchText)
-                                ||
-                                searchText.includes(
-                                    word.toLowerCase()
-                                );
-
-                        }
-                    );
-
-                });
+    card.className =
+        "pageCard" +
+        (i===selectedA4 ? " selected" : "");
 
 
-            if (foundDocuments.length === 0) {
+    const title =
+        document.createElement("div");
 
-                results.innerHTML = `
-                    <div class="no-result">
-                        कोई विकल्प नहीं मिला।
-                    </div>
-                `;
+    title.className =
+        "pageTitle";
 
-                return;
-            }
-
-
-            foundDocuments.forEach(
-                function (item) {
-
-                    const card =
-                        document.createElement("div");
-
-                    card.className =
-                        "result-card";
-
-                    card.innerHTML = `
-                        <div class="result-title">
-                            ${item.name}
-                        </div>
-
-                        <div class="result-size">
-                            Official Size:
-                            ${item.width} ×
-                            ${item.height} mm
-                        </div>
-                    `;
+    title.innerHTML =
+        `<span>
+            Page ${i+1}
+            ${i<2 ? " • PAN" : " • A4 Added"}
+        </span>`;
 
 
-                    card.addEventListener(
-                        "click",
-                        function () {
+    /* DELETE A4 */
 
-                            selectDocument(item);
+    if(i>=2){
 
-                        }
-                    );
+        const del =
+            document.createElement("button");
+
+        del.textContent =
+            "Remove";
+
+        del.className =
+            "danger";
+
+        del.style.width =
+            "auto";
+
+        del.onclick = ()=>{
+
+            pageData.splice(i,1);
+
+            selectedA4 =
+                pageData.length>2
+                ? Math.min(
+                    i,
+                    pageData.length-1
+                  )
+                : -1;
+
+            renderPages();
+
+        };
+
+        title.appendChild(del);
+
+    }
 
 
-                    results.appendChild(card);
+    card.appendChild(title);
 
-                }
+
+    /* CANVAS */
+
+    const wrap =
+        document.createElement("div");
+
+    wrap.className =
+        "canvasWrap";
+
+
+    const c =
+        document.createElement("canvas");
+
+    c.width =
+        p.canvas.width;
+
+    c.height =
+        p.canvas.height;
+
+    c.getContext("2d")
+        .drawImage(
+            p.canvas,
+            0,
+            0
+        );
+
+    wrap.appendChild(c);
+
+
+    /* PAN PAGES */
+
+    if(i===0 || i===1){
+
+        addOverlay(
+            wrap,
+            p.photo1,
+            "photo1",
+            i
+        );
+
+        if(i===0){
+
+            addOverlay(
+                wrap,
+                p.photo2,
+                "photo2",
+                i
             );
 
         }
 
 
-        /*
-         * SELECT DOCUMENT
-         */
+        if(i===0){
 
-        function selectDocument(item) {
-
-            selectedDocument = item;
-
-
-            editorTitle.textContent =
-                item.name;
-
-
-            sizeText.textContent =
-                item.width +
-                " × " +
-                item.height +
-                " mm";
-
-
-            editor.style.display =
-                "block";
-
-
-            results.innerHTML = "";
-
-
-            photoInput.value = "";
-
-
-            fileName.textContent =
-                "अभी कोई फोटो नहीं चुनी गई।";
-
-
-            a4Page.innerHTML = "";
-
-
-            /*
-             * Passport में हमेशा 6
-             */
-
-            if (item.id === "passport") {
-
-                countText.textContent =
-                    "6";
-
-            } else {
-
-                countText.textContent =
-                    "Automatic";
-
-            }
-
-
-            editor.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            addOverlay(
+                wrap,
+                p.sig1,
+                "sig1",
+                i
+            );
 
         }
 
 
-        /*
-         * PHOTO UPLOAD
-         */
+        if(i===1){
 
-        photoInput.addEventListener(
-            "change",
-            function () {
+            addOverlay(
+                wrap,
+                p.sig2,
+                "sig2",
+                i
+            );
 
-                if (!selectedDocument) {
+        }
 
-                    alert(
-                        "पहले document चुनें।"
+
+        const ctl =
+            document.createElement("div");
+
+        ctl.className =
+            "controls";
+
+
+        if(i===0){
+
+            const b =
+                document.createElement("button");
+
+            b.textContent =
+                "Photo 1 adjust";
+
+            b.className =
+                "secondary";
+
+            b.onclick =
+                () =>
+                adjustOverlay(
+                    p,
+                    "photo1",
+                    wrap
+                );
+
+
+            const b2 =
+                document.createElement("button");
+
+            b2.textContent =
+                "Photo 2 adjust";
+
+            b2.className =
+                "secondary";
+
+            b2.onclick =
+                () =>
+                adjustOverlay(
+                    p,
+                    "photo2",
+                    wrap
+                );
+
+
+            const b3 =
+                document.createElement("button");
+
+            b3.textContent =
+                "Signature adjust";
+
+            b3.className =
+                "secondary";
+
+            b3.onclick =
+                () =>
+                adjustOverlay(
+                    p,
+                    "sig1",
+                    wrap
+                );
+
+
+            ctl.append(
+                b,
+                b2,
+                b3
+            );
+
+        }
+        else{
+
+            const b =
+                document.createElement("button");
+
+            b.textContent =
+                "Signature adjust";
+
+            b.className =
+                "secondary";
+
+            b.onclick =
+                () =>
+                adjustOverlay(
+                    p,
+                    "sig2",
+                    wrap
+                );
+
+            ctl.appendChild(b);
+
+        }
+
+
+        card.appendChild(ctl);
+
+    }
+
+
+    /* ADDED A4 PAGE */
+
+    else{
+
+        wrap.onclick = ()=>{
+
+            selectedA4 = i;
+
+            renderPages();
+
+            status(
+                `Page ${i+1} selected. अब Add Document दबाएँ।`
+            );
+
+        };
+
+
+        const ctl =
+            document.createElement("div");
+
+        ctl.className =
+            "controls";
+
+
+        const b =
+            document.createElement("button");
+
+        b.textContent =
+            "Add / Replace Document";
+
+
+        b.onclick = e=>{
+
+            e.stopPropagation();
+
+            selectedA4 = i;
+
+            renderPages();
+
+            documentInput.click();
+
+        };
+
+
+        ctl.appendChild(b);
+
+        card.appendChild(ctl);
+
+
+        if(p.doc){
+
+            addOverlay(
+                wrap,
+                p.doc,
+                "doc",
+                i
+            );
+
+        }
+        else{
+
+            const e =
+                document.createElement("div");
+
+            e.className =
+                "empty";
+
+            e.textContent =
+                "Add Document दबाएँ";
+
+            wrap.appendChild(e);
+
+        }
+
+    }
+
+
+    return card;
+
+}
+
+
+/* RENDER */
+
+function renderPages(){
+
+    pagesEl.innerHTML = "";
+
+    pageData.forEach(
+        (_,i)=>
+        pagesEl.appendChild(
+            makePageCard(i)
+        )
+    );
+
+}
+
+
+/* OVERLAY */
+
+function addOverlay(
+    wrap,
+    obj,
+    key,
+    pageIndex
+){
+
+    if(!obj)return;
+
+
+    const o =
+        document.createElement("div");
+
+    o.className =
+        "overlay";
+
+    o.style.display =
+        "block";
+
+
+    const img =
+        document.createElement("img");
+
+    img.src =
+        obj.url;
+
+    o.appendChild(img);
+
+
+    const h =
+        document.createElement("div");
+
+    h.className =
+        "handle";
+
+    o.appendChild(h);
+
+
+    const scaleX =
+        wrap.clientWidth /
+        pageData[pageIndex].canvas.width;
+
+    const scaleY =
+        wrap.clientWidth /
+        pageData[pageIndex].canvas.width;
+
+    const pxPerPt =
+        pageData[pageIndex]
+        .canvas.width /
+        A4.w;
+
+
+    o.style.left =
+        (
+            obj.x *
+            pxPerPt *
+            scaleX
+        ) + "px";
+
+
+    o.style.top =
+        (
+            obj.y *
+            pxPerPt *
+            scaleY
+        ) + "px";
+
+
+    o.style.width =
+        (
+            obj.w *
+            pxPerPt *
+            scaleX
+        ) + "px";
+
+
+    o.style.height =
+        (
+            obj.h *
+            pxPerPt *
+            scaleY
+        ) + "px";
+
+
+    let moving = false;
+    let resizing = false;
+
+    let sx=0;
+    let sy=0;
+
+    let ox=0;
+    let oy=0;
+
+    let ow=0;
+    let oh=0;
+
+
+    o.onpointerdown = e=>{
+
+        e.preventDefault();
+
+        o.setPointerCapture(
+            e.pointerId
+        );
+
+        if(e.target===h){
+
+            resizing = true;
+
+        }
+        else{
+
+            moving = true;
+
+        }
+
+
+        sx =
+            e.clientX;
+
+        sy =
+            e.clientY;
+
+        ox =
+            obj.x;
+
+        oy =
+            obj.y;
+
+        ow =
+            obj.w;
+
+        oh =
+            obj.h;
+
+    };
+
+
+    o.onpointermove = e=>{
+
+        if(
+            !moving &&
+            !resizing
+        )return;
+
+
+        const dx =
+            (
+                e.clientX-sx
+            ) /
+            (
+                pxPerPt*scaleX
+            );
+
+
+        const dy =
+            (
+                e.clientY-sy
+            ) /
+            (
+                pxPerPt*scaleY
+            );
+
+
+        if(moving){
+
+            obj.x =
+                Math.max(
+                    0,
+                    ox+dx
+                );
+
+            obj.y =
+                Math.max(
+                    0,
+                    oy+dy
+                );
+
+        }
+        else{
+
+            obj.w =
+                Math.max(
+                    10,
+                    ow+dx
+                );
+
+            obj.h =
+                Math.max(
+                    10,
+                    oh+dy
+                );
+
+        }
+
+
+        o.style.left =
+            (
+                obj.x *
+                pxPerPt *
+                scaleX
+            ) + "px";
+
+
+        o.style.top =
+            (
+                obj.y *
+                pxPerPt *
+                scaleY
+            ) + "px";
+
+
+        o.style.width =
+            (
+                obj.w *
+                pxPerPt *
+                scaleX
+            ) + "px";
+
+
+        o.style.height =
+            (
+                obj.h *
+                pxPerPt *
+                scaleY
+            ) + "px";
+
+    };
+
+
+    o.onpointerup = ()=>{
+
+        moving = false;
+        resizing = false;
+
+    };
+
+
+    wrap.appendChild(o);
+
+}
+
+
+/* MANUAL POSITION */
+
+function adjustOverlay(
+    p,
+    key,
+    wrap
+){
+
+    const o =
+        p[key];
+
+    if(!o)return;
+
+
+    const msg =
+        prompt(
+            "X, Y, Width, Height (A4 points) comma से लिखें:",
+            `${o.x.toFixed(1)}, ${o.y.toFixed(1)}, ${o.w.toFixed(1)}, ${o.h.toFixed(1)}`
+        );
+
+
+    if(!msg)return;
+
+
+    const a =
+        msg
+        .split(",")
+        .map(Number);
+
+
+    if(
+        a.length===4 &&
+        a.every(
+            Number.isFinite
+        )
+    ){
+
+        [
+            o.x,
+            o.y,
+            o.w,
+            o.h
+        ] = a;
+
+        renderPages();
+
+    }
+
+}
+
+
+/* ADD A4 */
+
+document
+.getElementById("addPageBtn")
+.onclick = ()=>{
+
+    if(
+        pageData.length >=
+        MAX_PAGES
+    ){
+
+        alert(
+            "अधिकतम 4 pages ही रखे जा सकते हैं।"
+        );
+
+        return;
+
+    }
+
+
+    pageData.push({
+
+        type:"a4",
+
+        canvas:
+            makeBlankA4(),
+
+        doc:null
+
+    });
+
+
+    selectedA4 =
+        pageData.length-1;
+
+
+    renderPages();
+
+
+    status(
+        `Page ${pageData.length} जोड़ा गया। अब Add Document करें।`,
+        true
+    );
+
+};
+
+
+/* BLANK A4 */
+
+function makeBlankA4(){
+
+    const c =
+        document.createElement("canvas");
+
+    c.width =
+        1240;
+
+    c.height =
+        1754;
+
+
+    const x =
+        c.getContext("2d");
+
+    x.fillStyle =
+        "#fff";
+
+    x.fillRect(
+        0,
+        0,
+        c.width,
+        c.height
+    );
+
+
+    return c;
+
+}
+
+
+/* ADD DOCUMENT */
+
+document
+.getElementById("addDocumentBtn")
+.onclick = ()=>{
+
+    if(selectedA4 < 2){
+
+        alert(
+            "पहले Add A4 Page करें और उस page को select करें।"
+        );
+
+        return;
+
+    }
+
+    documentInput.click();
+
+};
+
+
+/* DOCUMENT INPUT */
+
+documentInput.addEventListener(
+    "change",
+    async e=>{
+
+        const f =
+            e.target.files[0];
+
+        if(!f)return;
+
+        if(selectedA4<2)return;
+
+
+        try{
+
+            let url;
+
+
+            /* PDF DOCUMENT */
+
+            if(
+                f.type ===
+                "application/pdf"
+            ){
+
+                const bytes =
+                    await readFile(f);
+
+                const pdf =
+                    await pdfjsLib
+                    .getDocument({
+                        data:bytes
+                    })
+                    .promise;
+
+
+                const pg =
+                    await pdf.getPage(1);
+
+
+                const vp =
+                    pg.getViewport({
+                        scale:1.5
+                    });
+
+
+                const c =
+                    document.createElement(
+                        "canvas"
                     );
 
-                    return;
-                }
+                c.width =
+                    vp.width;
+
+                c.height =
+                    vp.height;
 
 
-                const file =
-                    photoInput.files[0];
+                await pg.render({
+
+                    canvasContext:
+                        c.getContext("2d"),
+
+                    viewport:vp
+
+                }).promise;
 
 
-                if (!file) {
-                    return;
-                }
-
-
-                if (
-                    !file.type.startsWith("image/")
-                ) {
-
-                    alert(
-                        "कृपया केवल फोटो upload करें।"
+                url =
+                    c.toDataURL(
+                        "image/jpeg",
+                        .82
                     );
 
-                    photoInput.value = "";
+            }
 
-                    return;
+            /* IMAGE DOCUMENT */
+
+            else{
+
+                url =
+                    URL.createObjectURL(f);
+
+            }
+
+
+            openEditor(
+                url,
+                "document",
+                async dataUrl=>{
+
+                    const img =
+                        await loadImage(
+                            dataUrl
+                        );
+
+
+                    const p =
+                        pageData[
+                            selectedA4
+                        ];
+
+
+                    p.doc = {
+
+                        url:dataUrl,
+
+                        x:20,
+                        y:20,
+
+                        w:555,
+                        h:400,
+
+                        ratio:
+                            img.width /
+                            img.height
+
+                    };
+
+
+                    renderPages();
+
+
+                    status(
+                        `Page ${selectedA4+1} पर document लगा दिया गया। उसे drag/resize कर सकते हैं।`,
+                        true
+                    );
+
                 }
+            );
+
+        }
+        catch(err){
+
+            alert(
+                "Document load नहीं हुआ: "
+                + err.message
+            );
+
+        }
 
 
-                fileName.textContent =
-                    file.name;
+        documentInput.value = "";
+
+    }
+);
 
 
-                const imageURL =
-                    URL.createObjectURL(file);
+/* PHOTO */
+
+photoInput.addEventListener(
+    "change",
+    e=>{
+
+        const f =
+            e.target.files[0];
+
+        if(!f)return;
 
 
-                createA4Layout(imageURL);
+        openEditor(
+            URL.createObjectURL(f),
+            "photo",
+            async dataUrl=>{
+
+                const p =
+                    pageData[0];
+
+
+                /* PHOTO 1 */
+
+                p.photo1 = {
+
+                    url:dataUrl,
+
+                    x:10,
+                    y:109,
+
+                    w:106,
+                    h:127
+
+                };
+
+
+                /* PHOTO 2 */
+
+                p.photo2 = {
+
+                    url:dataUrl,
+
+                    x:479,
+                    y:109,
+
+                    w:96,
+                    h:127
+
+                };
+
+
+                renderPages();
+
+
+                status(
+                    "Photo दोनों निर्धारित boxes में लगा दी गई है।",
+                    true
+                );
 
             }
         );
 
 
-        /*
-         * CREATE A4 LAYOUT
-         */
+        photoInput.value = "";
 
-        function createA4Layout(imageURL) {
-
-            a4Page.innerHTML = "";
+    }
+);
 
 
-            const A4_WIDTH = 210;
-            const A4_HEIGHT = 297;
+/* SIGNATURE */
+
+signatureInput.addEventListener(
+    "change",
+    e=>{
+
+        const f =
+            e.target.files[0];
+
+        if(!f)return;
 
 
-            const photoWidth =
-                selectedDocument.width;
+        openEditor(
+            URL.createObjectURL(f),
+            "signature",
+            async dataUrl=>{
 
-            const photoHeight =
-                selectedDocument.height;
+                const p =
+                    pageData[0];
+
+                const p2 =
+                    pageData[1];
 
 
-            /*
-             * PASSPORT PHOTO
-             *
-             * 35 × 45 mm
-             *
-             * A4 के सबसे ऊपर
-             *
-             * 6 फोटो
-             *
-             * 3 × 2
-             */
+                /* PAGE 1 SIGNATURE */
 
-            if (
-                selectedDocument.id ===
-                "passport"
-            ) {
+                p.sig1 = {
 
-                const columns = 3;
-                const rows = 2;
+                    url:dataUrl,
 
-                const gap = 2;
+                    x:75,
+                    y:183,
 
-                const totalWidth =
-                    (
-                        columns * photoWidth
+                    w:82,
+                    h:34
+
+                };
+
+
+                /* PAGE 2 SIGNATURE */
+
+                p2.sig2 = {
+
+                    url:dataUrl,
+
+                    x:378,
+                    y:727,
+
+                    w:91,
+                    h:38
+
+                };
+
+
+                renderPages();
+
+
+                status(
+                    "Signature Page 1 और Page 2 दोनों में लगा दी गई है।",
+                    true
+                );
+
+            }
+        );
+
+
+        signatureInput.value = "";
+
+    }
+);
+
+
+/* EDITOR */
+
+function openEditor(
+    url,
+    mode,
+    done
+){
+
+    editorMode =
+        mode;
+
+    editorFile =
+        done;
+
+
+    document
+    .getElementById(
+        "editorTitle"
+    )
+    .textContent =
+        mode==="signature"
+        ? "Signature Crop + Background"
+        : "Crop";
+
+
+    document
+    .getElementById(
+        "signatureTools"
+    )
+    .style.display =
+        mode==="signature"
+        ? "flex"
+        : "none";
+
+
+    const im =
+        document.getElementById(
+            "cropImage"
+        );
+
+
+    im.src =
+        url;
+
+
+    document
+    .getElementById(
+        "editorModal"
+    )
+    .style.display =
+        "flex";
+
+
+    im.onload = ()=>{
+
+        if(cropper){
+
+            cropper.destroy();
+
+        }
+
+
+        cropper =
+            new Cropper(
+                im,
+                {
+
+                    viewMode:1,
+
+                    autoCropArea:.85,
+
+                    background:false,
+
+                    rotatable:false,
+
+                    zoomable:true,
+
+                    scalable:false
+
+                }
+            );
+
+    };
+
+}
+
+
+/* CANCEL */
+
+document
+.getElementById(
+    "cancelEditor"
+)
+.onclick = ()=>{
+
+    if(cropper){
+
+        cropper.destroy();
+
+    }
+
+    cropper = null;
+
+
+    document
+    .getElementById(
+        "editorModal"
+    )
+    .style.display =
+        "none";
+
+};
+
+
+/* APPLY */
+
+document
+.getElementById(
+    "applyEditor"
+)
+.onclick =
+async ()=>{
+
+    if(!cropper)return;
+
+
+    const c =
+        cropper.getCroppedCanvas({
+
+            maxWidth:1800,
+            maxHeight:1800,
+
+            imageSmoothingEnabled:true,
+
+            imageSmoothingQuality:
+                "high"
+
+        });
+
+
+    let dataUrl =
+        c.toDataURL(
+            "image/png"
+        );
+
+
+    if(
+        editorMode ===
+        "signature"
+    ){
+
+        dataUrl =
+            await removeWhiteBackground(
+                dataUrl,
+                Number(
+                    document
+                    .getElementById(
+                        "threshold"
                     )
-                    +
-                    (
-                        (columns - 1) * gap
+                    .value
+                )
+            );
+
+    }
+
+
+    const fn =
+        editorFile;
+
+
+    document
+    .getElementById(
+        "editorModal"
+    )
+    .style.display =
+        "none";
+
+
+    cropper.destroy();
+
+    cropper = null;
+
+
+    await fn(dataUrl);
+
+};
+
+
+/* THRESHOLD */
+
+document
+.getElementById(
+    "threshold"
+)
+.oninput =
+e=>{
+
+    document
+    .getElementById(
+        "thresholdValue"
+    )
+    .textContent =
+        e.target.value;
+
+};
+
+
+/* BACKGROUND PREVIEW */
+
+document
+.getElementById(
+    "previewBgBtn"
+)
+.onclick =
+async ()=>{
+
+    if(!cropper)return;
+
+
+    const c =
+        cropper.getCroppedCanvas({
+
+            maxWidth:1800,
+            maxHeight:1800
+
+        });
+
+
+    const out =
+        await removeWhiteBackground(
+            c.toDataURL("image/png"),
+            Number(
+                document
+                .getElementById(
+                    "threshold"
+                )
+                .value
+            )
+        );
+
+
+    document
+    .getElementById(
+        "cropImage"
+    )
+    .src =
+        out;
+
+
+    if(cropper){
+
+        cropper.destroy();
+
+        cropper = null;
+
+    }
+
+
+    document
+    .getElementById(
+        "cropImage"
+    )
+    .onload = ()=>{
+
+        cropper =
+            new Cropper(
+                document
+                .getElementById(
+                    "cropImage"
+                ),
+                {
+
+                    viewMode:1,
+
+                    autoCropArea:.9,
+
+                    background:false
+
+                }
+            );
+
+    };
+
+};
+
+
+/* REMOVE WHITE */
+
+function removeWhiteBackground(
+    dataUrl,
+    threshold
+){
+
+    return new Promise(
+        resolve=>{
+
+            const img =
+                new Image();
+
+
+            img.onload = ()=>{
+
+                const c =
+                    document
+                    .createElement(
+                        "canvas"
                     );
 
 
-                /*
-                 * Center horizontally
-                 */
+                c.width =
+                    img.width;
 
-                const startX =
-                    (
-                        A4_WIDTH -
-                        totalWidth
-                    ) / 2;
+                c.height =
+                    img.height;
 
 
-                /*
-                 * सबसे ऊपर से 5mm
-                 */
+                const x =
+                    c.getContext(
+                        "2d"
+                    );
 
-                const startY = 5;
+
+                x.drawImage(
+                    img,
+                    0,
+                    0
+                );
 
 
-                for (
-                    let row = 0;
-                    row < rows;
-                    row++
-                ) {
+                const d =
+                    x.getImageData(
+                        0,
+                        0,
+                        c.width,
+                        c.height
+                    );
 
-                    for (
-                        let column = 0;
-                        column < columns;
-                        column++
-                    ) {
 
-                        createPhoto(
-                            imageURL,
+                const a =
+                    d.data;
 
-                            photoWidth,
 
-                            photoHeight,
+                for(
+                    let i=0;
+                    i<a.length;
+                    i+=4
+                ){
 
-                            startX +
-                            column *
-                            (
-                                photoWidth +
-                                gap
-                            ),
+                    const r =
+                        a[i];
 
-                            startY +
-                            row *
-                            (
-                                photoHeight +
-                                gap
-                            )
+                    const g =
+                        a[i+1];
+
+                    const b =
+                        a[i+2];
+
+
+                    const min =
+                        Math.min(
+                            r,
+                            g,
+                            b
                         );
+
+
+                    if(
+                        r>=threshold &&
+                        g>=threshold &&
+                        b>=threshold
+                    ){
+
+                        a[i+3]=0;
+
+                    }
+
+                    else if(
+                        min>=
+                        threshold-25
+                    ){
+
+                        const alpha =
+                            Math.max(
+                                0,
+                                255 -
+                                Math.round(
+                                    (
+                                        r+
+                                        g+
+                                        b
+                                    )/3
+                                )
+                            );
+
+
+                        a[i+3] =
+                            Math.min(
+                                255,
+                                alpha*3
+                            );
 
                     }
 
                 }
 
 
-                return;
+                x.putImageData(
+                    d,
+                    0,
+                    0
+                );
+
+
+                resolve(
+                    c.toDataURL(
+                        "image/png"
+                    )
+                );
+
+            };
+
+
+            img.src =
+                dataUrl;
+
+        }
+    );
+
+}
+
+
+/* IMAGE LOAD */
+
+function loadImage(src){
+
+    return new Promise(
+        (res,rej)=>{
+
+            const i =
+                new Image();
+
+            i.onload =
+                ()=>res(i);
+
+            i.onerror =
+                rej;
+
+            i.src =
+                src;
+
+        }
+    );
+
+}
+
+
+/* FINAL PAGE */
+
+async function renderFinalPage(
+    pageIndex,
+    scale=1.5
+){
+
+    const p =
+        pageData[pageIndex];
+
+
+    const c =
+        document
+        .createElement(
+            "canvas"
+        );
+
+
+    c.width =
+        Math.round(
+            A4.w *
+            scale *
+            1.333
+        );
+
+
+    c.height =
+        Math.round(
+            A4.h *
+            scale *
+            1.333
+        );
+
+
+    const ctx =
+        c.getContext(
+            "2d"
+        );
+
+
+    ctx.fillStyle =
+        "#fff";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        c.width,
+        c.height
+    );
+
+
+    ctx.drawImage(
+        p.canvas,
+        0,
+        0,
+        c.width,
+        c.height
+    );
+
+
+    const sx =
+        c.width /
+        A4.w;
+
+    const sy =
+        c.height /
+        A4.h;
+
+
+    const add =
+        async obj=>{
+
+            if(!obj)return;
+
+
+            const im =
+                await loadImage(
+                    obj.url
+                );
+
+
+            ctx.drawImage(
+                im,
+
+                obj.x*sx,
+                obj.y*sy,
+
+                obj.w*sx,
+                obj.h*sy
+            );
+
+        };
+
+
+    await add(p.photo1);
+    await add(p.photo2);
+    await add(p.sig1);
+    await add(p.sig2);
+    await add(p.doc);
+
+
+    return c;
+
+}
+
+
+/* JPEG */
+
+async function jpegBlob(
+    canvas,
+    q
+){
+
+    return new Promise(
+        r=>
+            canvas.toBlob(
+                r,
+                "image/jpeg",
+                q
+            )
+    );
+
+}
+
+
+/* MAKE FINAL PDF */
+
+document
+.getElementById(
+    "makePdfBtn"
+)
+.onclick =
+async ()=>{
+
+    try{
+
+        if(pageData.length<2){
+
+            alert(
+                "पहले 2-page PAN template load करें।"
+            );
+
+            return;
+
+        }
+
+
+        if(pageData.length!==4){
+
+            alert(
+                "Final PDF के लिए 2 PAN + 2 A4 = कुल 4 pages रखें।"
+            );
+
+            return;
+
+        }
+
+
+        status(
+            "Final PDF तैयार हो रहा है… कृपया प्रतीक्षा करें।"
+        );
+
+
+        let quality =
+            .78;
+
+        let scale =
+            1.0;
+
+        let blobs = [];
+
+
+        for(
+            let attempt=0;
+            attempt<7;
+            attempt++
+        ){
+
+            blobs=[];
+
+
+            for(
+                let i=0;
+                i<4;
+                i++
+            ){
+
+                const c =
+                    await renderFinalPage(
+                        i,
+                        scale
+                    );
+
+
+                blobs.push(
+                    await jpegBlob(
+                        c,
+                        quality
+                    )
+                );
+
             }
 
 
-            /*
-             * AADHAAR / PAN
-             *
-             * Automatic A4 Grid
-             */
-
-            const margin = 5;
-            const gap = 2;
-
-
-            const columns =
-                Math.floor(
-                    (
-                        A4_WIDTH -
-                        (2 * margin) +
-                        gap
-                    )
-                    /
-                    (
-                        photoWidth +
-                        gap
-                    )
+            const total =
+                blobs.reduce(
+                    (s,b)=>
+                        s+b.size,
+                    0
                 );
 
 
-            const rows =
-                Math.floor(
-                    (
-                        A4_HEIGHT -
-                        (2 * margin) +
-                        gap
-                    )
-                    /
-                    (
-                        photoHeight +
-                        gap
-                    )
-                );
+            if(
+                total <
+                1750000
+            ){
+
+                break;
+
+            }
 
 
-            const totalPhotos =
-                columns * rows;
+            if(
+                quality > .5
+            ){
 
+                quality -= .07;
 
-            countText.textContent =
-                totalPhotos;
+            }
+            else{
 
-
-            const totalWidth =
-                (
-                    columns * photoWidth
-                )
-                +
-                (
-                    (columns - 1) * gap
-                );
-
-
-            const startX =
-                (
-                    A4_WIDTH -
-                    totalWidth
-                ) / 2;
-
-
-            for (
-                let row = 0;
-                row < rows;
-                row++
-            ) {
-
-                for (
-                    let column = 0;
-                    column < columns;
-                    column++
-                ) {
-
-                    createPhoto(
-                        imageURL,
-
-                        photoWidth,
-
-                        photoHeight,
-
-                        startX +
-                        column *
-                        (
-                            photoWidth +
-                            gap
-                        ),
-
-                        margin +
-                        row *
-                        (
-                            photoHeight +
-                            gap
-                        )
-                    );
-
-                }
+                scale = .85;
 
             }
 
         }
 
 
-        /*
-         * CREATE INDIVIDUAL PHOTO
-         */
-
-        function createPhoto(
-            imageURL,
-            width,
-            height,
-            left,
-            top
-        ) {
-
-            const image =
-                document.createElement("img");
+        const out =
+            await PDFDocument.create();
 
 
-            image.src =
-                imageURL;
+        for(
+            const b of blobs
+        ){
+
+            const bytes =
+                new Uint8Array(
+                    await b.arrayBuffer()
+                );
 
 
-            image.className =
-                "placed-photo";
+            const jpg =
+                await out.embedJpg(
+                    bytes
+                );
 
 
-            image.style.width =
-                width + "mm";
+            const pg =
+                out.addPage([
+                    A4.w,
+                    A4.h
+                ]);
 
 
-            image.style.height =
-                height + "mm";
+            pg.drawImage(
+                jpg,
+                {
+                    x:0,
+                    y:0,
 
-
-            image.style.left =
-                left + "mm";
-
-
-            image.style.top =
-                top + "mm";
-
-
-            a4Page.appendChild(image);
+                    width:A4.w,
+                    height:A4.h
+                }
+            );
 
         }
 
 
-        /*
-         * PRINT
-         */
-
-        printButton.addEventListener(
-            "click",
-            function () {
-
-                if (!selectedDocument) {
-
-                    alert(
-                        "पहले document चुनें।"
-                    );
-
-                    return;
-                }
+        finalPdfBytes =
+            await out.save({
+                useObjectStreams:true
+            });
 
 
-                if (!photoInput.files.length) {
-
-                    alert(
-                        "पहले फोटो Upload करें।"
-                    );
-
-                    return;
-                }
+        const mb =
+            finalPdfBytes.length /
+            1048576;
 
 
-                if (!a4Page.children.length) {
-
-                    alert(
-                        "A4 Preview तैयार नहीं है।"
-                    );
-
-                    return;
-                }
+        document
+        .getElementById(
+            "downloadBtn"
+        )
+        .disabled =
+            false;
 
 
-                window.print();
+        status(
+            `PDF तैयार है • 4 pages • आकार ${mb.toFixed(2)} MB`,
+            mb<2
+        );
 
+
+        if(mb>=2){
+
+            status(
+                `PDF तैयार है लेकिन आकार ${mb.toFixed(2)} MB है। App ने जितना संभव था compress किया है।`,
+                false
+            );
+
+        }
+
+    }
+    catch(err){
+
+        console.error(err);
+
+        status(
+            "PDF बनाने में error: "
+            + err.message
+        );
+
+    }
+
+};
+
+
+/* DOWNLOAD */
+
+document
+.getElementById(
+    "downloadBtn"
+)
+.onclick = ()=>{
+
+    if(!finalPdfBytes)return;
+
+
+    const blob =
+        new Blob(
+            [finalPdfBytes],
+            {
+                type:"application/pdf"
             }
         );
 
-    </script>
+
+    const a =
+        document.createElement("a");
+
+
+    a.href =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    a.download =
+        "PAN_Application_Final.pdf";
+
+
+    a.click();
+
+
+    setTimeout(
+        ()=>{
+            URL.revokeObjectURL(
+                a.href
+            );
+        },
+        1000
+    );
+
+};
+
+
+/* RESIZE */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+        if(pageData.length){
+            renderPages();
+        }
+    }
+);
+
+</script>
 
 </body>
 </html>
-```
