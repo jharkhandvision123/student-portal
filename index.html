@@ -1,696 +1,464 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="hi">
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>JHARKHANDVISION123</title>
-
-    <!-- ==============================
-         PWA SETTINGS
-    ============================== -->
-
-    <link rel="manifest" href="./manifest.json">
-
-    <meta name="theme-color" content="#ffffff">
-
-    <link
-        rel="apple-touch-icon"
-        href="images/imageslogo-192.png%20(1).jpeg"
-    >
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Print System</title>
 
     <style>
-
-        /* ==============================
-           LOGO
-        ============================== */
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        * {
+            box-sizing: border-box;
         }
 
-        .portal-logo {
-            width: 65px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .logo h1 {
+        body {
             margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
         }
 
-        .logo p {
-            margin: 3px 0 0;
+        header {
+            background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+            padding: 22px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
         }
 
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
 
-        /* ==============================
-           SLIDER
-        ============================== */
+        .container {
+            max-width: 850px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
 
-        .slider {
+        .search-box {
             width: 100%;
-            max-width: 1100px;
-            height: 350px;
-            margin: 20px auto;
-            overflow: hidden;
-            border-radius: 12px;
+            padding: 15px;
+            font-size: 18px;
+            border: 1px solid #aaa;
+            border-radius: 10px;
+            outline: none;
         }
 
-        .slides {
-            display: flex;
-            width: 400%;
-            height: 100%;
-            animation: slide 16s infinite;
+        .search-box:focus {
+            border-color: #2563eb;
         }
 
-        .slides img {
-            width: 25%;
-            height: 100%;
+        .result {
+            margin-top: 15px;
+        }
+
+        .option {
+            background: white;
+            padding: 16px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            background: #f0f7ff;
+        }
+
+        .option strong {
             display: block;
+            font-size: 18px;
+        }
+
+        .option small {
+            color: #666;
+        }
+
+        .editor {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .editor h2 {
+            margin-top: 0;
+        }
+
+        .info {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .print-btn {
+            background: #16a34a;
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .print-btn:hover {
+            background: #15803d;
+        }
+
+        .preview-title {
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .a4-preview {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            margin: auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+        }
+
+        .photo {
+            position: absolute;
             object-fit: cover;
         }
 
-        @keyframes slide {
-
-            0% {
-                transform: translateX(0);
-            }
-
-            20% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-25%);
-            }
-
-            45% {
-                transform: translateX(-25%);
-            }
-
-            50% {
-                transform: translateX(-50%);
-            }
-
-            70% {
-                transform: translateX(-50%);
-            }
-
-            75% {
-                transform: translateX(-75%);
-            }
-
-            95% {
-                transform: translateX(-75%);
-            }
-
-            100% {
-                transform: translateX(0);
-            }
-
+        .message {
+            margin-top: 10px;
+            color: #dc2626;
+            font-weight: bold;
         }
 
-
-        /* ==============================
-           JOIN GROUP TRICOLOR SECTION
-        ============================== */
-
-        .join-group-hero{
-            padding:12px;
-            border-radius:18px;
-            background:linear-gradient(
-                90deg,
-                #ff9933 0%,
-                #ffffff 50%,
-                #138808 100%
-            );
-            box-shadow:0 5px 16px rgba(0,0,0,.15);
+        @media (max-width: 750px) {
+            .a4-preview {
+                transform-origin: top left;
+                transform: scale(0.45);
+                margin-bottom: -160mm;
+            }
         }
 
-        .join-group-link{
-            display:flex;
-            align-items:center;
-            gap:20px;
-            padding:18px 22px;
-            text-decoration:none;
-            color:#08306b;
-            background:white;
-            border-radius:14px;
-        }
-
-        .join-group-logo{
-            width:90px;
-            height:90px;
-            min-width:90px;
-            border-radius:50%;
-            object-fit:cover;
-            border:5px solid white;
-            box-shadow:
-                0 0 0 3px #ff9933,
-                0 0 0 6px #ffffff,
-                0 0 0 9px #138808;
-        }
-
-        .join-group-text{
-            flex:1;
-        }
-
-        .join-group-text h2{
-            margin:0 0 7px;
-            font-size:30px;
-            font-weight:800;
-            color:#0d47a1;
-        }
-
-        .join-group-text p{
-            margin:0;
-            font-size:16px;
-            line-height:1.5;
-            color:#333;
-        }
-
-        .join-group-link:hover{
-            transform:translateY(-2px);
-        }
-
-        @media(max-width:600px){
-
-            .join-group-link{
-                gap:15px;
-                padding:15px;
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
             }
 
-            .join-group-logo{
-                width:72px;
-                height:72px;
-                min-width:72px;
+            body {
+                background: white;
             }
 
-            .join-group-text h2{
-                font-size:22px;
+            header,
+            .container > *:not(.editor),
+            .editor > *:not(.print-area) {
+                display: none !important;
             }
 
-            .join-group-text p{
-                font-size:14px;
+            .editor {
+                display: block !important;
+                padding: 0;
+                margin: 0;
+                border: 0;
             }
 
+            .print-area {
+                display: block !important;
+            }
+
+            .a4-preview {
+                width: 210mm;
+                height: 297mm;
+                min-height: 297mm;
+                margin: 0;
+                box-shadow: none;
+            }
         }
-
-        .tricolor-title{
-            background:linear-gradient(
-                to bottom,
-                #ff9933 0%,
-                #ff9933 33%,
-                #ffffff 33%,
-                #ffffff 66%,
-                #138808 66%,
-                #138808 100%
-            );
-
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-
-            font-weight:800;
-            text-shadow:0 1px 1px rgba(0,0,0,0.08);
-        }
-
     </style>
-
 </head>
-
 
 <body>
 
+<header>
+    <h1>Photo Print System</h1>
+</header>
 
-<!-- ==============================
-     HEADER
-================================ -->
+<div class="container">
 
-<header class="top-header">
+    <input
+        type="text"
+        id="searchInput"
+        class="search-box"
+        placeholder="Search करें: Aadhaar Card, Passport Size Photo, PAN Card"
+        autocomplete="off"
+    >
 
-    <div class="logo">
+    <div id="result" class="result"></div>
 
-        <img
-            src="images/imageslogo-192.png%20(1).jpeg"
-            alt="Student Portal Logo"
-            class="portal-logo"
+    <div id="editor" class="editor">
+
+        <h2 id="documentTitle"></h2>
+
+        <div class="info">
+            <div><strong>Size:</strong> <span id="documentSize"></span></div>
+            <div><strong>A4 में फोटो:</strong> <span id="photoCount"></span></div>
+        </div>
+
+        <input
+            type="file"
+            id="photoInput"
+            accept="image/*"
         >
 
-        <div>
+        <div id="message" class="message"></div>
 
-            <h1 class="tricolor-title">
-                S. P. D. D. COLLAGE NAGAR UNTARI ----- STUDY BY JV123
-            </h1>
+        <div class="print-area">
+            <h3 class="preview-title">A4 Preview</h3>
 
-            <p>Welcome to Student </p>
+            <div id="a4Preview" class="a4-preview"></div>
 
+            <button
+                class="print-btn"
+                onclick="printPage()"
+            >
+                🖨️ Print
+            </button>
         </div>
 
     </div>
 
-</header>
-
-
-<!-- ==============================
-     NAVIGATION
-================================ -->
-
-<nav class="navbar">
-
-    <a href="index.html">Home</a>
-
-    <a href="notification.html">
-        Notification
-    </a>
-
-    <a href="contact.html">
-        Contact
-    </a>
-
-    <a href="about.html">
-        About
-    </a>
-
-</nav>
-
-
-<!-- ==============================
-     SLIDER
-================================ -->
-
-<section class="slider">
-
-    <div class="slides">
-
-        <img
-            src="images/slide1.jpg"
-            alt="Slide 1"
-        >
-
-        <img
-            src="images/slide2.jpg"
-            alt="Slide 2"
-        >
-
-        <img
-            src="images/ChatGPT Image Aug 13, 2026, 06_05_15 PM.png"
-            alt="Slide 3"
-        >
-
-        <img
-            src="images/slide4.jpg"
-            alt="Slide 4"
-        >
-
-    </div>
-
-</section>
-
-
-<!-- ==============================
-     HERO
-================================ -->
-
-<section class="hero">
-
-    <section class="hero join-group-hero">
-
-        <a
-            href="https://chat.whatsapp.com/FKA6o4eNNXC0GYzvkzm3O8"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="join-group-link"
-        >
-
-            <img
-                src="images/group-logo.png.jpeg"
-                alt="Join Student Group"
-                class="join-group-logo"
-            >
-
-            <div class="join-group-text">
-
-                <h2>JOIN GROUP NOW</h2>
-
-                <p>
-                    Access student information, courses,
-                    notifications and other useful services
-                    from one place.
-                </p>
-
-            </div>
-
-        </a>
-
-    </section>
-
-</section>
-
-
-<!-- ==============================
-     SEARCH SECTION
-================================ -->
-
-
-<!-- ==============================
-     MAIN DASHBOARD
-================================ -->
-
-<section class="dashboard">
-
-
-    <a href="ba-details.html">
-
-        <button type="button">
-            BA Details
-        </button>
-
-    </a>
-
-
-    <a href="form-filling.html">
-
-        <button type="button">
-            Form-filling
-        </button>
-
-    </a>
-
-
-    <a href="project-file.html">
-
-        <button type="button">
-            Project File
-        </button>
-
-    </a>
-
-
-    <!-- Student CSC -->
-
-    <a href="student-csc.html">
-
-        <button type="button">
-            Student CSC
-        </button>
-
-    </a>
-
-
-    <!-- NPU Result -->
-
-    <a
-        href="https://npuuniv.in/npuresult/login"
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-
-        <button type="button">
-            NPU Result
-        </button>
-
-    </a>
-
-</section>
-
-
-<!-- ==============================
-     FOOTER
-================================ -->
-
-<footer class="copyright">
-
-    <p>Student Portal</p>
-
-</footer>
-
-
-<!-- ==============================
-     JAVASCRIPT
-================================ -->
-
-<script src="script.js"></script>
-
-
-<!-- ==============================
-     PWA SERVICE WORKER
-================================ -->
+</div>
 
 <script>
+    const documents = [
+        {
+            name: "Aadhaar Card",
+            keywords: ["aadhaar", "aadhar", "आधार", "आधार कार्ड"],
+            width: 86,
+            height: 54,
+            count: 6
+        },
+        {
+            name: "Passport Size Photo",
+            keywords: [
+                "passport",
+                "passport photo",
+                "पासपोर्ट",
+                "पासपोर्ट फोटो",
+                "पासपोर्ट साइज फोटो"
+            ],
+            width: 35,
+            height: 45,
+            count: 6
+        },
+        {
+            name: "PAN Card",
+            keywords: ["pan", "pan card", "पैन", "पैन कार्ड"],
+            width: 85.60,
+            height: 53.98,
+            count: 6
+        }
+    ];
 
-    if ("serviceWorker" in navigator) {
+    let selectedDocument = null;
 
-        window.addEventListener("load", function () {
+    const searchInput = document.getElementById("searchInput");
+    const result = document.getElementById("result");
+    const editor = document.getElementById("editor");
+    const photoInput = document.getElementById("photoInput");
+    const a4Preview = document.getElementById("a4Preview");
+    const message = document.getElementById("message");
 
-            navigator.serviceWorker
-                .register("./service-worker.js")
+    searchInput.addEventListener("input", function () {
+        const search = this.value.trim().toLowerCase();
 
-                .then(function () {
+        result.innerHTML = "";
+        editor.style.display = "none";
 
-                    console.log(
-                        "S.P.D.D.C Service Worker registered successfully."
-                    );
+        if (!search) {
+            return;
+        }
 
-                })
-
-                .catch(function (error) {
-
-                    console.error(
-                        "Service Worker registration failed:",
-                        error
-                    );
-
-                });
-
+        const matches = documents.filter(document => {
+            return document.keywords.some(keyword =>
+                keyword.toLowerCase().includes(search) ||
+                search.includes(keyword.toLowerCase())
+            );
         });
 
-    }
-
-</script>
-
-
-<!-- =========================================
-     FIREBASE PUSH NOTIFICATION
-========================================= -->
-
-<script type="module">
-
-    import { initializeApp }
-        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-    import {
-        getMessaging,
-        getToken
-    }
-        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
-
-
-    const firebaseConfig = {
-
-        apiKey:
-            "AIzaSyD8YmnfyVnEXKIxBsKeAdQZYVo1CHjmYXg",
-
-        authDomain:
-            "spddc-notification.firebaseapp.com",
-
-        projectId:
-            "spddc-notification",
-
-        storageBucket:
-            "spddc-notification.firebasestorage.app",
-
-        messagingSenderId:
-            "329322876402",
-
-        appId:
-            "1:329322876402:web:736db8f195a23a18206f6b"
-
-    };
-
-
-    const app =
-        initializeApp(firebaseConfig);
-
-
-    const messaging =
-        getMessaging(app);
-
-
-    window.addEventListener("load", async function () {
-
-        try {
-
-            /* ==============================
-               REQUEST NOTIFICATION PERMISSION
-            ============================== */
-
-            const permission =
-                await Notification.requestPermission();
-
-
-            if (permission !== "granted") {
-
-                console.log(
-                    "Notification permission was not granted."
-                );
-
-                return;
-
-            }
-
-
-            console.log(
-                "Notification permission granted."
-            );
-
-
-            /* ==============================
-               GET FIREBASE TOKEN
-            ============================== */
-
-            const registration =
-                await navigator.serviceWorker.ready;
-
-
-            const token =
-                await getToken(
-
-                    messaging,
-
-                    {
-
-                        vapidKey:
-                            "BMpeXyHCM_IBCYIH6jVLMlyNZE3M4lTNkO9yahExvW9OkALmcFNpnHYDIW-1xVqoMP_XbNLs-sa6sLNdqZx8oBc",
-
-                        serviceWorkerRegistration:
-                            registration
-
-                    }
-
-                );
-
-
-            if (!token) {
-
-                console.log(
-                    "No notification token received."
-                );
-
-                return;
-
-            }
-
-
-            console.log(
-                "Notification Token:",
-                token
-            );
-
-
-            /* ==============================
-               SAVE TOKEN TO SUPABASE
-            ============================== */
-
-            const SUPABASE_URL =
-                "https://aghizlgvrhunpuxvohep.supabase.co";
-
-
-            const SUPABASE_KEY =
-                "sb_publishable_gpc7KUqUIykO3WM1aCzRfg_Myo8AKyx";
-
-
-            const response =
-                await fetch(
-
-                    SUPABASE_URL +
-                    "/rest/v1/push_subscriptions",
-
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "apikey":
-                                SUPABASE_KEY,
-
-                            "Authorization":
-                                "Bearer " +
-                                SUPABASE_KEY,
-
-                            "Content-Type":
-                                "application/json",
-
-                            "Prefer":
-                                "resolution=ignore-duplicates"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                token: token
-
-                            })
-
-                    }
-
-                );
-
-
-            if (!response.ok) {
-
-                const errorText =
-                    await response.text();
-
-                console.error(
-                    "Supabase Token Save Error:",
-                    errorText
-                );
-
-                return;
-
-            }
-
-
-            console.log(
-                "Notification token saved successfully."
-            );
-
-
+        matches.forEach(document => {
+
+            const option = document.createElement("div");
+            option.className = "option";
+
+            option.innerHTML = `
+                <strong>${document.name}</strong>
+                <small>
+                    ${document.width} × ${document.height} mm
+                </small>
+            `;
+
+            option.addEventListener("click", function () {
+                selectDocument(document);
+            });
+
+            result.appendChild(option);
+        });
+
+        if (matches.length === 0) {
+            result.innerHTML = `
+                <div class="option">
+                    कोई विकल्प नहीं मिला।
+                </div>
+            `;
         }
-
-        catch (error) {
-
-            console.error(
-                "Firebase Notification Error:",
-                error
-            );
-
-        }
-
     });
 
-</script>
+    function selectDocument(document) {
 
+        selectedDocument = document;
 
-</body>
+        documentTitle.textContent = document.name;
 
-</html>
+        documentSize.textContent =
+            document.width + " × " +
+            document.height + " mm";
+
+        photoCount.textContent = document.count;
+
+        editor.style.display = "block";
+
+        result.innerHTML = "";
+
+        photoInput.value = "";
+        a4Preview.innerHTML = "";
+        message.textContent = "";
+
+        editor.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+
+    photoInput.addEventListener("change", function () {
+
+        if (!selectedDocument) {
+            return;
+        }
+
+        const file = this.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+            message.textContent = "कृपया केवल फोटो अपलोड करें।";
+            return;
+        }
+
+        const imageURL = URL.createObjectURL(file);
+
+        createA4Sheet(imageURL);
+    });
+
+    function createA4Sheet(imageURL) {
+
+        a4Preview.innerHTML = "";
+        message.textContent = "";
+
+        const pageWidth = 210;
+        const pageHeight = 297;
+
+        const photoWidth = selectedDocument.width;
+        const photoHeight = selectedDocument.height;
+
+        /*
+            Passport:
+            ऊपर से 6 फोटो
+            3 फोटो × 2 फोटो
+        */
+
+        if (selectedDocument.name === "Passport Size Photo") {
+
+            const columns = 3;
+            const rows = 2;
+
+            const gap = 2;
+
+            const totalWidth =
+                columns * photoWidth +
+                (columns - 1) * gap;
+
+            const startX =
+                (pageWidth - totalWidth) / 2;
+
+            const startY = 5;
+
+            for (let row = 0; row < rows; row++) {
+
+                for (let column = 0; column < columns; column++) {
+
+                    const img = document.createElement("img");
+
+                    img.src = imageURL;
+                    img.className = "photo";
+
+                    img.style.width = photoWidth + "mm";
+                    img.style.height = photoHeight + "mm";
+
+                    img.style.left =
+                        startX +
+                        column * (photoWidth + gap) +
+                        "mm";
+
+                    img.style.top =
+                        startY +
+                        row * (photoHeight + gap) +
+                        "mm";
+
+                    a4Preview.appendChild(img);
+                }
+            }
+
+            return;
+        }
+
+        /*
+            बाकी documents:
+            A4 में उपलब्ध जगह के अनुसार
+            automatic grid.
+        */
+
+        const margin = 5;
+        const gap = 2;
+
+        const columns = Math.floor(
+            (pageWidth - (2 * margin) + gap) /
+            (photoWidth + gap)
+        );
+
+        const rows = Math.floor(
+            (pageHeight - (2 * margin) + gap) /
+            (photoHeight + gap)
+        );
+
+        const totalPhotos = columns * rows;
+
+        if (totalPhotos < 1) {
+            message.textContent =
+                "
