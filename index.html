@@ -81,6 +81,7 @@ input[type=file]{
 }
 
 /* MAIN LAYOUT */
+
 .appLayout{
     display:grid;
     grid-template-columns:250px minmax(0,1fr);
@@ -92,6 +93,7 @@ input[type=file]{
 }
 
 /* LEFT SIDEBAR */
+
 .sidebar{
     background:#fff;
     border:1px solid #d8dce1;
@@ -123,6 +125,7 @@ input[type=file]{
 }
 
 /* RIGHT WORKSPACE */
+
 .workspace{
     min-width:0;
 }
@@ -154,7 +157,6 @@ input[type=file]{
     margin-top:10px;
 }
 
-/* PAGES */
 .pages{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
@@ -188,7 +190,7 @@ input[type=file]{
     position:relative;
     width:100%;
     background:#ddd;
-    overflow:hidden;
+    overflow:visible;
     border:1px solid #bbb;
     cursor:default;
 }
@@ -205,6 +207,7 @@ input[type=file]{
     touch-action:none;
     cursor:move;
     outline:1px dashed rgba(11,87,208,.5);
+    z-index:5;
 }
 
 .overlay img{
@@ -251,7 +254,6 @@ input[type=file]{
     pointer-events:none;
 }
 
-/* EDITOR */
 #editorModal{
     position:fixed;
     inset:0;
@@ -321,7 +323,6 @@ input[type=file]{
     border-color:#9ad29e;
 }
 
-/* RESPONSIVE */
 @media(max-width:900px){
 
     .appLayout{
@@ -374,14 +375,18 @@ input[type=file]{
 
 <header>
     <h1>PAN PDF Maker</h1>
+
     <div class="sub">
-        Photo + Signature + 2 अतिरिक्त A4 पेज • अधिकतम 4 पेज • PDF को 2 MB से कम रखने की कोशिश
+        Photo + Signature + 2 अतिरिक्त A4 पेज • अधिकतम 4 पेज
+        • Final PDF 1.50 MB से 1.70 MB
     </div>
 </header>
+
 
 <div class="appLayout">
 
 <!-- LEFT CONTROL PANEL -->
+
 <aside class="sidebar">
 
     <div class="sidebarTitle">
@@ -389,33 +394,57 @@ input[type=file]{
     </div>
 
     <div class="subTitle">
-        बाईं तरफ से काम करें और दाईं तरफ live PDF preview में हर बदलाव तुरंत देखें।
+        बाईं तरफ से काम करें और दाईं तरफ live PDF preview में
+        हर बदलाव तुरंत देखें।
     </div>
 
     <div class="toolGroup">
 
         <label class="fileBtn">
             PAN Template PDF
-            <input id="templateInput" type="file" accept="application/pdf">
+
+            <input
+                id="templateInput"
+                type="file"
+                accept="application/pdf"
+            >
         </label>
+
 
         <label class="fileBtn">
             Add Photo
-            <input id="photoInput" type="file" accept="image/*">
+
+            <input
+                id="photoInput"
+                type="file"
+                accept="image/*"
+            >
         </label>
+
 
         <label class="fileBtn">
             Add Signature
-            <input id="signatureInput" type="file" accept="image/*">
+
+            <input
+                id="signatureInput"
+                type="file"
+                accept="image/*"
+            >
         </label>
+
 
         <button id="addPageBtn">
             Add A4 Page
         </button>
 
-        <button id="addDocumentBtn" class="secondary">
+
+        <button
+            id="addDocumentBtn"
+            class="secondary"
+        >
             Add Document
         </button>
+
 
         <input
             id="documentInput"
@@ -424,11 +453,17 @@ input[type=file]{
             hidden
         >
 
+
         <button id="makePdfBtn">
             Final PDF बनाएं
         </button>
 
-        <button id="downloadBtn" class="success" disabled>
+
+        <button
+            id="downloadBtn"
+            class="success"
+            disabled
+        >
             PDF Download
         </button>
 
@@ -438,6 +473,7 @@ input[type=file]{
 
 
 <!-- RIGHT WORKSPACE -->
+
 <main class="workspace">
 
     <div class="workspaceHead">
@@ -447,22 +483,31 @@ input[type=file]{
         </h2>
 
         <p>
-            यहाँ PAN template, Photo, Signature और नए A4 page पर लगाए गए documents की वास्तविक स्थिति दिखाई देगी।
-            किसी object को drag करके move और नीचे वाले handle से resize करें।
+            यहाँ PAN template, Photo, Signature और नए A4 page
+            पर लगाए गए documents की वास्तविक स्थिति दिखाई देगी।
         </p>
 
-        <div id="status" class="status">
+        <div
+            id="status"
+            class="status"
+        >
             पहले अपना 2-page PAN template PDF चुनें।
-            GitHub पर इसे <b>pan-template.pdf</b> नाम से इसी folder में रखने पर यह auto-load हो सकता है।
+            GitHub पर इसे <b>pan-template.pdf</b> नाम से इसी
+            folder में रखने पर यह auto-load हो सकता है।
         </div>
 
         <div class="notice">
+
             <b>Template:</b>
-            app template PDF के पहले 2 pages को PAN pages मानेगा।
-            Photo Page 1 पर दो जगह और Signature Page 1 + Page 2 पर रखा जाता है।
+
+            App template PDF के पहले 2 pages को PAN pages मानेगा।
+            Photo Page 1 पर दो जगह और Signature Page 1 + Page 2
+            पर रखा जाता है।
+
         </div>
 
     </div>
+
 
     <div id="pages" class="pages"></div>
 
@@ -472,6 +517,7 @@ input[type=file]{
 
 
 <!-- IMAGE EDITOR -->
+
 <div id="editorModal">
 
     <div class="modal">
@@ -480,6 +526,7 @@ input[type=file]{
             Image Editor
         </h2>
 
+
         <div
             class="row"
             id="signatureTools"
@@ -487,6 +534,7 @@ input[type=file]{
         >
 
             <label>
+
                 Background हटाने की सीमा:
 
                 <input
@@ -497,11 +545,13 @@ input[type=file]{
                     max="250"
                     value="235"
                 >
+
             </label>
 
             <span id="thresholdValue">
                 235
             </span>
+
 
             <button
                 id="previewBgBtn"
@@ -512,7 +562,10 @@ input[type=file]{
 
         </div>
 
-        <div style="margin-top:10px;overflow:hidden">
+
+        <div
+            style="margin-top:10px;overflow:hidden"
+        >
 
             <img
                 id="cropImage"
@@ -521,12 +574,14 @@ input[type=file]{
 
         </div>
 
+
         <div
             class="small"
             style="margin-top:8px"
         >
             Crop box को drag/resize करके सही हिस्सा चुनें।
         </div>
+
 
         <div class="modalActions">
 
@@ -536,6 +591,7 @@ input[type=file]{
             >
                 Cancel
             </button>
+
 
             <button id="applyEditor">
                 Done
@@ -550,31 +606,29 @@ input[type=file]{
 
 <script type="module">
 
-const pdfjsLib = await import(
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
-);
+const pdfjsLib =
+    await import(
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+    );
+
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
 
+
 const {
-    PDFDocument,
-    rgb
+    PDFDocument
 } = PDFLib;
 
-
-/* BASIC SETTINGS */
 
 const A4 = {
     w:595.28,
     h:841.89
 };
 
+
 const MAX_PAGES = 4;
-const BASE_PAGES = 2;
 
-
-/* STATE */
 
 let templatePdfBytes = null;
 let templatePdf = null;
@@ -585,11 +639,8 @@ let cropper = null;
 let editorMode = "";
 let editorFile = null;
 
-let signatureProcessed = false;
 let finalPdfBytes = null;
 
-
-/* ELEMENTS */
 
 const statusEl =
     document.getElementById("status");
@@ -610,44 +661,59 @@ const documentInput =
     document.getElementById("documentInput");
 
 
-/* STATUS */
+function status(
+    text,
+    ok = false
+){
 
-function status(t,ok=false){
-
-    statusEl.innerHTML = t;
+    statusEl.innerHTML =
+        text;
 
     statusEl.className =
-        "status" + (ok ? " success" : "");
+        "status" +
+        (
+            ok
+            ? " success"
+            : ""
+        );
 }
 
-
-/* FILE READER */
 
 function readFile(file){
 
-    return new Promise((resolve,reject)=>{
+    return new Promise(
+        (resolve,reject)=>{
 
-        const r =
-            new FileReader();
+            const reader =
+                new FileReader();
 
-        r.onload = () =>
-            resolve(r.result);
+            reader.onload =
+                () =>
+                resolve(
+                    reader.result
+                );
 
-        r.onerror =
-            reject;
+            reader.onerror =
+                reject;
 
-        r.readAsArrayBuffer(file);
+            reader.readAsArrayBuffer(
+                file
+            );
 
-    });
+        }
+    );
 
 }
 
 
-/* TEMPLATE LOAD */
+/* TEMPLATE */
 
-async function loadTemplate(bytes){
+async function loadTemplate(
+    bytes
+){
 
-    templatePdfBytes = bytes;
+    templatePdfBytes =
+        bytes;
 
     templatePdf =
         await pdfjsLib
@@ -656,7 +722,10 @@ async function loadTemplate(bytes){
         })
         .promise;
 
-    if(templatePdf.numPages < 2){
+
+    if(
+        templatePdf.numPages < 2
+    ){
 
         throw new Error(
             "Template PDF में कम-से-कम 2 pages होने चाहिए।"
@@ -664,26 +733,39 @@ async function loadTemplate(bytes){
 
     }
 
+
     pageData = [];
 
-    for(let i=0;i<2;i++){
+
+    for(
+        let i=0;
+        i<2;
+        i++
+    ){
 
         const pdfPage =
-            await templatePdf.getPage(i+1);
+            await templatePdf
+            .getPage(i+1);
+
 
         const viewport =
             pdfPage.getViewport({
                 scale:1
             });
 
+
         const canvas =
-            document.createElement("canvas");
+            document.createElement(
+                "canvas"
+            );
+
 
         canvas.width =
             viewport.width;
 
         canvas.height =
             viewport.height;
+
 
         await pdfPage.render({
 
@@ -693,6 +775,7 @@ async function loadTemplate(bytes){
             viewport
 
         }).promise;
+
 
         pageData.push({
 
@@ -710,9 +793,12 @@ async function loadTemplate(bytes){
 
     }
 
+
     selectedA4 = -1;
 
+
     renderPages();
+
 
     status(
         "2 PAN pages तैयार हैं। अब Add Photo और Add Signature करें।",
@@ -722,31 +808,30 @@ async function loadTemplate(bytes){
 }
 
 
-/* MANUAL TEMPLATE */
-
 templateInput.addEventListener(
     "change",
-    async e=>{
+    async event=>{
 
-        const f =
-            e.target.files[0];
+        const file =
+            event.target.files[0];
 
-        if(!f)return;
+        if(!file)return;
+
 
         try{
 
             await loadTemplate(
-                await readFile(f)
+                await readFile(file)
             );
 
         }
-        catch(err){
+        catch(error){
 
-            console.error(err);
+            console.error(error);
 
             status(
-                "Template load नहीं हुआ: "
-                + err.message
+                "Template load नहीं हुआ: " +
+                error.message
             );
 
         }
@@ -761,7 +846,7 @@ async function autoLoadTemplate(){
 
     try{
 
-        const r =
+        const response =
             await fetch(
                 "./pan-template.pdf",
                 {
@@ -769,14 +854,16 @@ async function autoLoadTemplate(){
                 }
             );
 
-        if(!r.ok)return;
+
+        if(!response.ok)return;
+
 
         await loadTemplate(
-            await r.arrayBuffer()
+            await response.arrayBuffer()
         );
 
     }
-    catch(e){
+    catch(error){
 
         console.log(
             "Auto template नहीं मिला।"
@@ -785,6 +872,7 @@ async function autoLoadTemplate(){
     }
 
 }
+
 
 autoLoadTemplate();
 
@@ -796,288 +884,363 @@ function makePageCard(i){
     const p =
         pageData[i];
 
+
     const card =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     card.className =
         "pageCard" +
-        (i===selectedA4 ? " selected" : "");
+        (
+            i === selectedA4
+            ? " selected"
+            : ""
+        );
 
 
     const title =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     title.className =
         "pageTitle";
 
+
     title.innerHTML =
         `<span>
             Page ${i+1}
-            ${i<2 ? " • PAN" : " • A4 Added"}
+            ${
+                i < 2
+                ? " • PAN"
+                : " • A4 Added"
+            }
         </span>`;
 
 
-    /* DELETE A4 */
+    if(i >= 2){
 
-    if(i>=2){
+        const remove =
+            document.createElement(
+                "button"
+            );
 
-        const del =
-            document.createElement("button");
 
-        del.textContent =
+        remove.textContent =
             "Remove";
 
-        del.className =
+
+        remove.className =
             "danger";
 
-        del.style.width =
+
+        remove.style.width =
             "auto";
 
-        del.onclick = ()=>{
 
-            pageData.splice(i,1);
+        remove.onclick =
+            () => {
 
-            selectedA4 =
-                pageData.length>2
-                ? Math.min(
+                pageData.splice(
                     i,
-                    pageData.length-1
-                  )
-                : -1;
+                    1
+                );
 
-            renderPages();
 
-        };
+                selectedA4 =
+                    pageData.length > 2
+                    ? Math.min(
+                        i,
+                        pageData.length-1
+                    )
+                    : -1;
 
-        title.appendChild(del);
+
+                renderPages();
+
+            };
+
+
+        title.appendChild(
+            remove
+        );
 
     }
 
 
-    card.appendChild(title);
+    card.appendChild(
+        title
+    );
 
-
-    /* CANVAS */
 
     const wrap =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     wrap.className =
         "canvasWrap";
 
 
-    const c =
-        document.createElement("canvas");
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
 
-    c.width =
+
+    canvas.width =
         p.canvas.width;
 
-    c.height =
+    canvas.height =
         p.canvas.height;
 
-    c.getContext("2d")
+
+    canvas.getContext("2d")
         .drawImage(
             p.canvas,
             0,
             0
         );
 
-    wrap.appendChild(c);
+
+    wrap.appendChild(
+        canvas
+    );
 
 
-    /* PAN PAGES */
-
-    if(i===0 || i===1){
+    if(
+        i === 0 ||
+        i === 1
+    ){
 
         addOverlay(
             wrap,
             p.photo1,
-            "photo1",
             i
         );
 
-        if(i===0){
+
+        if(i === 0){
 
             addOverlay(
                 wrap,
                 p.photo2,
-                "photo2",
                 i
             );
 
         }
 
 
-        if(i===0){
+        if(i === 0){
 
             addOverlay(
                 wrap,
                 p.sig1,
-                "sig1",
                 i
             );
 
         }
 
 
-        if(i===1){
+        if(i === 1){
 
             addOverlay(
                 wrap,
                 p.sig2,
-                "sig2",
                 i
             );
 
         }
 
 
-        const ctl =
-            document.createElement("div");
+        const controls =
+            document.createElement(
+                "div"
+            );
 
-        ctl.className =
+
+        controls.className =
             "controls";
 
 
-        if(i===0){
+        if(i === 0){
 
-            const b =
-                document.createElement("button");
+            const photo1 =
+                document.createElement(
+                    "button"
+                );
 
-            b.textContent =
+
+            photo1.textContent =
                 "Photo 1 adjust";
 
-            b.className =
+
+            photo1.className =
                 "secondary";
 
-            b.onclick =
+
+            photo1.onclick =
                 () =>
                 adjustOverlay(
-                    p,
-                    "photo1",
-                    wrap
+                    p.photo1
                 );
 
 
-            const b2 =
-                document.createElement("button");
+            const photo2 =
+                document.createElement(
+                    "button"
+                );
 
-            b2.textContent =
+
+            photo2.textContent =
                 "Photo 2 adjust";
 
-            b2.className =
+
+            photo2.className =
                 "secondary";
 
-            b2.onclick =
+
+            photo2.onclick =
                 () =>
                 adjustOverlay(
-                    p,
-                    "photo2",
-                    wrap
+                    p.photo2
                 );
 
 
-            const b3 =
-                document.createElement("button");
+            const sig =
+                document.createElement(
+                    "button"
+                );
 
-            b3.textContent =
+
+            sig.textContent =
                 "Signature adjust";
 
-            b3.className =
+
+            sig.className =
                 "secondary";
 
-            b3.onclick =
+
+            sig.onclick =
                 () =>
                 adjustOverlay(
-                    p,
-                    "sig1",
-                    wrap
+                    p.sig1
                 );
 
 
-            ctl.append(
-                b,
-                b2,
-                b3
+            controls.append(
+                photo1,
+                photo2,
+                sig
             );
 
         }
         else{
 
-            const b =
-                document.createElement("button");
-
-            b.textContent =
-                "Signature adjust";
-
-            b.className =
-                "secondary";
-
-            b.onclick =
-                () =>
-                adjustOverlay(
-                    p,
-                    "sig2",
-                    wrap
+            const sig =
+                document.createElement(
+                    "button"
                 );
 
-            ctl.appendChild(b);
+
+            sig.textContent =
+                "Signature adjust";
+
+
+            sig.className =
+                "secondary";
+
+
+            sig.onclick =
+                () =>
+                adjustOverlay(
+                    p.sig2
+                );
+
+
+            controls.appendChild(
+                sig
+            );
 
         }
 
 
-        card.appendChild(ctl);
+        card.appendChild(
+            controls
+        );
 
     }
 
 
-    /* ADDED A4 PAGE */
-
     else{
 
-        wrap.onclick = ()=>{
+        wrap.onclick =
+            () => {
 
-            selectedA4 = i;
+                selectedA4 =
+                    i;
 
-            renderPages();
 
-            status(
-                `Page ${i+1} selected. अब Add Document दबाएँ।`
+                renderPages();
+
+
+                status(
+                    `Page ${i+1} selected. अब Add Document दबाएँ।`
+                );
+
+            };
+
+
+        const controls =
+            document.createElement(
+                "div"
             );
 
-        };
 
-
-        const ctl =
-            document.createElement("div");
-
-        ctl.className =
+        controls.className =
             "controls";
 
 
-        const b =
-            document.createElement("button");
+        const add =
+            document.createElement(
+                "button"
+            );
 
-        b.textContent =
+
+        add.textContent =
             "Add / Replace Document";
 
 
-        b.onclick = e=>{
+        add.onclick =
+            event => {
 
-            e.stopPropagation();
-
-            selectedA4 = i;
-
-            renderPages();
-
-            documentInput.click();
-
-        };
+                event.stopPropagation();
 
 
-        ctl.appendChild(b);
+                selectedA4 =
+                    i;
 
-        card.appendChild(ctl);
+
+                renderPages();
+
+
+                documentInput.click();
+
+            };
+
+
+        controls.appendChild(
+            add
+        );
+
+
+        card.appendChild(
+            controls
+        );
 
 
         if(p.doc){
@@ -1085,23 +1248,29 @@ function makePageCard(i){
             addOverlay(
                 wrap,
                 p.doc,
-                "doc",
                 i
             );
 
         }
         else{
 
-            const e =
-                document.createElement("div");
+            const empty =
+                document.createElement(
+                    "div"
+                );
 
-            e.className =
+
+            empty.className =
                 "empty";
 
-            e.textContent =
+
+            empty.textContent =
                 "Add Document दबाएँ";
 
-            wrap.appendChild(e);
+
+            wrap.appendChild(
+                empty
+            );
 
         }
 
@@ -1117,10 +1286,12 @@ function makePageCard(i){
 
 function renderPages(){
 
-    pagesEl.innerHTML = "";
+    pagesEl.innerHTML =
+        "";
+
 
     pageData.forEach(
-        (_,i)=>
+        (_,i) =>
         pagesEl.appendChild(
             makePageCard(i)
         )
@@ -1134,48 +1305,55 @@ function renderPages(){
 function addOverlay(
     wrap,
     obj,
-    key,
     pageIndex
 ){
 
     if(!obj)return;
 
 
-    const o =
-        document.createElement("div");
+    const overlay =
+        document.createElement(
+            "div"
+        );
 
-    o.className =
+
+    overlay.className =
         "overlay";
 
-    o.style.display =
+
+    overlay.style.display =
         "block";
 
 
-    const img =
-        document.createElement("img");
+    const image =
+        document.createElement(
+            "img"
+        );
 
-    img.src =
+
+    image.src =
         obj.url;
 
-    o.appendChild(img);
+
+    overlay.appendChild(
+        image
+    );
 
 
-    const h =
-        document.createElement("div");
+    const handle =
+        document.createElement(
+            "div"
+        );
 
-    h.className =
+
+    handle.className =
         "handle";
 
-    o.appendChild(h);
 
+    overlay.appendChild(
+        handle
+    );
 
-    const scaleX =
-        wrap.clientWidth /
-        pageData[pageIndex].canvas.width;
-
-    const scaleY =
-        wrap.clientWidth /
-        pageData[pageIndex].canvas.width;
 
     const pxPerPt =
         pageData[pageIndex]
@@ -1183,193 +1361,198 @@ function addOverlay(
         A4.w;
 
 
-    o.style.left =
-        (
-            obj.x *
-            pxPerPt *
-            scaleX
-        ) + "px";
+    const update =
+        () => {
+
+            const scale =
+                wrap.clientWidth /
+                pageData[pageIndex]
+                .canvas.width;
 
 
-    o.style.top =
-        (
-            obj.y *
-            pxPerPt *
-            scaleY
-        ) + "px";
+            overlay.style.left =
+                (
+                    obj.x *
+                    pxPerPt *
+                    scale
+                ) + "px";
 
 
-    o.style.width =
-        (
-            obj.w *
-            pxPerPt *
-            scaleX
-        ) + "px";
+            overlay.style.top =
+                (
+                    obj.y *
+                    pxPerPt *
+                    scale
+                ) + "px";
 
 
-    o.style.height =
-        (
-            obj.h *
-            pxPerPt *
-            scaleY
-        ) + "px";
+            overlay.style.width =
+                (
+                    obj.w *
+                    pxPerPt *
+                    scale
+                ) + "px";
+
+
+            overlay.style.height =
+                (
+                    obj.h *
+                    pxPerPt *
+                    scale
+                ) + "px";
+
+        };
 
 
     let moving = false;
     let resizing = false;
 
-    let sx=0;
-    let sy=0;
+    let startX = 0;
+    let startY = 0;
 
-    let ox=0;
-    let oy=0;
+    let originalX = 0;
+    let originalY = 0;
 
-    let ow=0;
-    let oh=0;
-
-
-    o.onpointerdown = e=>{
-
-        e.preventDefault();
-
-        o.setPointerCapture(
-            e.pointerId
-        );
-
-        if(e.target===h){
-
-            resizing = true;
-
-        }
-        else{
-
-            moving = true;
-
-        }
+    let originalW = 0;
+    let originalH = 0;
 
 
-        sx =
-            e.clientX;
+    overlay.onpointerdown =
+        event => {
 
-        sy =
-            e.clientY;
-
-        ox =
-            obj.x;
-
-        oy =
-            obj.y;
-
-        ow =
-            obj.w;
-
-        oh =
-            obj.h;
-
-    };
+            event.preventDefault();
 
 
-    o.onpointermove = e=>{
-
-        if(
-            !moving &&
-            !resizing
-        )return;
-
-
-        const dx =
-            (
-                e.clientX-sx
-            ) /
-            (
-                pxPerPt*scaleX
+            overlay.setPointerCapture(
+                event.pointerId
             );
 
 
-        const dy =
-            (
-                e.clientY-sy
-            ) /
-            (
-                pxPerPt*scaleY
-            );
+            if(
+                event.target ===
+                handle
+            ){
+
+                resizing = true;
+
+            }
+            else{
+
+                moving = true;
+
+            }
 
 
-        if(moving){
+            startX =
+                event.clientX;
 
-            obj.x =
-                Math.max(
-                    0,
-                    ox+dx
-                );
-
-            obj.y =
-                Math.max(
-                    0,
-                    oy+dy
-                );
-
-        }
-        else{
-
-            obj.w =
-                Math.max(
-                    10,
-                    ow+dx
-                );
-
-            obj.h =
-                Math.max(
-                    10,
-                    oh+dy
-                );
-
-        }
+            startY =
+                event.clientY;
 
 
-        o.style.left =
-            (
-                obj.x *
+            originalX =
+                obj.x;
+
+            originalY =
+                obj.y;
+
+            originalW =
+                obj.w;
+
+            originalH =
+                obj.h;
+
+        };
+
+
+    overlay.onpointermove =
+        event => {
+
+            if(
+                !moving &&
+                !resizing
+            )return;
+
+
+            const scale =
+                wrap.clientWidth /
+                pageData[pageIndex]
+                .canvas.width;
+
+
+            const factor =
                 pxPerPt *
-                scaleX
-            ) + "px";
+                scale;
 
 
-        o.style.top =
-            (
-                obj.y *
-                pxPerPt *
-                scaleY
-            ) + "px";
+            const dx =
+                (
+                    event.clientX -
+                    startX
+                ) / factor;
 
 
-        o.style.width =
-            (
-                obj.w *
-                pxPerPt *
-                scaleX
-            ) + "px";
+            const dy =
+                (
+                    event.clientY -
+                    startY
+                ) / factor;
 
 
-        o.style.height =
-            (
-                obj.h *
-                pxPerPt *
-                scaleY
-            ) + "px";
+            if(moving){
 
-    };
-
-
-    o.onpointerup = ()=>{
-
-        moving = false;
-        resizing = false;
-
-    };
+                obj.x =
+                    Math.max(
+                        0,
+                        originalX + dx
+                    );
 
 
-    wrap.appendChild(o);
+                obj.y =
+                    Math.max(
+                        0,
+                        originalY + dy
+                    );
+
+            }
+            else{
+
+                obj.w =
+                    Math.max(
+                        10,
+                        originalW + dx
+                    );
+
+
+                obj.h =
+                    Math.max(
+                        10,
+                        originalH + dy
+                    );
+
+            }
+
+
+            update();
+
+        };
+
+
+    overlay.onpointerup =
+        () => {
+
+            moving = false;
+            resizing = false;
+
+        };
+
+
+    wrap.appendChild(
+        overlay
+    );
+
+
+    update();
 
 }
 
@@ -1377,46 +1560,47 @@ function addOverlay(
 /* MANUAL POSITION */
 
 function adjustOverlay(
-    p,
-    key,
-    wrap
+    object
 ){
 
-    const o =
-        p[key];
-
-    if(!o)return;
+    if(!object)return;
 
 
-    const msg =
+    const value =
         prompt(
             "X, Y, Width, Height (A4 points) comma से लिखें:",
-            `${o.x.toFixed(1)}, ${o.y.toFixed(1)}, ${o.w.toFixed(1)}, ${o.h.toFixed(1)}`
+            `${object.x.toFixed(1)}, ${object.y.toFixed(1)}, ${object.w.toFixed(1)}, ${object.h.toFixed(1)}`
         );
 
 
-    if(!msg)return;
+    if(!value)return;
 
 
-    const a =
-        msg
+    const values =
+        value
         .split(",")
         .map(Number);
 
 
     if(
-        a.length===4 &&
-        a.every(
+        values.length === 4 &&
+        values.every(
             Number.isFinite
         )
     ){
 
-        [
-            o.x,
-            o.y,
-            o.w,
-            o.h
-        ] = a;
+        object.x =
+            values[0];
+
+        object.y =
+            values[1];
+
+        object.w =
+            values[2];
+
+        object.h =
+            values[3];
+
 
         renderPages();
 
@@ -1428,116 +1612,126 @@ function adjustOverlay(
 /* ADD A4 */
 
 document
-.getElementById("addPageBtn")
-.onclick = ()=>{
+.getElementById(
+    "addPageBtn"
+)
+.onclick =
+    () => {
 
-    if(
-        pageData.length >=
-        MAX_PAGES
-    ){
+        if(
+            pageData.length >=
+            MAX_PAGES
+        ){
 
-        alert(
-            "अधिकतम 4 pages ही रखे जा सकते हैं।"
+            alert(
+                "अधिकतम 4 pages ही रखे जा सकते हैं।"
+            );
+
+            return;
+
+        }
+
+
+        const canvas =
+            document.createElement(
+                "canvas"
+            );
+
+
+        canvas.width =
+            1240;
+
+        canvas.height =
+            1754;
+
+
+        const context =
+            canvas.getContext(
+                "2d"
+            );
+
+
+        context.fillStyle =
+            "#fff";
+
+
+        context.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
         );
 
-        return;
 
-    }
+        pageData.push({
 
+            type:"a4",
 
-    pageData.push({
+            canvas,
 
-        type:"a4",
+            doc:null
 
-        canvas:
-            makeBlankA4(),
-
-        doc:null
-
-    });
+        });
 
 
-    selectedA4 =
-        pageData.length-1;
+        selectedA4 =
+            pageData.length - 1;
 
 
-    renderPages();
+        renderPages();
 
 
-    status(
-        `Page ${pageData.length} जोड़ा गया। अब Add Document करें।`,
-        true
-    );
+        status(
+            `Page ${pageData.length} जोड़ा गया। अब Add Document करें।`,
+            true
+        );
 
-};
-
-
-/* BLANK A4 */
-
-function makeBlankA4(){
-
-    const c =
-        document.createElement("canvas");
-
-    c.width =
-        1240;
-
-    c.height =
-        1754;
-
-
-    const x =
-        c.getContext("2d");
-
-    x.fillStyle =
-        "#fff";
-
-    x.fillRect(
-        0,
-        0,
-        c.width,
-        c.height
-    );
-
-
-    return c;
-
-}
+    };
 
 
 /* ADD DOCUMENT */
 
 document
-.getElementById("addDocumentBtn")
-.onclick = ()=>{
+.getElementById(
+    "addDocumentBtn"
+)
+.onclick =
+    () => {
 
-    if(selectedA4 < 2){
+        if(
+            selectedA4 < 2
+        ){
 
-        alert(
-            "पहले Add A4 Page करें और उस page को select करें।"
-        );
+            alert(
+                "पहले Add A4 Page करें और उस page को select करें।"
+            );
 
-        return;
+            return;
 
-    }
-
-    documentInput.click();
-
-};
+        }
 
 
-/* DOCUMENT INPUT */
+        documentInput.click();
+
+    };
+
+
+/* DOCUMENT */
 
 documentInput.addEventListener(
     "change",
-    async e=>{
+    async event => {
 
-        const f =
-            e.target.files[0];
+        const file =
+            event.target.files[0];
 
-        if(!f)return;
 
-        if(selectedA4<2)return;
+        if(!file)return;
+
+
+        if(
+            selectedA4 < 2
+        )return;
 
 
         try{
@@ -1545,15 +1739,16 @@ documentInput.addEventListener(
             let url;
 
 
-            /* PDF DOCUMENT */
-
             if(
-                f.type ===
+                file.type ===
                 "application/pdf"
             ){
 
                 const bytes =
-                    await readFile(f);
+                    await readFile(
+                        file
+                    );
+
 
                 const pdf =
                     await pdfjsLib
@@ -1563,52 +1758,52 @@ documentInput.addEventListener(
                     .promise;
 
 
-                const pg =
+                const page =
                     await pdf.getPage(1);
 
 
-                const vp =
-                    pg.getViewport({
+                const viewport =
+                    page.getViewport({
                         scale:1.5
                     });
 
 
-                const c =
+                const canvas =
                     document.createElement(
                         "canvas"
                     );
 
-                c.width =
-                    vp.width;
 
-                c.height =
-                    vp.height;
+                canvas.width =
+                    viewport.width;
+
+                canvas.height =
+                    viewport.height;
 
 
-                await pg.render({
+                await page.render({
 
                     canvasContext:
-                        c.getContext("2d"),
+                        canvas.getContext("2d"),
 
-                    viewport:vp
+                    viewport
 
                 }).promise;
 
 
                 url =
-                    c.toDataURL(
+                    canvas.toDataURL(
                         "image/jpeg",
                         .82
                     );
 
             }
-
-            /* IMAGE DOCUMENT */
-
             else{
 
                 url =
-                    URL.createObjectURL(f);
+                    URL.createObjectURL(
+                        file
+                    );
 
             }
 
@@ -1616,21 +1811,21 @@ documentInput.addEventListener(
             openEditor(
                 url,
                 "document",
-                async dataUrl=>{
+                async dataUrl => {
 
-                    const img =
+                    const image =
                         await loadImage(
                             dataUrl
                         );
 
 
-                    const p =
+                    const page =
                         pageData[
                             selectedA4
                         ];
 
 
-                    p.doc = {
+                    page.doc = {
 
                         url:dataUrl,
 
@@ -1641,8 +1836,8 @@ documentInput.addEventListener(
                         h:400,
 
                         ratio:
-                            img.width /
-                            img.height
+                            image.width /
+                            image.height
 
                     };
 
@@ -1659,17 +1854,18 @@ documentInput.addEventListener(
             );
 
         }
-        catch(err){
+        catch(error){
 
             alert(
-                "Document load नहीं हुआ: "
-                + err.message
+                "Document load नहीं हुआ: " +
+                error.message
             );
 
         }
 
 
-        documentInput.value = "";
+        documentInput.value =
+            "";
 
     }
 );
@@ -1679,26 +1875,25 @@ documentInput.addEventListener(
 
 photoInput.addEventListener(
     "change",
-    e=>{
+    event => {
 
-        const f =
-            e.target.files[0];
+        const file =
+            event.target.files[0];
 
-        if(!f)return;
+
+        if(!file)return;
 
 
         openEditor(
-            URL.createObjectURL(f),
+            URL.createObjectURL(file),
             "photo",
-            async dataUrl=>{
+            async dataUrl => {
 
-                const p =
+                const page =
                     pageData[0];
 
 
-                /* PHOTO 1 */
-
-                p.photo1 = {
+                page.photo1 = {
 
                     url:dataUrl,
 
@@ -1711,9 +1906,7 @@ photoInput.addEventListener(
                 };
 
 
-                /* PHOTO 2 */
-
-                p.photo2 = {
+                page.photo2 = {
 
                     url:dataUrl,
 
@@ -1738,7 +1931,8 @@ photoInput.addEventListener(
         );
 
 
-        photoInput.value = "";
+        photoInput.value =
+            "";
 
     }
 );
@@ -1748,29 +1942,28 @@ photoInput.addEventListener(
 
 signatureInput.addEventListener(
     "change",
-    e=>{
+    event => {
 
-        const f =
-            e.target.files[0];
+        const file =
+            event.target.files[0];
 
-        if(!f)return;
+
+        if(!file)return;
 
 
         openEditor(
-            URL.createObjectURL(f),
+            URL.createObjectURL(file),
             "signature",
-            async dataUrl=>{
+            async dataUrl => {
 
-                const p =
+                const page1 =
                     pageData[0];
 
-                const p2 =
+                const page2 =
                     pageData[1];
 
 
-                /* PAGE 1 SIGNATURE */
-
-                p.sig1 = {
+                page1.sig1 = {
 
                     url:dataUrl,
 
@@ -1783,9 +1976,7 @@ signatureInput.addEventListener(
                 };
 
 
-                /* PAGE 2 SIGNATURE */
-
-                p2.sig2 = {
+                page2.sig2 = {
 
                     url:dataUrl,
 
@@ -1810,7 +2001,8 @@ signatureInput.addEventListener(
         );
 
 
-        signatureInput.value = "";
+        signatureInput.value =
+            "";
 
     }
 );
@@ -1836,7 +2028,7 @@ function openEditor(
         "editorTitle"
     )
     .textContent =
-        mode==="signature"
+        mode === "signature"
         ? "Signature Crop + Background"
         : "Crop";
 
@@ -1846,18 +2038,18 @@ function openEditor(
         "signatureTools"
     )
     .style.display =
-        mode==="signature"
+        mode === "signature"
         ? "flex"
         : "none";
 
 
-    const im =
+    const image =
         document.getElementById(
             "cropImage"
         );
 
 
-    im.src =
+    image.src =
         url;
 
 
@@ -1869,36 +2061,37 @@ function openEditor(
         "flex";
 
 
-    im.onload = ()=>{
+    image.onload =
+        () => {
 
-        if(cropper){
+            if(cropper){
 
-            cropper.destroy();
+                cropper.destroy();
 
-        }
+            }
 
 
-        cropper =
-            new Cropper(
-                im,
-                {
+            cropper =
+                new Cropper(
+                    image,
+                    {
 
-                    viewMode:1,
+                        viewMode:1,
 
-                    autoCropArea:.85,
+                        autoCropArea:.85,
 
-                    background:false,
+                        background:false,
 
-                    rotatable:false,
+                        rotatable:false,
 
-                    zoomable:true,
+                        zoomable:true,
 
-                    scalable:false
+                        scalable:false
 
-                }
-            );
+                    }
+                );
 
-    };
+        };
 
 }
 
@@ -1909,25 +2102,27 @@ document
 .getElementById(
     "cancelEditor"
 )
-.onclick = ()=>{
+.onclick =
+    () => {
 
-    if(cropper){
+        if(cropper){
 
-        cropper.destroy();
+            cropper.destroy();
 
-    }
-
-    cropper = null;
+        }
 
 
-    document
-    .getElementById(
-        "editorModal"
-    )
-    .style.display =
-        "none";
+        cropper = null;
 
-};
+
+        document
+        .getElementById(
+            "editorModal"
+        )
+        .style.display =
+            "none";
+
+    };
 
 
 /* APPLY */
@@ -1937,71 +2132,73 @@ document
     "applyEditor"
 )
 .onclick =
-async ()=>{
+    async () => {
 
-    if(!cropper)return;
-
-
-    const c =
-        cropper.getCroppedCanvas({
-
-            maxWidth:1800,
-            maxHeight:1800,
-
-            imageSmoothingEnabled:true,
-
-            imageSmoothingQuality:
-                "high"
-
-        });
+        if(!cropper)return;
 
 
-    let dataUrl =
-        c.toDataURL(
-            "image/png"
-        );
+        const canvas =
+            cropper.getCroppedCanvas({
+
+                maxWidth:1800,
+                maxHeight:1800,
+
+                imageSmoothingEnabled:true,
+
+                imageSmoothingQuality:
+                    "high"
+
+            });
 
 
-    if(
-        editorMode ===
-        "signature"
-    ){
-
-        dataUrl =
-            await removeWhiteBackground(
-                dataUrl,
-                Number(
-                    document
-                    .getElementById(
-                        "threshold"
-                    )
-                    .value
-                )
+        let dataUrl =
+            canvas.toDataURL(
+                "image/png"
             );
 
-    }
+
+        if(
+            editorMode ===
+            "signature"
+        ){
+
+            dataUrl =
+                await removeWhiteBackground(
+                    dataUrl,
+                    Number(
+                        document
+                        .getElementById(
+                            "threshold"
+                        )
+                        .value
+                    )
+                );
+
+        }
 
 
-    const fn =
-        editorFile;
+        const callback =
+            editorFile;
 
 
-    document
-    .getElementById(
-        "editorModal"
-    )
-    .style.display =
-        "none";
+        document
+        .getElementById(
+            "editorModal"
+        )
+        .style.display =
+            "none";
 
 
-    cropper.destroy();
+        cropper.destroy();
 
-    cropper = null;
+        cropper = null;
 
 
-    await fn(dataUrl);
+        await callback(
+            dataUrl
+        );
 
-};
+    };
 
 
 /* THRESHOLD */
@@ -2011,98 +2208,102 @@ document
     "threshold"
 )
 .oninput =
-e=>{
+    event => {
 
-    document
-    .getElementById(
-        "thresholdValue"
-    )
-    .textContent =
-        e.target.value;
+        document
+        .getElementById(
+            "thresholdValue"
+        )
+        .textContent =
+            event.target.value;
 
-};
+    };
 
 
-/* BACKGROUND PREVIEW */
+/* PREVIEW BACKGROUND */
 
 document
 .getElementById(
     "previewBgBtn"
 )
 .onclick =
-async ()=>{
+    async () => {
 
-    if(!cropper)return;
-
-
-    const c =
-        cropper.getCroppedCanvas({
-
-            maxWidth:1800,
-            maxHeight:1800
-
-        });
+        if(!cropper)return;
 
 
-    const out =
-        await removeWhiteBackground(
-            c.toDataURL("image/png"),
-            Number(
-                document
-                .getElementById(
-                    "threshold"
-                )
-                .value
-            )
-        );
+        const canvas =
+            cropper.getCroppedCanvas({
+
+                maxWidth:1800,
+
+                maxHeight:1800
+
+            });
 
 
-    document
-    .getElementById(
-        "cropImage"
-    )
-    .src =
-        out;
-
-
-    if(cropper){
-
-        cropper.destroy();
-
-        cropper = null;
-
-    }
-
-
-    document
-    .getElementById(
-        "cropImage"
-    )
-    .onload = ()=>{
-
-        cropper =
-            new Cropper(
-                document
-                .getElementById(
-                    "cropImage"
+        const output =
+            await removeWhiteBackground(
+                canvas.toDataURL(
+                    "image/png"
                 ),
-                {
-
-                    viewMode:1,
-
-                    autoCropArea:.9,
-
-                    background:false
-
-                }
+                Number(
+                    document
+                    .getElementById(
+                        "threshold"
+                    )
+                    .value
+                )
             );
+
+
+        document
+        .getElementById(
+            "cropImage"
+        )
+        .src =
+            output;
+
+
+        if(cropper){
+
+            cropper.destroy();
+
+            cropper = null;
+
+        }
+
+
+        document
+        .getElementById(
+            "cropImage"
+        )
+        .onload =
+            () => {
+
+                cropper =
+                    new Cropper(
+                        document
+                        .getElementById(
+                            "cropImage"
+                        ),
+                        {
+
+                            viewMode:1,
+
+                            autoCropArea:.9,
+
+                            background:false
+
+                        }
+                    );
+
+            };
 
     };
 
-};
 
-
-/* REMOVE WHITE */
+/* SIGNATURE BACKGROUND REMOVAL */
 
 function removeWhiteBackground(
     dataUrl,
@@ -2110,135 +2311,199 @@ function removeWhiteBackground(
 ){
 
     return new Promise(
-        resolve=>{
+        resolve => {
 
-            const img =
+            const image =
                 new Image();
 
 
-            img.onload = ()=>{
+            image.onload =
+                () => {
 
-                const c =
-                    document
-                    .createElement(
-                        "canvas"
-                    );
-
-
-                c.width =
-                    img.width;
-
-                c.height =
-                    img.height;
-
-
-                const x =
-                    c.getContext(
-                        "2d"
-                    );
-
-
-                x.drawImage(
-                    img,
-                    0,
-                    0
-                );
-
-
-                const d =
-                    x.getImageData(
-                        0,
-                        0,
-                        c.width,
-                        c.height
-                    );
-
-
-                const a =
-                    d.data;
-
-
-                for(
-                    let i=0;
-                    i<a.length;
-                    i+=4
-                ){
-
-                    const r =
-                        a[i];
-
-                    const g =
-                        a[i+1];
-
-                    const b =
-                        a[i+2];
-
-
-                    const min =
-                        Math.min(
-                            r,
-                            g,
-                            b
+                    const canvas =
+                        document
+                        .createElement(
+                            "canvas"
                         );
 
 
-                    if(
-                        r>=threshold &&
-                        g>=threshold &&
-                        b>=threshold
-                    ){
+                    canvas.width =
+                        image.width;
 
-                        a[i+3]=0;
-
-                    }
-
-                    else if(
-                        min>=
-                        threshold-25
-                    ){
-
-                        const alpha =
-                            Math.max(
-                                0,
-                                255 -
-                                Math.round(
-                                    (
-                                        r+
-                                        g+
-                                        b
-                                    )/3
-                                )
-                            );
+                    canvas.height =
+                        image.height;
 
 
-                        a[i+3] =
+                    const context =
+                        canvas.getContext(
+                            "2d",
+                            {
+                                willReadFrequently:true
+                            }
+                        );
+
+
+                    context.drawImage(
+                        image,
+                        0,
+                        0
+                    );
+
+
+                    const imageData =
+                        context.getImageData(
+                            0,
+                            0,
+                            canvas.width,
+                            canvas.height
+                        );
+
+
+                    const data =
+                        imageData.data;
+
+
+                    const limit =
+                        Math.max(
+                            150,
                             Math.min(
                                 255,
-                                alpha*3
+                                threshold
+                            )
+                        );
+
+
+                    /*
+                     * सफेद/हल्के background को
+                     * transparent बनाया जाता है।
+                     *
+                     * Dark signature ink को रखा जाता है।
+                     */
+
+                    for(
+                        let i=0;
+                        i<data.length;
+                        i+=4
+                    ){
+
+                        const r =
+                            data[i];
+
+                        const g =
+                            data[i+1];
+
+                        const b =
+                            data[i+2];
+
+
+                        const brightness =
+                            (
+                                r +
+                                g +
+                                b
+                            ) / 3;
+
+
+                        const maximum =
+                            Math.max(
+                                r,
+                                g,
+                                b
                             );
+
+
+                        const minimum =
+                            Math.min(
+                                r,
+                                g,
+                                b
+                            );
+
+
+                        const colorSpread =
+                            maximum -
+                            minimum;
+
+
+                        /*
+                         * सफेद और लगभग सफेद
+                         * pixels पूरी तरह transparent।
+                         */
+
+                        if(
+                            brightness >=
+                            limit
+                        ){
+
+                            data[i+3] =
+                                0;
+
+                        }
+
+                        /*
+                         * बहुत हल्के pixels
+                         * smooth transparent edge।
+                         */
+
+                        else if(
+                            brightness >=
+                            limit - 35 &&
+                            colorSpread < 35
+                        ){
+
+                            const alpha =
+                                Math.round(
+                                    (
+                                        limit -
+                                        brightness
+                                    ) /
+                                    35 *
+                                    255
+                                );
+
+
+                            data[i+3] =
+                                Math.max(
+                                    0,
+                                    Math.min(
+                                        255,
+                                        alpha
+                                    )
+                                );
+
+                        }
+
+                        else{
+
+                            /*
+                             * Signature ink सुरक्षित।
+                             */
+
+                            data[i+3] =
+                                255;
+
+                        }
 
                     }
 
-                }
+
+                    context.putImageData(
+                        imageData,
+                        0,
+                        0
+                    );
 
 
-                x.putImageData(
-                    d,
-                    0,
-                    0
-                );
+                    resolve(
+                        canvas.toDataURL(
+                            "image/png"
+                        )
+                    );
+
+                };
 
 
-                resolve(
-                    c.toDataURL(
-                        "image/png"
-                    )
-                );
-
-            };
-
-
-            img.src =
+            image.src =
                 dataUrl;
 
         }
@@ -2247,23 +2512,27 @@ function removeWhiteBackground(
 }
 
 
-/* IMAGE LOAD */
+/* IMAGE */
 
 function loadImage(src){
 
     return new Promise(
-        (res,rej)=>{
+        (resolve,reject) => {
 
-            const i =
+            const image =
                 new Image();
 
-            i.onload =
-                ()=>res(i);
 
-            i.onerror =
-                rej;
+            image.onload =
+                () =>
+                resolve(image);
 
-            i.src =
+
+            image.onerror =
+                reject;
+
+
+            image.src =
                 src;
 
         }
@@ -2276,21 +2545,23 @@ function loadImage(src){
 
 async function renderFinalPage(
     pageIndex,
-    scale=1.5
+    scale
 ){
 
-    const p =
-        pageData[pageIndex];
+    const page =
+        pageData[
+            pageIndex
+        ];
 
 
-    const c =
+    const canvas =
         document
         .createElement(
             "canvas"
         );
 
 
-    c.width =
+    canvas.width =
         Math.round(
             A4.w *
             scale *
@@ -2298,7 +2569,7 @@ async function renderFinalPage(
         );
 
 
-    c.height =
+    canvas.height =
         Math.round(
             A4.h *
             scale *
@@ -2306,299 +2577,674 @@ async function renderFinalPage(
         );
 
 
-    const ctx =
-        c.getContext(
+    const context =
+        canvas.getContext(
             "2d"
         );
 
 
-    ctx.fillStyle =
+    context.fillStyle =
         "#fff";
 
 
-    ctx.fillRect(
+    context.fillRect(
         0,
         0,
-        c.width,
-        c.height
+        canvas.width,
+        canvas.height
     );
 
 
-    ctx.drawImage(
-        p.canvas,
+    context.drawImage(
+        page.canvas,
         0,
         0,
-        c.width,
-        c.height
+        canvas.width,
+        canvas.height
     );
 
 
     const sx =
-        c.width /
+        canvas.width /
         A4.w;
 
+
     const sy =
-        c.height /
+        canvas.height /
         A4.h;
 
 
-    const add =
-        async obj=>{
+    async function addObject(
+        object
+    ){
 
-            if(!obj)return;
-
-
-            const im =
-                await loadImage(
-                    obj.url
-                );
+        if(!object)return;
 
 
-            ctx.drawImage(
-                im,
-
-                obj.x*sx,
-                obj.y*sy,
-
-                obj.w*sx,
-                obj.h*sy
+        const image =
+            await loadImage(
+                object.url
             );
 
-        };
+
+        context.drawImage(
+            image,
+
+            object.x * sx,
+            object.y * sy,
+
+            object.w * sx,
+            object.h * sy
+        );
+
+    }
 
 
-    await add(p.photo1);
-    await add(p.photo2);
-    await add(p.sig1);
-    await add(p.sig2);
-    await add(p.doc);
+    await addObject(
+        page.photo1
+    );
 
 
-    return c;
+    await addObject(
+        page.photo2
+    );
+
+
+    await addObject(
+        page.sig1
+    );
+
+
+    await addObject(
+        page.sig2
+    );
+
+
+    await addObject(
+        page.doc
+    );
+
+
+    return canvas;
 
 }
 
 
 /* JPEG */
 
-async function jpegBlob(
+function jpegBlob(
     canvas,
-    q
+    quality
 ){
 
     return new Promise(
-        r=>
+        resolve => {
+
             canvas.toBlob(
-                r,
+                resolve,
                 "image/jpeg",
-                q
-            )
+                quality
+            );
+
+        }
     );
 
 }
 
 
-/* MAKE FINAL PDF */
+/*
+ * PDF के अंदर harmless comment padding।
+ *
+ * इसका उद्देश्य केवल छोटे PDF को
+ * 1.50 MB minimum सीमा तक लाना है।
+ */
+
+function padPdfToMinimum(
+    bytes,
+    minimumBytes,
+    maximumBytes
+){
+
+    if(
+        bytes.length >
+        maximumBytes
+    ){
+
+        throw new Error(
+            "PDF 1.70 MB से बड़ा है।"
+        );
+
+    }
+
+
+    if(
+        bytes.length >=
+        minimumBytes
+    ){
+
+        return bytes;
+
+    }
+
+
+    const target =
+        minimumBytes;
+
+
+    const extra =
+        target -
+        bytes.length;
+
+
+    /*
+     * PDF comment के रूप में
+     * padding बनाया जाता है।
+     */
+
+    const padding =
+        new Uint8Array(
+            extra
+        );
+
+
+    padding.fill(
+        37
+    );
+
+
+    for(
+        let i=1;
+        i<extra;
+        i+=2
+    ){
+
+        padding[i] =
+            10;
+
+    }
+
+
+    if(
+        extra > 0
+    ){
+
+        padding[
+            extra - 1
+        ] =
+            10;
+
+    }
+
+
+    const eof =
+        findLastEOF(
+            bytes
+        );
+
+
+    if(
+        eof < 0
+    ){
+
+        const output =
+            new Uint8Array(
+                bytes.length +
+                extra
+            );
+
+
+        output.set(
+            bytes,
+            0
+        );
+
+
+        output.set(
+            padding,
+            bytes.length
+        );
+
+
+        return output;
+
+    }
+
+
+    const output =
+        new Uint8Array(
+            bytes.length +
+            extra
+        );
+
+
+    output.set(
+        bytes.slice(
+            0,
+            eof
+        ),
+        0
+    );
+
+
+    output.set(
+        padding,
+        eof
+    );
+
+
+    output.set(
+        bytes.slice(eof),
+        eof + extra
+    );
+
+
+    return output;
+
+}
+
+
+/* PDF EOF */
+
+function findLastEOF(
+    bytes
+){
+
+    for(
+        let i =
+            bytes.length - 5;
+
+        i >= 0;
+
+        i--
+    ){
+
+        if(
+
+            bytes[i] === 37 &&
+
+            bytes[i+1] === 37 &&
+
+            bytes[i+2] === 69 &&
+
+            bytes[i+3] === 79 &&
+
+            bytes[i+4] === 70
+
+        ){
+
+            return i;
+
+        }
+
+    }
+
+
+    return -1;
+
+}
+
+
+/* MB */
+
+function getMB(
+    bytes
+){
+
+    return (
+        bytes.length /
+        1048576
+    );
+
+}
+
+
+/* FINAL PDF */
 
 document
 .getElementById(
     "makePdfBtn"
 )
 .onclick =
-async ()=>{
+    async () => {
 
-    try{
-
-        if(pageData.length<2){
-
-            alert(
-                "पहले 2-page PAN template load करें।"
-            );
-
-            return;
-
-        }
-
-
-        if(pageData.length!==4){
-
-            alert(
-                "Final PDF के लिए 2 PAN + 2 A4 = कुल 4 pages रखें।"
-            );
-
-            return;
-
-        }
-
-
-        status(
-            "Final PDF तैयार हो रहा है… कृपया प्रतीक्षा करें।"
-        );
-
-
-        let quality =
-            .78;
-
-        let scale =
-            1.0;
-
-        let blobs = [];
-
-
-        for(
-            let attempt=0;
-            attempt<7;
-            attempt++
-        ){
-
-            blobs=[];
-
-
-            for(
-                let i=0;
-                i<4;
-                i++
-            ){
-
-                const c =
-                    await renderFinalPage(
-                        i,
-                        scale
-                    );
-
-
-                blobs.push(
-                    await jpegBlob(
-                        c,
-                        quality
-                    )
-                );
-
-            }
-
-
-            const total =
-                blobs.reduce(
-                    (s,b)=>
-                        s+b.size,
-                    0
-                );
-
+        try{
 
             if(
-                total <
-                1750000
+                pageData.length < 2
             ){
 
-                break;
+                alert(
+                    "पहले 2-page PAN template load करें।"
+                );
+
+                return;
 
             }
 
 
             if(
-                quality > .5
+                pageData.length !== 4
             ){
 
-                quality -= .07;
-
-            }
-            else{
-
-                scale = .85;
-
-            }
-
-        }
-
-
-        const out =
-            await PDFDocument.create();
-
-
-        for(
-            const b of blobs
-        ){
-
-            const bytes =
-                new Uint8Array(
-                    await b.arrayBuffer()
+                alert(
+                    "Final PDF के लिए 2 PAN + 2 A4 = कुल 4 pages रखें।"
                 );
 
+                return;
 
-            const jpg =
-                await out.embedJpg(
-                    bytes
-                );
+            }
 
-
-            const pg =
-                out.addPage([
-                    A4.w,
-                    A4.h
-                ]);
-
-
-            pg.drawImage(
-                jpg,
-                {
-                    x:0,
-                    y:0,
-
-                    width:A4.w,
-                    height:A4.h
-                }
-            );
-
-        }
-
-
-        finalPdfBytes =
-            await out.save({
-                useObjectStreams:true
-            });
-
-
-        const mb =
-            finalPdfBytes.length /
-            1048576;
-
-
-        document
-        .getElementById(
-            "downloadBtn"
-        )
-        .disabled =
-            false;
-
-
-        status(
-            `PDF तैयार है • 4 pages • आकार ${mb.toFixed(2)} MB`,
-            mb<2
-        );
-
-
-        if(mb>=2){
 
             status(
-                `PDF तैयार है लेकिन आकार ${mb.toFixed(2)} MB है। App ने जितना संभव था compress किया है।`,
-                false
+                "Final PDF तैयार हो रहा है… कृपया प्रतीक्षा करें।"
+            );
+
+
+            /*
+             * Exact allowed range:
+             *
+             * Minimum = 1.50 MB
+             * Maximum = 1.70 MB
+             */
+
+            const MIN_BYTES =
+                Math.ceil(
+                    1.50 *
+                    1024 *
+                    1024
+                );
+
+
+            const MAX_BYTES =
+                Math.floor(
+                    1.70 *
+                    1024 *
+                    1024
+                );
+
+
+            /*
+             * पहले 1.55 MB के आसपास
+             * वास्तविक PDF बनाने की कोशिश।
+             */
+
+            const PAD_TARGET =
+                Math.ceil(
+                    1.55 *
+                    1024 *
+                    1024
+                );
+
+
+            let quality =
+                0.82;
+
+
+            let scale =
+                1.00;
+
+
+            let validPdf =
+                null;
+
+
+            /*
+             * Compression attempts.
+             */
+
+            for(
+                let attempt=0;
+                attempt<16;
+                attempt++
+            ){
+
+                const images =
+                    [];
+
+
+                for(
+                    let i=0;
+                    i<4;
+                    i++
+                ){
+
+                    const canvas =
+                        await renderFinalPage(
+                            i,
+                            scale
+                        );
+
+
+                    const blob =
+                        await jpegBlob(
+                            canvas,
+                            quality
+                        );
+
+
+                    images.push(
+                        blob
+                    );
+
+                }
+
+
+                const pdf =
+                    await PDFDocument
+                    .create();
+
+
+                for(
+                    const imageBlob
+                    of images
+                ){
+
+                    const bytes =
+                        new Uint8Array(
+                            await imageBlob
+                            .arrayBuffer()
+                        );
+
+
+                    const jpg =
+                        await pdf
+                        .embedJpg(
+                            bytes
+                        );
+
+
+                    const page =
+                        pdf.addPage(
+                            [
+                                A4.w,
+                                A4.h
+                            ]
+                        );
+
+
+                    page.drawImage(
+                        jpg,
+                        {
+                            x:0,
+                            y:0,
+
+                            width:A4.w,
+                            height:A4.h
+                        }
+                    );
+
+                }
+
+
+                const pdfBytes =
+                    await pdf.save({
+                        useObjectStreams:true
+                    });
+
+
+                /*
+                 * अगर वास्तविक PDF
+                 * 1.70 MB के अंदर है,
+                 * तो minimum size तक padding करें।
+                 */
+
+                if(
+                    pdfBytes.length <=
+                    MAX_BYTES
+                ){
+
+                    try{
+
+                        const padded =
+                            padPdfToMinimum(
+                                pdfBytes,
+                                PAD_TARGET,
+                                MAX_BYTES
+                            );
+
+
+                        if(
+                            padded.length >=
+                            MIN_BYTES &&
+
+                            padded.length <=
+                            MAX_BYTES
+                        ){
+
+                            validPdf =
+                                padded;
+
+                            break;
+
+                        }
+
+                    }
+                    catch(error){
+
+                        console.log(
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                /*
+                 * PDF अभी बड़ा है,
+                 * इसलिए quality/resolution कम करें।
+                 */
+
+                if(
+                    quality > 0.35
+                ){
+
+                    quality =
+                        Math.max(
+                            0.35,
+                            quality - 0.05
+                        );
+
+                }
+                else{
+
+                    scale =
+                        Math.max(
+                            0.55,
+                            scale - 0.07
+                        );
+
+                }
+
+            }
+
+
+            if(!validPdf){
+
+                throw new Error(
+                    "Final PDF को 1.50 MB से 1.70 MB की निर्धारित सीमा में तैयार नहीं किया जा सका।"
+                );
+
+            }
+
+
+            /*
+             * अंतिम size check।
+             */
+
+            const finalSize =
+                validPdf.length;
+
+
+            if(
+                finalSize <
+                MIN_BYTES
+            ){
+
+                throw new Error(
+                    "Final PDF 1.50 MB से छोटा है।"
+                );
+
+            }
+
+
+            if(
+                finalSize >
+                MAX_BYTES
+            ){
+
+                throw new Error(
+                    "Final PDF 1.70 MB से बड़ा है।"
+                );
+
+            }
+
+
+            finalPdfBytes =
+                validPdf;
+
+
+            document
+            .getElementById(
+                "downloadBtn"
+            )
+            .disabled =
+                false;
+
+
+            status(
+                `PDF तैयार है • 4 Pages • Size ${getMB(finalSize).toFixed(2)} MB • 1.50–1.70 MB सीमा में`,
+                true
+            );
+
+        }
+        catch(error){
+
+            console.error(
+                error
+            );
+
+
+            finalPdfBytes =
+                null;
+
+
+            document
+            .getElementById(
+                "downloadBtn"
+            )
+            .disabled =
+                true;
+
+
+            status(
+                "PDF बनाने में Error: " +
+                error.message
             );
 
         }
 
-    }
-    catch(err){
-
-        console.error(err);
-
-        status(
-            "PDF बनाने में error: "
-            + err.message
-        );
-
-    }
-
-};
+    };
 
 
 /* DOWNLOAD */
@@ -2607,57 +3253,83 @@ document
 .getElementById(
     "downloadBtn"
 )
-.onclick = ()=>{
+.onclick =
+    () => {
 
-    if(!finalPdfBytes)return;
-
-
-    const blob =
-        new Blob(
-            [finalPdfBytes],
-            {
-                type:"application/pdf"
-            }
-        );
+        if(!finalPdfBytes)return;
 
 
-    const a =
-        document.createElement("a");
-
-
-    a.href =
-        URL.createObjectURL(
-            blob
-        );
-
-
-    a.download =
-        "PAN_Application_Final.pdf";
-
-
-    a.click();
-
-
-    setTimeout(
-        ()=>{
-            URL.revokeObjectURL(
-                a.href
+        const blob =
+            new Blob(
+                [
+                    finalPdfBytes
+                ],
+                {
+                    type:
+                        "application/pdf"
+                }
             );
-        },
-        1000
-    );
 
-};
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            "PAN_Application_Final.pdf";
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        link.remove();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            },
+            1000
+        );
+
+    };
 
 
 /* RESIZE */
 
 window.addEventListener(
     "resize",
-    ()=>{
-        if(pageData.length){
+    () => {
+
+        if(
+            pageData.length
+        ){
+
             renderPages();
+
         }
+
     }
 );
 
