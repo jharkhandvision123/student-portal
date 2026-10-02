@@ -173,10 +173,6 @@ input[type=file]{
     border-color:#9ad29e;
 }
 
-/* =========================
-   PAGE PREVIEW
-========================= */
-
 .pages{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -276,10 +272,6 @@ input[type=file]{
     color:#777;
     pointer-events:none;
 }
-
-/* =========================
-   EDITOR
-========================= */
 
 #editorModal{
     position:fixed;
@@ -522,7 +514,7 @@ Live PDF Preview
 <div class="notice">
 
 <b>ध्यान दें:</b>
-पहले 2 pages PAN template के रहेंगे। Photo Page 1 पर दो जगह और Signature Page 1 तथा Page 2 पर अपने निर्धारित स्थान पर लगाया जाएगा।
+एक A4 page पर अधिकतम 2 अलग-अलग documents/photos लगाए जा सकते हैं। जैसे Aadhaar Front और Aadhaar Back।
 
 </div>
 
@@ -537,10 +529,6 @@ Live PDF Preview
 
 </div>
 
-
-<!-- =========================
-     EDITOR MODAL
-========================= -->
 
 <div id="editorModal">
 
@@ -625,10 +613,6 @@ Done
 
 <script type="module">
 
-/* =========================================================
-   LIBRARIES
-========================================================= */
-
 const pdfjsLib = await import(
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
 );
@@ -636,14 +620,13 @@ const pdfjsLib = await import(
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
 
-
 const {
     PDFDocument
 } = PDFLib;
 
 
 /* =========================================================
-   CONSTANTS
+   SETTINGS
 ========================================================= */
 
 const A4 = {
@@ -655,11 +638,11 @@ const MAX_PAGES = 4;
 
 const BASE_PAGES = 2;
 
-
 /*
-    PAN TEMPLATE में वास्तविक दिखाई देने वाली जगह के अनुसार
-    Photo और Signature coordinates
+   एक A4 page पर अधिकतम 2 documents.
 */
+const MAX_DOCUMENTS_PER_A4 = 2;
+
 
 const PAN_POSITIONS = {
 
@@ -702,8 +685,6 @@ let templatePdfBytes = null;
 
 let templatePdf = null;
 
-let templateSourcePdf = null;
-
 let pageData = [];
 
 let selectedA4 = -1;
@@ -713,10 +694,6 @@ let cropper = null;
 let editorMode = "";
 
 let editorDone = null;
-
-let finalPdfBytes = null;
-
-let currentEditorSource = null;
 
 
 /* =========================================================
@@ -788,10 +765,11 @@ function readFile(file){
         const reader =
             new FileReader();
 
-        reader.onload = () =>
-            resolve(reader.result);
+        reader.onload =
+            ()=>resolve(reader.result);
 
-        reader.onerror = reject;
+        reader.onerror =
+            reject;
 
         reader.readAsArrayBuffer(file);
 
@@ -808,14 +786,17 @@ function loadImage(src){
 
     return new Promise((resolve,reject)=>{
 
-        const img = new Image();
+        const img =
+            new Image();
 
-        img.onload = () =>
-            resolve(img);
+        img.onload =
+            ()=>resolve(img);
 
-        img.onerror = reject;
+        img.onerror =
+            reject;
 
-        img.src = src;
+        img.src =
+            src;
 
     });
 
@@ -828,11 +809,9 @@ function loadImage(src){
 
 async function loadTemplate(bytes){
 
-    templatePdfBytes = bytes.slice(0);
+    templatePdfBytes =
+        bytes.slice(0);
 
-    /*
-        PDF.js preview document
-    */
 
     templatePdf =
         await pdfjsLib.getDocument({
@@ -849,24 +828,8 @@ async function loadTemplate(bytes){
     }
 
 
-    /*
-        pdf-lib original PDF
-        final PDF के लिए
-    */
+    pageData=[];
 
-    templateSourcePdf =
-        await PDFDocument.load(
-            bytes.slice(0)
-        );
-
-
-    pageData = [];
-
-
-    /*
-        Preview को high-resolution में render करें।
-        इससे preview भी साफ दिखाई देगा।
-    */
 
     for(let i=0;i<2;i++){
 
@@ -892,9 +855,12 @@ async function loadTemplate(bytes){
 
 
         const context =
-            canvas.getContext("2d",{
-                alpha:false
-            });
+            canvas.getContext(
+                "2d",
+                {
+                    alpha:false
+                }
+            );
 
 
         context.fillStyle="#fff";
@@ -911,9 +877,7 @@ async function loadTemplate(bytes){
 
             canvasContext:context,
 
-            viewport:viewport,
-
-            intent:"display"
+            viewport:viewport
 
         }).promise;
 
@@ -964,10 +928,9 @@ templateInput.addEventListener(
 
         try{
 
-            const bytes =
-                await readFile(file);
-
-            await loadTemplate(bytes);
+            await loadTemplate(
+                await readFile(file)
+            );
 
         }
         catch(error){
@@ -986,7 +949,7 @@ templateInput.addEventListener(
 
 
 /* =========================================================
-   AUTO LOAD pan-template.pdf
+   AUTO LOAD
 ========================================================= */
 
 async function autoLoadTemplate(){
@@ -1005,24 +968,16 @@ async function autoLoadTemplate(){
         if(!response.ok)return;
 
 
-        const bytes =
-            await response.arrayBuffer();
-
-
-        await loadTemplate(bytes);
+        await loadTemplate(
+            await response.arrayBuffer()
+        );
 
     }
     catch(error){
 
-        /*
-            File मौजूद नहीं होने पर
-            कोई error दिखाने की जरूरत नहीं।
-        */
-
     }
 
 }
-
 
 autoLoadTemplate();
 
@@ -1043,9 +998,12 @@ function makePageCard(index){
 
     card.className =
         "pageCard"
-        + (index===selectedA4
+        +
+        (
+            index===selectedA4
             ? " selected"
-            : "");
+            : ""
+        );
 
 
     const title =
@@ -1062,9 +1020,12 @@ function makePageCard(index){
 
     titleText.textContent =
         `Page ${index+1}`
-        + (index<2
+        +
+        (
+            index<2
             ? " • PAN"
-            : " • A4 Added");
+            : " • A4 Added"
+        );
 
 
     title.appendChild(titleText);
@@ -1097,6 +1058,7 @@ function makePageCard(index){
 
                 e.stopPropagation();
 
+
                 pageData.splice(
                     index,
                     1
@@ -1115,6 +1077,7 @@ function makePageCard(index){
                             index,
                             pageData.length-1
                         );
+
 
                     if(selectedA4<2){
 
@@ -1138,10 +1101,6 @@ function makePageCard(index){
     card.appendChild(title);
 
 
-    /*
-        Canvas Preview
-    */
-
     const wrap =
         document.createElement("div");
 
@@ -1161,23 +1120,20 @@ function makePageCard(index){
         page.canvas.height;
 
 
-    const context =
-        canvas.getContext("2d");
-
-
-    context.drawImage(
-        page.canvas,
-        0,
-        0
-    );
+    canvas.getContext("2d")
+        .drawImage(
+            page.canvas,
+            0,
+            0
+        );
 
 
     wrap.appendChild(canvas);
 
 
-    /*
-        PAN overlays
-    */
+    /* =====================================================
+       PAN OBJECTS
+    ===================================================== */
 
     if(index<2){
 
@@ -1227,18 +1183,32 @@ function makePageCard(index){
     }
 
 
-    /*
-        Added A4 page
-    */
+    /* =====================================================
+       A4 DOCUMENTS
+    ===================================================== */
 
     else{
 
-        if(page.doc){
+        /*
+           अब page.doc नहीं है।
+           page.docs array है।
+        */
 
-            addOverlay(
-                wrap,
-                page.doc,
-                index
+        if(
+            page.docs &&
+            page.docs.length
+        ){
+
+            page.docs.forEach(
+                (doc,index2)=>{
+
+                    addOverlay(
+                        wrap,
+                        doc,
+                        index
+                    );
+
+                }
             );
 
         }
@@ -1247,13 +1217,18 @@ function makePageCard(index){
             const empty =
                 document.createElement("div");
 
+
             empty.className =
                 "empty";
+
 
             empty.textContent =
                 "Add Document दबाएँ";
 
-            wrap.appendChild(empty);
+
+            wrap.appendChild(
+                empty
+            );
 
         }
 
@@ -1264,13 +1239,16 @@ function makePageCard(index){
                 if(
                     e.target.closest(".overlay")
                 ){
+
                     return;
+
                 }
 
 
                 selectedA4=index;
 
                 renderPages();
+
 
                 status(
                     `Page ${index+1} selected। अब Add Document दबाएँ।`
@@ -1284,9 +1262,9 @@ function makePageCard(index){
     card.appendChild(wrap);
 
 
-    /*
-        Controls
-    */
+    /* =====================================================
+       CONTROLS
+    ===================================================== */
 
     const controls =
         document.createElement("div");
@@ -1303,11 +1281,14 @@ function makePageCard(index){
             const button =
                 document.createElement("button");
 
+
             button.textContent =
                 "Photo 1 adjust";
 
+
             button.className =
                 "secondary";
+
 
             button.onclick =
                 e=>{
@@ -1320,6 +1301,7 @@ function makePageCard(index){
 
                 };
 
+
             controls.appendChild(button);
 
         }
@@ -1330,11 +1312,14 @@ function makePageCard(index){
             const button =
                 document.createElement("button");
 
+
             button.textContent =
                 "Photo 2 adjust";
 
+
             button.className =
                 "secondary";
+
 
             button.onclick =
                 e=>{
@@ -1347,6 +1332,7 @@ function makePageCard(index){
 
                 };
 
+
             controls.appendChild(button);
 
         }
@@ -1357,11 +1343,14 @@ function makePageCard(index){
             const button =
                 document.createElement("button");
 
+
             button.textContent =
                 "Signature adjust";
 
+
             button.className =
                 "secondary";
+
 
             button.onclick =
                 e=>{
@@ -1373,6 +1362,7 @@ function makePageCard(index){
                     );
 
                 };
+
 
             controls.appendChild(button);
 
@@ -1386,11 +1376,14 @@ function makePageCard(index){
         const button =
             document.createElement("button");
 
+
         button.textContent =
             "Signature adjust";
 
+
         button.className =
             "secondary";
+
 
         button.onclick =
             e=>{
@@ -1403,6 +1396,7 @@ function makePageCard(index){
 
             };
 
+
         controls.appendChild(button);
 
     }
@@ -1410,26 +1404,103 @@ function makePageCard(index){
 
     if(index>=2){
 
-        const button =
-            document.createElement("button");
+        if(
+            page.docs &&
+            page.docs.length
+        ){
 
-        button.textContent =
-            "Add / Replace Document";
+            page.docs.forEach(
+                (doc,docIndex)=>{
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
 
 
-        button.onclick =
+                    button.textContent =
+                        `Document ${docIndex+1} adjust`;
+
+
+                    button.className =
+                        "secondary";
+
+
+                    button.onclick =
+                        e=>{
+
+                            e.stopPropagation();
+
+                            adjustOverlay(
+                                doc
+                            );
+
+                        };
+
+
+                    controls.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+        }
+
+
+        const addButton =
+            document.createElement(
+                "button"
+            );
+
+
+        addButton.textContent =
+            page.docs &&
+            page.docs.length>=MAX_DOCUMENTS_PER_A4
+                ? "2 Documents Added"
+                : "Add Document";
+
+
+        if(
+            page.docs &&
+            page.docs.length>=MAX_DOCUMENTS_PER_A4
+        ){
+
+            addButton.disabled=true;
+
+        }
+
+
+        addButton.onclick =
             e=>{
 
                 e.stopPropagation();
 
                 selectedA4=index;
 
+
+                if(
+                    pageData[index].docs.length>=
+                    MAX_DOCUMENTS_PER_A4
+                ){
+
+                    alert(
+                        "एक A4 page पर अधिकतम 2 documents/photos ही जोड़े जा सकते हैं।"
+                    );
+
+                    return;
+
+                }
+
+
                 documentInput.click();
 
             };
 
 
-        controls.appendChild(button);
+        controls.appendChild(
+            addButton
+        );
 
     }
 
@@ -1449,7 +1520,7 @@ function makePageCard(index){
 
 
 /* =========================================================
-   RENDER ALL PAGES
+   RENDER PAGES
 ========================================================= */
 
 function renderPages(){
@@ -1500,7 +1571,9 @@ function addOverlay(
         object.url;
 
 
-    overlay.appendChild(image);
+    overlay.appendChild(
+        image
+    );
 
 
     const handle =
@@ -1511,20 +1584,17 @@ function addOverlay(
         "handle";
 
 
-    overlay.appendChild(handle);
+    overlay.appendChild(
+        handle
+    );
 
 
     const pageCanvas =
         pageData[pageIndex].canvas;
 
 
-    /*
-        Preview canvas का वास्तविक
-        PDF point ratio
-    */
-
     const pxPerPt =
-        pageCanvas.width / A4.w;
+        pageCanvas.width/A4.w;
 
 
     function update(){
@@ -1592,6 +1662,7 @@ function addOverlay(
 
             e.stopPropagation();
 
+
             overlay.setPointerCapture(
                 e.pointerId
             );
@@ -1612,6 +1683,7 @@ function addOverlay(
             startX=e.clientX;
 
             startY=e.clientY;
+
 
             originalX=object.x;
 
@@ -1650,13 +1722,13 @@ function addOverlay(
             const dx =
                 (
                     e.clientX-startX
-                ) / factor;
+                )/factor;
 
 
             const dy =
                 (
                     e.clientY-startY
-                ) / factor;
+                )/factor;
 
 
             if(moving){
@@ -1677,16 +1749,10 @@ function addOverlay(
             }
             else{
 
-                /*
-                    Signature और photo का
-                    resize natural ratio
-                    बिगाड़े बिना
-                */
-
                 if(object.keepRatio){
 
                     const ratio =
-                        originalW /
+                        originalW/
                         originalH;
 
 
@@ -1711,6 +1777,7 @@ function addOverlay(
                                 10,
                                 originalH+dy
                             );
+
 
                         newW =
                             newH*ratio;
@@ -1779,7 +1846,7 @@ function addOverlay(
 
 
 /* =========================================================
-   MANUAL POSITION ADJUST
+   MANUAL ADJUST
 ========================================================= */
 
 function adjustOverlay(object){
@@ -1818,6 +1885,7 @@ function adjustOverlay(object){
 
         object.h=values[3];
 
+
         renderPages();
 
     }
@@ -1848,10 +1916,6 @@ document.getElementById(
         document.createElement("canvas");
 
 
-    /*
-        High-resolution A4 preview
-    */
-
     canvas.width=1785;
 
     canvas.height=2526;
@@ -1878,7 +1942,12 @@ document.getElementById(
 
         canvas:canvas,
 
-        doc:null
+        /*
+           सबसे महत्वपूर्ण बदलाव:
+           एक document के बजाय array.
+        */
+
+        docs:[]
 
     });
 
@@ -1899,7 +1968,7 @@ document.getElementById(
 
 
 /* =========================================================
-   ADD DOCUMENT
+   ADD DOCUMENT BUTTON
 ========================================================= */
 
 document.getElementById(
@@ -1917,13 +1986,27 @@ document.getElementById(
     }
 
 
+    if(
+        pageData[selectedA4].docs.length>=
+        MAX_DOCUMENTS_PER_A4
+    ){
+
+        alert(
+            "एक A4 page पर अधिकतम 2 documents/photos ही जोड़े जा सकते हैं।"
+        );
+
+        return;
+
+    }
+
+
     documentInput.click();
 
 };
 
 
 /* =========================================================
-   DOCUMENT INPUT
+   DOCUMENT UPLOAD
 ========================================================= */
 
 documentInput.addEventListener(
@@ -1934,7 +2017,11 @@ documentInput.addEventListener(
             e.target.files[0];
 
 
-        if(!file)return;
+        if(!file){
+
+            return;
+
+        }
 
 
         if(selectedA4<2){
@@ -1950,15 +2037,44 @@ documentInput.addEventListener(
             selectedA4;
 
 
+        const page =
+            pageData[targetPage];
+
+
+        /*
+           दूसरा upload पहले document को
+           replace नहीं करेगा।
+        */
+
+        if(
+            !page.docs
+        ){
+
+            page.docs=[];
+
+        }
+
+
+        if(
+            page.docs.length>=
+            MAX_DOCUMENTS_PER_A4
+        ){
+
+            alert(
+                "एक A4 page पर अधिकतम 2 documents/photos ही जोड़े जा सकते हैं।"
+            );
+
+            documentInput.value="";
+
+            return;
+
+        }
+
+
         try{
 
             let url;
 
-
-            /*
-                PDF का पहला page
-                high-resolution image में
-            */
 
             if(
                 file.type==="application/pdf"
@@ -2012,7 +2128,7 @@ documentInput.addEventListener(
                 url =
                     c.toDataURL(
                         "image/jpeg",
-                        .94
+                        .95
                     );
 
             }
@@ -2037,18 +2153,23 @@ documentInput.addEventListener(
                         );
 
 
-                    const page =
-                        pageData[targetPage];
+                    /*
+                       2 documents को A4 page पर
+                       default अलग-अलग जगह रखा जाएगा।
+                    */
+
+                    const docNumber =
+                        page.docs.length;
 
 
                     const maxW=555;
 
-                    const maxH=700;
+                    const maxH=350;
 
 
                     let w=maxW;
 
-                    let h=
+                    let h =
                         w /
                         (
                             img.width /
@@ -2060,7 +2181,7 @@ documentInput.addEventListener(
 
                         h=maxH;
 
-                        w=
+                        w =
                             h *
                             (
                                 img.width /
@@ -2070,13 +2191,35 @@ documentInput.addEventListener(
                     }
 
 
-                    page.doc={
+                    let x=20;
+
+                    let y=20;
+
+
+                    if(docNumber===1){
+
+                        /*
+                           दूसरा document नीचे।
+                        */
+
+                        y =
+                            Math.max(
+                                20,
+                                841.89 -
+                                h -
+                                25
+                            );
+
+                    }
+
+
+                    page.docs.push({
 
                         url:dataUrl,
 
-                        x:20,
+                        x:x,
 
-                        y:20,
+                        y:y,
 
                         w:w,
 
@@ -2088,14 +2231,14 @@ documentInput.addEventListener(
 
                         keepRatio:true
 
-                    };
+                    });
 
 
                     renderPages();
 
 
                     status(
-                        `Page ${targetPage+1} पर document लगा दिया गया।`,
+                        `Page ${targetPage+1} पर Document ${page.docs.length} जोड़ दिया गया। दोनों documents अलग-अलग move/resize किए जा सकते हैं।`,
                         true
                     );
 
@@ -2107,6 +2250,7 @@ documentInput.addEventListener(
 
             console.error(error);
 
+
             alert(
                 "Document load नहीं हुआ: "
                 + error.message
@@ -2114,6 +2258,11 @@ documentInput.addEventListener(
 
         }
 
+
+        /*
+           Input reset जरूरी है ताकि
+           अगली बार वही file भी select की जा सके।
+        */
 
         documentInput.value="";
 
@@ -2220,6 +2369,7 @@ signatureInput.addEventListener(
                 const page1 =
                     pageData[0];
 
+
                 const page2 =
                     pageData[1];
 
@@ -2277,8 +2427,6 @@ function openEditor(
     editorMode=mode;
 
     editorDone=done;
-
-    currentEditorSource=url;
 
 
     document.getElementById(
@@ -2380,9 +2528,6 @@ document.getElementById(
     signaturePreviewBox.style.display =
         "none";
 
-
-    currentEditorSource=null;
-
 };
 
 
@@ -2454,11 +2599,6 @@ function removeSignatureBackground(
         );
 
 
-    /*
-        Background color corners से
-        estimate किया जा रहा है।
-    */
-
     const samples=[];
 
 
@@ -2469,7 +2609,7 @@ function removeSignatureBackground(
                 Math.min(
                     width,
                     height
-                ) * .05
+                )*.05
             )
         );
 
@@ -2579,42 +2719,31 @@ function removeSignatureBackground(
             samples.reduce(
                 (sum,s)=>sum+s.r,
                 0
-            ) / samples.length;
+            )/samples.length;
 
 
         bgG =
             samples.reduce(
                 (sum,s)=>sum+s.g,
                 0
-            ) / samples.length;
+            )/samples.length;
 
 
         bgB =
             samples.reduce(
                 (sum,s)=>sum+s.b,
                 0
-            ) / samples.length;
+            )/samples.length;
 
     }
 
 
-    /*
-        Threshold का अर्थ:
-        कम value = ज्यादा aggressive removal
-        ज्यादा value = ज्यादा conservative
-    */
+    const colorTolerance =
+        30+
+        ((240-t)*.45);
+
 
     const neutralLimit=48;
-
-
-    /*
-        Gray background हटाने के लिए
-        threshold के आधार पर tolerance।
-    */
-
-    const colorTolerance =
-        30 +
-        ((240-t) * .45);
 
 
     for(
@@ -2635,14 +2764,14 @@ function removeSignatureBackground(
 
 
         const spread =
-            Math.max(r,g,b) -
+            Math.max(r,g,b)-
             Math.min(r,g,b);
 
 
         const bgDistance =
             Math.sqrt(
-                Math.pow(r-bgR,2) +
-                Math.pow(g-bgG,2) +
+                Math.pow(r-bgR,2)+
+                Math.pow(g-bgG,2)+
                 Math.pow(b-bgB,2)
             );
 
@@ -2654,10 +2783,6 @@ function removeSignatureBackground(
         let alpha=255;
 
 
-        /*
-            मुख्य gray/white background removal
-        */
-
         if(
             neutral &&
             brightness>=t
@@ -2666,13 +2791,6 @@ function removeSignatureBackground(
             alpha=0;
 
         }
-
-
-        /*
-            Corner background के
-            बहुत करीब pixels भी हटाएँ।
-        */
-
         else if(
             bgDistance<=colorTolerance &&
             brightness>55
@@ -2681,37 +2799,26 @@ function removeSignatureBackground(
             alpha=0;
 
         }
-
-
-        /*
-            Soft edge:
-            signature के आसपास हल्का
-            gray halo हटाने में मदद करता है।
-        */
-
         else if(
             neutral &&
-            brightness >= t-35
+            brightness>=t-35
         ){
 
             const ratio =
                 (
                     brightness-(t-35)
-                ) / 35;
+                )/35;
 
 
             alpha =
                 Math.round(
-                    255 *
-                    (
-                        1-ratio
-                    )
+                    255*(1-ratio)
                 );
 
         }
 
 
-        data[i+3]=
+        data[i+3] =
             Math.max(
                 0,
                 Math.min(
@@ -2867,12 +2974,6 @@ document.getElementById(
     }
     else{
 
-        /*
-            Photo/Document को JPEG में
-            रखा जा रहा है ताकि final PDF
-            unnecessary बड़ा न हो।
-        */
-
         dataUrl =
             cropped.toDataURL(
                 "image/jpeg",
@@ -2903,113 +3004,13 @@ document.getElementById(
         "none";
 
 
-    currentEditorSource=null;
-
-
     await done(dataUrl);
 
 };
 
 
 /* =========================================================
-   FINAL PAGE SIZE
-========================================================= */
-
-function pdfPointY(
-    topY,
-    height
-){
-
-    return (
-        A4.h -
-        topY -
-        height
-    );
-
-}
-
-
-/* =========================================================
-   ADD IMAGE TO VECTOR PDF PAGE
-========================================================= */
-
-async function drawObjectOnPdfPage(
-    pdfPage,
-    object
-){
-
-    if(!object)return;
-
-
-    if(
-        !object.url
-    ){
-
-        return;
-
-    }
-
-
-    /*
-        Signature PNG = transparency
-        Photo/Document JPEG = smaller size
-    */
-
-    let image;
-
-
-    if(
-        object.url.startsWith(
-            "data:image/png"
-        )
-    ){
-
-        image =
-            await templateOutput.embedPng(
-                object.url
-            );
-
-    }
-    else{
-
-        image =
-            await templateOutput.embedJpg(
-                object.url
-            );
-
-    }
-
-
-    pdfPage.drawImage(
-        image,
-        {
-
-            x:object.x,
-
-            y:pdfPointY(
-                object.y,
-                object.h
-            ),
-
-            width:object.w,
-
-            height:object.h
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   FINAL PDF
-========================================================= */
-
-let templateOutput=null;
-
-
-/* =========================================================
-   RENDER A PAGE FOR RASTER PDF
+   PDF RASTER PAGE
 ========================================================= */
 
 async function renderFinalRasterPage(
@@ -3063,10 +3064,6 @@ async function renderFinalRasterPage(
         height
     );
 
-
-    /*
-        Base page
-    */
 
     ctx.drawImage(
         page.canvas,
@@ -3135,9 +3132,28 @@ async function renderFinalRasterPage(
     );
 
 
-    await addObject(
-        page.doc
-    );
+    /*
+       मुख्य बदलाव:
+       A4 के सभी documents PDF में
+       अलग-अलग draw होंगे।
+    */
+
+    if(
+        page.docs &&
+        page.docs.length
+    ){
+
+        for(
+            const doc of page.docs
+        ){
+
+            await addObject(
+                doc
+            );
+
+        }
+
+    }
 
 
     return canvas;
@@ -3187,7 +3203,7 @@ function canvasToJpegBlob(
 
 
 /* =========================================================
-   CREATE RASTER PDF
+   CREATE PDF
 ========================================================= */
 
 async function createRasterPdf(
@@ -3264,7 +3280,7 @@ async function createRasterPdf(
 
 
 /* =========================================================
-   SAFE PDF PADDING
+   SAFE PADDING
 ========================================================= */
 
 function padPdfAfterEOF(
@@ -3290,15 +3306,8 @@ function padPdfAfterEOF(
 
 
     const extra =
-        targetBytes -
-        bytes.length;
+        targetBytes-bytes.length;
 
-
-    /*
-        PDF के EOF के बाद
-        harmless comment bytes।
-        इससे xref offsets नहीं बदलते।
-    */
 
     const text =
         "\n% PAN PDF SIZE PADDING\n";
@@ -3312,14 +3321,14 @@ function padPdfAfterEOF(
 
     const repetitions =
         Math.ceil(
-            extra /
+            extra/
             textBytes.length
         );
 
 
     const padding =
         new Uint8Array(
-            repetitions *
+            repetitions*
             textBytes.length
         );
 
@@ -3375,16 +3384,13 @@ function padPdfAfterEOF(
 
 function mb(bytes){
 
-    return (
-        bytes /
-        1048576
-    );
+    return bytes/1048576;
 
 }
 
 
 /* =========================================================
-   FINAL PDF BUTTON
+   FINAL PDF
 ========================================================= */
 
 document.getElementById(
@@ -3428,60 +3434,51 @@ document.getElementById(
         );
 
 
-        /*
-            User की exact सीमा
-        */
-
         const MIN_BYTES =
             Math.ceil(
-                1.50 *
-                1048576
+                1.50*1048576
             );
 
 
         const MAX_BYTES =
             Math.floor(
-                1.70 *
-                1048576
+                1.70*1048576
             );
 
 
         /*
-            पहले high-quality setting।
-            जरूरत पड़ने पर compression।
+           पहले से थोड़ा ज्यादा quality।
+           अगर size सीमा से ऊपर जाए तो
+           धीरे-धीरे compression होगी।
         */
 
         const attempts=[
 
-            {scale:3.0, quality:.96},
+            {scale:3.20,quality:.97},
 
-            {scale:3.0, quality:.95},
+            {scale:3.20,quality:.96},
 
-            {scale:3.0, quality:.94},
+            {scale:3.10,quality:.96},
 
-            {scale:3.0, quality:.93},
+            {scale:3.00,quality:.96},
 
-            {scale:3.0, quality:.92},
+            {scale:3.00,quality:.95},
 
-            {scale:2.8, quality:.94},
+            {scale:2.90,quality:.95},
 
-            {scale:2.8, quality:.92},
+            {scale:2.80,quality:.95},
 
-            {scale:2.7, quality:.92},
+            {scale:2.70,quality:.94},
 
-            {scale:2.6, quality:.92},
+            {scale:2.60,quality:.94},
 
-            {scale:2.5, quality:.92},
+            {scale:2.50,quality:.93},
 
-            {scale:2.5, quality:.90},
+            {scale:2.40,quality:.92},
 
-            {scale:2.4, quality:.90},
+            {scale:2.30,quality:.92},
 
-            {scale:2.3, quality:.90},
-
-            {scale:2.2, quality:.90},
-
-            {scale:2.1, quality:.90}
+            {scale:2.20,quality:.91}
 
         ];
 
@@ -3502,7 +3499,7 @@ document.getElementById(
 
 
             status(
-                `PDF quality तैयार हो रही है… ${i+1}/${attempts.length}`
+                `High-quality PDF तैयार हो रही है… ${i+1}/${attempts.length}`
             );
 
 
@@ -3517,11 +3514,6 @@ document.getElementById(
                 pdfBytes.length;
 
 
-            /*
-                Maximum के अंदर सबसे अच्छी
-                quality वाला PDF save रखें।
-            */
-
             if(
                 size<=MAX_BYTES &&
                 size>bestUnderMaxSize
@@ -3535,11 +3527,6 @@ document.getElementById(
 
             }
 
-
-            /*
-                अगर minimum और maximum
-                के बीच आ गया तो यही लें।
-            */
 
             if(
                 size>=MIN_BYTES &&
@@ -3557,9 +3544,8 @@ document.getElementById(
 
 
         /*
-            अगर generated PDF minimum से छोटा है,
-            तो valid trailing padding से
-            1.50 MB तक बढ़ाएँ।
+           यदि quality वाला PDF 1.50 MB से छोटा है,
+           तो उसे 1.55 MB तक safely बढ़ाएँ।
         */
 
         if(!finalPdfBytes){
@@ -3571,8 +3557,7 @@ document.getElementById(
 
                 const target =
                     Math.ceil(
-                        1.55 *
-                        1048576
+                        1.55*1048576
                     );
 
 
@@ -3602,10 +3587,6 @@ document.getElementById(
         }
 
 
-        /*
-            Final fallback
-        */
-
         if(!finalPdfBytes){
 
             if(
@@ -3625,7 +3606,7 @@ document.getElementById(
         if(!finalPdfBytes){
 
             throw new Error(
-                "इस सामग्री को 1.50–1.70 MB सीमा में रखते हुए पर्याप्त quality के साथ PDF बनाना संभव नहीं हुआ।"
+                "PDF को 1.50–1.70 MB सीमा में रखते हुए पर्याप्त quality के साथ बनाना संभव नहीं हुआ।"
             );
 
         }
@@ -3656,7 +3637,6 @@ document.getElementById(
             `PDF तैयार है • 4 pages • ${mb(finalSize).toFixed(2)} MB • 1.50–1.70 MB सीमा में`,
             true
         );
-
 
     }
     catch(error){
@@ -3713,6 +3693,7 @@ document.getElementById(
 
 
     link.href=url;
+
 
     link.download =
         "PAN_Application_Final.pdf";
