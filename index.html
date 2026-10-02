@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Photo Print System</title>
 
     <style>
@@ -14,14 +15,22 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f3f4f6;
-            color: #111827;
+            background: #f2f2f2;
+            color: #222;
         }
 
+        /* HEADER */
         header {
-            background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+            background: linear-gradient(
+                to right,
+                #ff9933,
+                #ffffff,
+                #138808
+            );
+
             padding: 22px 15px;
             text-align: center;
+
             border-bottom: 1px solid #ddd;
         }
 
@@ -30,212 +39,306 @@
             font-size: 28px;
         }
 
+        /* MAIN */
         .container {
+            width: 95%;
             max-width: 900px;
             margin: 25px auto;
-            padding: 0 15px;
         }
 
+        /* SEARCH */
         .search-area {
             display: flex;
             gap: 10px;
+            width: 100%;
         }
 
-        .search-box {
+        #searchInput {
             flex: 1;
-            padding: 15px;
-            font-size: 18px;
+
+            height: 52px;
+
+            padding: 0 15px;
+
             border: 1px solid #aaa;
-            border-radius: 10px;
+            border-radius: 8px;
+
+            font-size: 17px;
+
             outline: none;
         }
 
-        .search-button {
+        #searchInput:focus {
+            border-color: #2563eb;
+        }
+
+        #searchButton {
+            height: 52px;
+
+            padding: 0 25px;
+
+            border: none;
+            border-radius: 8px;
+
             background: #2563eb;
             color: white;
-            padding: 0 25px;
-            border: none;
-            border-radius: 10px;
+
             font-size: 17px;
+            font-weight: bold;
+
             cursor: pointer;
         }
 
-        .search-button:hover {
+        #searchButton:hover {
             background: #1d4ed8;
         }
 
-        .result {
+        /* SEARCH RESULT */
+        #results {
             margin-top: 15px;
         }
 
-        .option {
+        .result-card {
             background: white;
+
+            border: 1px solid #ddd;
+            border-radius: 10px;
+
             padding: 16px;
+
             margin-bottom: 10px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+
             cursor: pointer;
         }
 
-        .option:hover {
-            background: #f0f7ff;
-        }
-
-        .option strong {
-            display: block;
-            font-size: 18px;
-        }
-
-        .option small {
-            color: #666;
-        }
-
-        .editor {
-            display: none;
-            margin-top: 20px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-        }
-
-        .editor h2 {
-            margin-top: 0;
-        }
-
-        .info {
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            line-height: 1.8;
-        }
-
-        .upload-box {
-            border: 2px dashed #2563eb;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
+        .result-card:hover {
             background: #eff6ff;
+            border-color: #2563eb;
         }
 
-        .upload-box label {
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            padding: 13px 22px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 17px;
-        }
-
-        .upload-box input {
-            display: none;
-        }
-
-        .file-name {
-            margin-top: 10px;
-            color: #374151;
-        }
-
-        .message {
-            margin-top: 10px;
-            color: #dc2626;
+        .result-title {
+            font-size: 19px;
             font-weight: bold;
         }
 
-        .preview-title {
-            margin-top: 25px;
-            margin-bottom: 10px;
+        .result-size {
+            margin-top: 6px;
+            color: #666;
+            font-size: 14px;
         }
 
-        .a4-preview {
+        .no-result {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+
+            padding: 16px;
+
+            color: #dc2626;
+        }
+
+        /* EDITOR */
+        #editor {
+            display: none;
+
+            margin-top: 20px;
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            border: 1px solid #ddd;
+        }
+
+        #editorTitle {
+            margin-top: 0;
+        }
+
+        .details {
+            background: #f8fafc;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            line-height: 1.8;
+
+            margin-bottom: 20px;
+        }
+
+        /* UPLOAD */
+        .upload-section {
+            text-align: center;
+
+            border: 2px dashed #2563eb;
+
+            border-radius: 10px;
+
+            background: #eff6ff;
+
+            padding: 25px 15px;
+        }
+
+        #uploadButton {
+            display: inline-block;
+
+            background: #2563eb;
+
+            color: white;
+
+            padding: 13px 22px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 17px;
+
+            font-weight: bold;
+        }
+
+        #photoInput {
+            display: none;
+        }
+
+        #fileName {
+            margin-top: 12px;
+
+            color: #555;
+
+            word-break: break-word;
+        }
+
+        /* PREVIEW */
+        #previewHeading {
+            margin-top: 25px;
+        }
+
+        #a4Page {
             width: 210mm;
             height: 297mm;
+
             background: white;
-            margin: auto;
+
             position: relative;
+
             overflow: hidden;
-            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+
+            margin: 0 auto;
+
+            box-shadow:
+                0 0 10px rgba(0, 0, 0, 0.20);
         }
 
-        .photo {
+        .placed-photo {
             position: absolute;
+
             object-fit: cover;
+
+            display: block;
         }
 
-        .print-btn {
-            background: #16a34a;
-            color: white;
+        /* PRINT */
+        #printButton {
             width: 100%;
-            margin-top: 15px;
+
+            margin-top: 18px;
+
             padding: 14px;
+
             border: none;
+
             border-radius: 8px;
-            font-size: 17px;
+
+            background: #16a34a;
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
             cursor: pointer;
         }
 
-        .print-btn:hover {
+        #printButton:hover {
             background: #15803d;
         }
 
-        @media (max-width: 750px) {
+        /* MOBILE */
+        @media (max-width: 700px) {
+
             .search-area {
                 flex-direction: column;
             }
 
-            .search-button {
-                padding: 14px;
+            #searchButton {
+                width: 100%;
             }
 
-            .a4-preview {
+            #a4Page {
                 transform-origin: top left;
-                transform: scale(0.45);
-                margin-bottom: -160mm;
+                transform: scale(0.42);
+
+                margin-bottom: -170mm;
             }
         }
 
+        /* PRINT */
         @media print {
+
             @page {
                 size: A4 portrait;
                 margin: 0;
             }
 
+            html,
             body {
+                margin: 0;
+                padding: 0;
+
                 background: white;
             }
 
             header,
             .search-area,
-            .result,
-            .info,
-            .upload-box,
-            .editor h2,
-            .preview-title,
-            .print-btn,
-            .message {
+            #results,
+            #editor > h2,
+            .details,
+            .upload-section,
+            #previewHeading,
+            #printButton {
                 display: none !important;
             }
 
             .container {
+                width: 210mm;
+                max-width: none;
+
                 margin: 0;
                 padding: 0;
-                max-width: none;
             }
 
-            .editor {
+            #editor {
                 display: block !important;
+
                 margin: 0;
                 padding: 0;
+
                 border: none;
             }
 
-            .a4-preview {
+            #a4Page {
                 width: 210mm;
                 height: 297mm;
+
                 margin: 0;
+
                 box-shadow: none;
+
+                transform: none;
             }
         }
     </style>
@@ -243,63 +346,772 @@
 
 <body>
 
-<header>
-    <h1>Photo Print System</h1>
-</header>
+    <header>
+        <h1>Photo Print System</h1>
+    </header>
 
-<div class="container">
 
-    <div class="search-area">
+    <div class="container">
 
-        <input
-            type="text"
-            id="searchInput"
-            class="search-box"
-            placeholder="Aadhaar Card / Passport Size Photo / PAN Card"
-            autocomplete="off"
-        >
+        <!-- SEARCH -->
+        <div class="search-area">
 
-        <button
-            class="search-button"
-            onclick="searchDocument()"
-        >
-            Search
-        </button>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Aadhaar Card / Passport Size Photo / PAN Card"
+                autocomplete="off"
+            >
+
+            <button
+                type="button"
+                id="searchButton"
+            >
+                Search
+            </button>
+
+        </div>
+
+
+        <!-- RESULTS -->
+        <div id="results"></div>
+
+
+        <!-- EDITOR -->
+        <div id="editor">
+
+            <h2 id="editorTitle"></h2>
+
+
+            <div class="details">
+
+                <div>
+                    <strong>Official Size:</strong>
+                    <span id="sizeText"></span>
+                </div>
+
+                <div>
+                    <strong>A4 में फोटो:</strong>
+                    <span id="countText"></span>
+                </div>
+
+            </div>
+
+
+            <!-- UPLOAD -->
+            <div class="upload-section">
+
+                <label
+                    for="photoInput"
+                    id="uploadButton"
+                >
+                    📷 फोटो Upload करें
+                </label>
+
+                <input
+                    type="file"
+                    id="photoInput"
+                    accept="image/jpeg,image/png,image/webp,image/*"
+                >
+
+                <div id="fileName">
+                    अभी कोई फोटो नहीं चुनी गई।
+                </div>
+
+            </div>
+
+
+            <!-- PREVIEW -->
+            <h3 id="previewHeading">
+                A4 Print Preview
+            </h3>
+
+            <div id="a4Page"></div>
+
+
+            <!-- PRINT -->
+            <button
+                type="button"
+                id="printButton"
+            >
+                🖨️ Print करें
+            </button>
+
+        </div>
 
     </div>
 
-    <div id="result" class="result"></div>
 
-    <div id="editor" class="editor">
+    <script>
 
-        <h2 id="documentTitle"></h2>
+        /*
+         * DOCUMENT SETTINGS
+         */
 
-        <div class="info">
-            <div>
-                <strong>Official Size:</strong>
-                <span id="documentSize"></span>
-            </div>
+        const documentList = [
 
-            <div>
-                <strong>A4 में फोटो:</strong>
-                <span id="photoCount"></span>
-            </div>
-        </div>
+            {
+                id: "aadhaar",
+                name: "Aadhaar Card",
+                searchWords: [
+                    "aadhaar",
+                    "aadhar",
+                    "आधार",
+                    "आधार कार्ड"
+                ],
+                width: 86,
+                height: 54
+            },
 
-        <div class="upload-box">
+            {
+                id: "passport",
+                name: "Passport Size Photo",
+                searchWords: [
+                    "passport",
+                    "passport photo",
+                    "passport size",
+                    "passport size photo",
+                    "पासपोर्ट",
+                    "पासपोर्ट फोटो",
+                    "पासपोर्ट साइज",
+                    "पासपोर्ट साइज फोटो"
+                ],
+                width: 35,
+                height: 45
+            },
 
-            <label for="photoInput">
-                📷 फोटो Upload करें
-            </label>
+            {
+                id: "pan",
+                name: "PAN Card",
+                searchWords: [
+                    "pan",
+                    "pan card",
+                    "पैन",
+                    "पैन कार्ड"
+                ],
+                width: 85.60,
+                height: 53.98
+            }
 
-            <input
-                type="file"
-                id="photoInput"
-                accept="image/*"
-            >
+        ];
 
-            <div
-                id="fileName"
-                class="file-name"
-            >
-                अभी
+
+        /*
+         * ELEMENTS
+         */
+
+        const searchInput =
+            document.getElementById("searchInput");
+
+        const searchButton =
+            document.getElementById("searchButton");
+
+        const results =
+            document.getElementById("results");
+
+        const editor =
+            document.getElementById("editor");
+
+        const editorTitle =
+            document.getElementById("editorTitle");
+
+        const sizeText =
+            document.getElementById("sizeText");
+
+        const countText =
+            document.getElementById("countText");
+
+        const photoInput =
+            document.getElementById("photoInput");
+
+        const fileName =
+            document.getElementById("fileName");
+
+        const a4Page =
+            document.getElementById("a4Page");
+
+        const printButton =
+            document.getElementById("printButton");
+
+
+        /*
+         * SELECTED DOCUMENT
+         */
+
+        let selectedDocument = null;
+
+
+        /*
+         * SEARCH BUTTON
+         */
+
+        searchButton.addEventListener(
+            "click",
+            function () {
+
+                performSearch();
+
+            }
+        );
+
+
+        /*
+         * ENTER KEY SEARCH
+         */
+
+        searchInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    performSearch();
+
+                }
+
+            }
+        );
+
+
+        /*
+         * SEARCH FUNCTION
+         */
+
+        function performSearch() {
+
+            const searchText =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            results.innerHTML = "";
+
+            editor.style.display = "none";
+
+            selectedDocument = null;
+
+            a4Page.innerHTML = "";
+
+            photoInput.value = "";
+
+            fileName.textContent =
+                "अभी कोई फोटो नहीं चुनी गई।";
+
+
+            if (searchText === "") {
+
+                results.innerHTML = `
+                    <div class="no-result">
+                        कृपया Aadhaar Card, Passport Size Photo
+                        या PAN Card लिखें।
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            const foundDocuments =
+                documentList.filter(function (item) {
+
+                    return item.searchWords.some(
+                        function (word) {
+
+                            return word
+                                .toLowerCase()
+                                .includes(searchText)
+                                ||
+                                searchText.includes(
+                                    word.toLowerCase()
+                                );
+
+                        }
+                    );
+
+                });
+
+
+            if (foundDocuments.length === 0) {
+
+                results.innerHTML = `
+                    <div class="no-result">
+                        कोई विकल्प नहीं मिला।
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            foundDocuments.forEach(
+                function (item) {
+
+                    const card =
+                        document.createElement("div");
+
+                    card.className =
+                        "result-card";
+
+                    card.innerHTML = `
+                        <div class="result-title">
+                            ${item.name}
+                        </div>
+
+                        <div class="result-size">
+                            Official Size:
+                            ${item.width} ×
+                            ${item.height} mm
+                        </div>
+                    `;
+
+
+                    card.addEventListener(
+                        "click",
+                        function () {
+
+                            selectDocument(item);
+
+                        }
+                    );
+
+
+                    results.appendChild(card);
+
+                }
+            );
+
+        }
+
+
+        /*
+         * SELECT DOCUMENT
+         */
+
+        function selectDocument(item) {
+
+            selectedDocument = item;
+
+
+            editorTitle.textContent =
+                item.name;
+
+
+            sizeText.textContent =
+                item.width +
+                " × " +
+                item.height +
+                " mm";
+
+
+            editor.style.display =
+                "block";
+
+
+            results.innerHTML = "";
+
+
+            photoInput.value = "";
+
+
+            fileName.textContent =
+                "अभी कोई फोटो नहीं चुनी गई।";
+
+
+            a4Page.innerHTML = "";
+
+
+            /*
+             * Passport में हमेशा 6
+             */
+
+            if (item.id === "passport") {
+
+                countText.textContent =
+                    "6";
+
+            } else {
+
+                countText.textContent =
+                    "Automatic";
+
+            }
+
+
+            editor.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+
+        /*
+         * PHOTO UPLOAD
+         */
+
+        photoInput.addEventListener(
+            "change",
+            function () {
+
+                if (!selectedDocument) {
+
+                    alert(
+                        "पहले document चुनें।"
+                    );
+
+                    return;
+                }
+
+
+                const file =
+                    photoInput.files[0];
+
+
+                if (!file) {
+                    return;
+                }
+
+
+                if (
+                    !file.type.startsWith("image/")
+                ) {
+
+                    alert(
+                        "कृपया केवल फोटो upload करें।"
+                    );
+
+                    photoInput.value = "";
+
+                    return;
+                }
+
+
+                fileName.textContent =
+                    file.name;
+
+
+                const imageURL =
+                    URL.createObjectURL(file);
+
+
+                createA4Layout(imageURL);
+
+            }
+        );
+
+
+        /*
+         * CREATE A4 LAYOUT
+         */
+
+        function createA4Layout(imageURL) {
+
+            a4Page.innerHTML = "";
+
+
+            const A4_WIDTH = 210;
+            const A4_HEIGHT = 297;
+
+
+            const photoWidth =
+                selectedDocument.width;
+
+            const photoHeight =
+                selectedDocument.height;
+
+
+            /*
+             * PASSPORT PHOTO
+             *
+             * 35 × 45 mm
+             *
+             * A4 के सबसे ऊपर
+             *
+             * 6 फोटो
+             *
+             * 3 × 2
+             */
+
+            if (
+                selectedDocument.id ===
+                "passport"
+            ) {
+
+                const columns = 3;
+                const rows = 2;
+
+                const gap = 2;
+
+                const totalWidth =
+                    (
+                        columns * photoWidth
+                    )
+                    +
+                    (
+                        (columns - 1) * gap
+                    );
+
+
+                /*
+                 * Center horizontally
+                 */
+
+                const startX =
+                    (
+                        A4_WIDTH -
+                        totalWidth
+                    ) / 2;
+
+
+                /*
+                 * सबसे ऊपर से 5mm
+                 */
+
+                const startY = 5;
+
+
+                for (
+                    let row = 0;
+                    row < rows;
+                    row++
+                ) {
+
+                    for (
+                        let column = 0;
+                        column < columns;
+                        column++
+                    ) {
+
+                        createPhoto(
+                            imageURL,
+
+                            photoWidth,
+
+                            photoHeight,
+
+                            startX +
+                            column *
+                            (
+                                photoWidth +
+                                gap
+                            ),
+
+                            startY +
+                            row *
+                            (
+                                photoHeight +
+                                gap
+                            )
+                        );
+
+                    }
+
+                }
+
+
+                return;
+            }
+
+
+            /*
+             * AADHAAR / PAN
+             *
+             * Automatic A4 Grid
+             */
+
+            const margin = 5;
+            const gap = 2;
+
+
+            const columns =
+                Math.floor(
+                    (
+                        A4_WIDTH -
+                        (2 * margin) +
+                        gap
+                    )
+                    /
+                    (
+                        photoWidth +
+                        gap
+                    )
+                );
+
+
+            const rows =
+                Math.floor(
+                    (
+                        A4_HEIGHT -
+                        (2 * margin) +
+                        gap
+                    )
+                    /
+                    (
+                        photoHeight +
+                        gap
+                    )
+                );
+
+
+            const totalPhotos =
+                columns * rows;
+
+
+            countText.textContent =
+                totalPhotos;
+
+
+            const totalWidth =
+                (
+                    columns * photoWidth
+                )
+                +
+                (
+                    (columns - 1) * gap
+                );
+
+
+            const startX =
+                (
+                    A4_WIDTH -
+                    totalWidth
+                ) / 2;
+
+
+            for (
+                let row = 0;
+                row < rows;
+                row++
+            ) {
+
+                for (
+                    let column = 0;
+                    column < columns;
+                    column++
+                ) {
+
+                    createPhoto(
+                        imageURL,
+
+                        photoWidth,
+
+                        photoHeight,
+
+                        startX +
+                        column *
+                        (
+                            photoWidth +
+                            gap
+                        ),
+
+                        margin +
+                        row *
+                        (
+                            photoHeight +
+                            gap
+                        )
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /*
+         * CREATE INDIVIDUAL PHOTO
+         */
+
+        function createPhoto(
+            imageURL,
+            width,
+            height,
+            left,
+            top
+        ) {
+
+            const image =
+                document.createElement("img");
+
+
+            image.src =
+                imageURL;
+
+
+            image.className =
+                "placed-photo";
+
+
+            image.style.width =
+                width + "mm";
+
+
+            image.style.height =
+                height + "mm";
+
+
+            image.style.left =
+                left + "mm";
+
+
+            image.style.top =
+                top + "mm";
+
+
+            a4Page.appendChild(image);
+
+        }
+
+
+        /*
+         * PRINT
+         */
+
+        printButton.addEventListener(
+            "click",
+            function () {
+
+                if (!selectedDocument) {
+
+                    alert(
+                        "पहले document चुनें।"
+                    );
+
+                    return;
+                }
+
+
+                if (!photoInput.files.length) {
+
+                    alert(
+                        "पहले फोटो Upload करें।"
+                    );
+
+                    return;
+                }
+
+
+                if (!a4Page.children.length) {
+
+                    alert(
+                        "A4 Preview तैयार नहीं है।"
+                    );
+
+                    return;
+                }
+
+
+                window.print();
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
+```
