@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#e5ddd5}
+.header{background:#075e54;color:white;padding:16px;text-align:center;font-size:20px;font-weight:bold}
+.chat-box{max-width:700px;height:calc(100vh - 125px);height:calc(100dvh - 125px);margin:auto;display:flex;flex-direction:column}
+.messages{flex:1;overflow-y:auto;padding:15px}
+.message{max-width:75%;padding:10px 13px;margin:7px 0;border-radius:10px;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.user{margin-left:auto;background:#dcf8c6;border-top-right-radius:2px}
+.admin{margin-right:auto;background:white;border-top-left-radius:2px}
+.time{display:block;font-size:10px;color:#777;text-align:right;margin-top:3px}
+.input-area{display:flex;align-items:center;padding:10px;background:#f0f0f0;gap:8px}
+.input-area input[type="text"]{flex:1;min-width:0;border:none;padding:13px;border-radius:25px;outline:none;font-size:15px}
+.input-area button{width:50px;height:50px;flex-shrink:0;border:none;border-radius:50%;background:#075e54;color:white;font-size:20px;cursor:pointer}
+.file-button{width:44px!important;height:44px!important;background:#e0e0e0!important;color:#075e54!important}
+#fileInput{display:none}
+#fileStatus{padding:5px 10px;background:#f0f0f0;color:#555;font-size:12px;overflow-wrap:anywhere}
+.message-image{display:block;max-width:100%;max-height:300px;border-radius:7px;margin:5px 0}
+.file-link{display:block;margin:5px 0;color:#075e54;overflow-wrap:anywhere}
+.status{text-align:center;font-size:12px;padding:5px;background:#f5f5f5;color:#777}
+button:disabled{opacity:.55;cursor:wait}
+</style>
+</head>
+
+<body>
+<div class="header">💬 Chat</div>
+
+<div class="chat-box">
+  <div class="status" id="status">Connecting...</div>
+  <div class="messages" id="messages"></div>
+
+  <div id="fileStatus"></div>
+
+  <div class="input-area">
+    <input type="file" id="fileInput"
+      accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip">
+
+    <button class="file-button" id="fileBtn" type="button"
+      title="फोटो या फाइल चुनें">📎</button>
+
+    <input type="text" id="messageInput"
+      placeholder="Type a message..." autocomplete="off">
+
+    <button id="sendBtn" type="button" title="Send">➤</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =========================================
+   SUPABASE CONFIG - ORIGINAL
+========================================= */
+
+const SUPABASE_URL =
+  "https://aghizlgvrhunpuxvohep.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_gpc7KUqUIykO3WM1aCzRfg_Myo8AKyx";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+/* =========================================
+   FILE STORAGE CONFIG
+   Supabase Storage में chat-files नाम का
+   bucket बनाना आवश्यक है।
+========================================= */
+
+const STORAGE_BUCKET = "chat-files";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+let selectedFile = null;
+let sending = false;
+
+/* =========================================
+   TEMPORARY ROOM ID - ORIGINAL
+========================================= */
+
+let roomId = sessionStorage.getItem("temporary_chat_room");
+
+if (!roomId) {
+  roomId = crypto.randomUUID();
+  sessionStorage.setItem("temporary_chat_room", roomId);
+}
+
+/* =========================================
+   USER CHAT CHANNEL - ORIGINAL
+========================================= */
+
+const chatChannel = supabaseClient.channel(
+  "temporary-chat-" + roomId,
+  {
+    config: {
+      broadcast: {
+        self: false
+      }
+    }
+  }
+);
+
+/* =========================================
+   USER PRESENCE / ONLINE LIST - ORIGINAL
+========================================= */
+
+const lobbyChannel = supabaseClient.channel(
+  "chat-online-users",
+  {
+    config: {
+      presence: {
+        key: roomId
+      }
+    }
+  }
+);
+
+/* =========================================
+   CONNECTION STATUS - ORIGINAL
+========================================= */
+
+chatChannel.subscribe(function(status) {
+  document.getElementById("status").textContent =
+    status === "SUBSCRIBED" ? "🟢 Connected" : "Connecting...";
+});
+
+/* =========================================
+   RECEIVE ADMIN TEXT OR FILE
+========================================= */
+
+chatChannel.on(
+  "broadcast",
+  { event: "admin-message" },
+  function(payload) {
+    const data = payload && payload.payload;
+    if (!data || data.roomId !== roomId) return;
+
+    if (data.message || data.fileUrl) {
+      addMessage(data, "admin");
+    }
+  }
+);
+
+/* =========================================
+   USER ONLINE - ORIGINAL
+========================================= */
+
+lobbyChannel.subscribe(async function(status) {
+  if (status === "SUBSCRIBED") {
+    await lobbyChannel.track({
+      roomId: roomId,
+      type: "user",
+      online: true,
+      joinedAt: new Date().toISOString()
+    });
+  }
+});
+
+/* =========================================
+   FILE PICKER
+========================================= */
+
+const fileInput = document.getElementById("fileInput");
+const fileStatus = document.getElementById("fileStatus");
+
+document.getElementById("fileBtn").addEventListener("click", function() {
+  fileInput.click();
+});
+
+fileInput.addEventListener("change", function() {
+  const file = fileInput.files && fileInput.files[0];
+
+  selectedFile = file || null;
+
+  if (!selectedFile) {
+    fileStatus.textContent = "";
+    return;
+  }
+
+  if (selectedFile.size > MAX_FILE_SIZE) {
+    alert("फाइल का आकार 10 MB से कम होना चाहिए।");
+    selectedFile = null;
+    fileInput.value = "";
+    fileStatus.textContent = "";
+    return;
+  }
+
+  fileStatus.textContent =
+    "📎 " + selectedFile.name +
+    " (" + formatSize(selectedFile.size) + ")";
+});
+
+/* =========================================
+   FILE UPLOAD TO SUPABASE STORAGE
+========================================= */
+
+function safeFileName(name) {
+  return name
+    .normalize("NFKC")
+    .replace(/[^a-zA-Z0-9._-]/g, "_")
+    .slice(-100) || "file";
+}
+
+function formatSize(size) {
+  return size < 1024 * 1024
+    ? (size / 1024).toFixed(1) + " KB"
+    : (size / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+async function uploadFile(file) {
+  const path =
+    roomId + "/" + crypto.randomUUID() + "_" +
+    safeFileName(file.name);
+
+  const result = await supabaseClient.storage
+    .from(STORAGE_BUCKET)
+    .upload(path, file, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type || "application/octet-stream"
+    });
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const urlResult = supabaseClient.storage
+    .from(STORAGE_BUCKET)
+    .getPublicUrl(result.data.path);
+
+  if (!urlResult.data || !urlResult.data.publicUrl) {
+    throw new Error("File URL नहीं बन पाया।");
+  }
+
+  return {
+    fileUrl: urlResult.data.publicUrl,
+    fileName: file.name,
+    fileType: file.type || "application/octet-stream",
+    fileSize: file.size
+  };
+}
+
+/* =========================================
+   SEND TEXT AND/OR FILE
+========================================= */
+
+async function sendMessage() {
+  if (sending) return;
+
+  const input = document.getElementById("messageInput");
+  const message = input.value.trim();
+  const file = selectedFile;
+
+  if (!message && !file) return;
+
+  sending = true;
+
+  const sendBtn = document.getElementById("sendBtn");
+  sendBtn.disabled = true;
+  document.getElementById("fileBtn").disabled = true;
+  fileStatus.textContent = file ? "फाइल अपलोड हो रही है..." : "मैसेज भेजा जा रहा है...";
+
+  try {
+    let fileData = {};
+
+    if (file) {
+      fileData = await uploadFile(file);
+    }
+
+    const payload = {
+      roomId: roomId,
+      message: message,
+      time: new Date().toISOString(),
+      ...fileData
+    };
+
+    const result = await chatChannel.send({
+      type: "broadcast",
+      event: "user-message",
+      payload: payload
+    });
+
+    if (result !== "ok") {
+      throw new Error("मैसेज सर्वर तक नहीं पहुँचा।");
+    }
+
+    // Broadcast में self:false है, इसलिए अपना मैसेज
+    // स्क्रीन पर स्वयं दिखाएँ।
+    addMessage(payload, "user");
+
+    input.value = "";
+    selectedFile = null;
+    fileInput.value = "";
+    fileStatus.textContent = "";
+
+  } catch (error) {
+    console.error("Message/File Send Error:", error);
+
+    alert(
+      "मैसेज या फाइल नहीं भेजी जा सकी। " +
+      "Supabase Storage bucket, permissions और इंटरनेट कनेक्शन जाँचें।"
+    );
+
+    fileStatus.textContent =
+      file ? "फाइल भेजने में समस्या हुई।" : "मैसेज भेजने में समस्या हुई।";
+
+  } finally {
+    sending = false;
+    sendBtn.disabled = false;
+    document.getElementById("fileBtn").disabled = false;
+  }
+}
+
+/* =========================================
+   DISPLAY MESSAGE, PHOTO OR FILE
+========================================= */
+
+function addMessage(data, type) {
+  const messages = document.getElementById("messages");
+  const div = document.createElement("div");
+
+  div.className = "message " + type;
+
+  if (data.message) {
+    const text = document.createElement("div");
+    text.textContent = data.message;
+    div.appendChild(text);
+  }
+
+  if (data.fileUrl) {
+    let validUrl;
+
+    try {
+      validUrl = new URL(data.fileUrl);
+      if (validUrl.protocol !== "https:") {
+        throw new Error("Invalid file URL");
+      }
+    } catch (e) {
+      console.error("Invalid file URL:", e);
+      return;
+    }
+
+    const isImage = /^image\//i.test(data.fileType || "");
+
+    if (isImage) {
+      const img = document.createElement("img");
+      img.className = "message-image";
+      img.src = validUrl.href;
+      img.alt = data.fileName || "Photo";
+      img.loading = "lazy";
+      div.appendChild(img);
+    }
+
+    const link = document.createElement("a");
+    link.className = "file-link";
+    link.href = validUrl.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent =
+      "📎 " + (data.fileName || "Open file") +
+      (data.fileSize ? " (" + formatSize(data.fileSize) + ")" : "");
+
+    div.appendChild(link);
+  }
+
+  const time = document.createElement("span");
+  time.className = "time";
+
+  const timestamp = data.time ? new Date(data.time) : new Date();
+
+  time.textContent = Number.isNaN(timestamp.getTime())
+    ? formatTime(new Date())
+    : formatTime(timestamp);
+
+  div.appendChild(time);
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function formatTime(date) {
+  return date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+/* =========================================
+   SEND BUTTON - ORIGINAL
+========================================= */
+
+document.getElementById("sendBtn").addEventListener(
+  "click",
+  sendMessage
+);
+
+/* =========================================
+   ENTER KEY - ORIGINAL
+========================================= */
+
+document.getElementById("messageInput").addEventListener(
+  "keydown",
+  function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  }
+);
+
+/* =========================================
+   CLEAN UP - ORIGINAL
+========================================= */
+
+window.addEventListener("beforeunload", function() {
+  try {
+    lobbyChannel.untrack();
+  } catch (error) {
+    console.log(error);
+  }
+});
+</script>
+</body>
+</html>
