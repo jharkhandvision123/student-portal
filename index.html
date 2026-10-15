@@ -1,538 +1,3698 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#075e54">
-<title>Chat - Messaging</title>
+
+<title>PAN PDF Maker</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
-:root{--green:#075e54;--lightgreen:#128c7e;--bg:#e9edef}
-body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:#222}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-.app{height:100dvh;max-width:1500px;margin:auto;display:flex;background:white;overflow:hidden}
-.sidebar{width:360px;max-width:100%;border-right:1px solid #ddd;display:flex;flex-direction:column;flex-shrink:0}
-.header{height:62px;background:var(--green);color:white;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.brand{font-size:21px;font-weight:bold}
-.iconbtn{border:0;background:transparent;color:inherit;font-size:22px;padding:7px;border-radius:50%}
-.iconbtn:hover{background:#ffffff20}
-.search{padding:12px;background:#f7f8fa}
-.search input{width:100%;border:0;outline:0;border-radius:9px;padding:12px;background:white}
-.contactlist{overflow-y:auto;flex:1}
-.contact{display:flex;align-items:center;gap:12px;padding:13px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer}
-.contact:hover,.contact.active{background:#e9edef}
-.avatar{height:46px;width:46px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:#d8eee9;color:#075e54;font-size:20px;font-weight:bold}
-.contactinfo{min-width:0;flex:1}
-.contactname{font-weight:bold;margin-bottom:6px}
-.preview{font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.emptycontacts{text-align:center;padding:35px 18px;color:#667781;line-height:1.7}
-.chatpanel{flex:1;min-width:0;display:flex;flex-direction:column;background:#efeae2}
-.chatheader{background:var(--green);color:white;padding:8px 14px;display:flex;align-items:center;gap:10px;min-height:62px}
-.chatheader .avatar{height:42px;width:42px;background:#d8eee9}
-.chatheading{flex:1;min-width:0}
-.chatheading strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chatheading small{display:block;margin-top:4px;opacity:.8}
-.backbtn{display:none}
-.messages{flex:1;overflow-y:auto;padding:20px clamp(10px,4vw,60px);display:flex;flex-direction:column;gap:9px;background-color:#efeae2;background-image:radial-gradient(#d9d3c8 0.7px,transparent .7px);background-size:18px 18px}
-.welcome{margin:auto;background:#fff;padding:22px;border-radius:12px;text-align:center;max-width:390px;line-height:1.7;color:#53636a}
-.daylabel{align-self:center;background:#fff9df;color:#54656d;font-size:12px;padding:6px 12px;border-radius:7px;margin:4px}
-.bubble{max-width:min(78%,540px);padding:9px 11px 6px;background:#fff;border-radius:9px;box-shadow:0 1px 1px #0001;overflow-wrap:anywhere;align-self:flex-start;white-space:pre-wrap}
-.bubble.outgoing{align-self:flex-end;background:#d9fdd3}
-.bubble img{display:block;max-width:100%;max-height:320px;object-fit:contain;border-radius:5px;margin-bottom:6px}
-.bubble a{color:#075e54;overflow-wrap:anywhere}
-.msgtime{font-size:10px;color:#667781;text-align:right;margin-top:5px}
-.composer{background:#f0f2f5;padding:10px;display:flex;align-items:flex-end;gap:8px}
-.composer textarea{flex:1;resize:none;min-height:44px;max-height:120px;border:0;outline:0;padding:13px;border-radius:12px;background:white}
-.sendbtn{height:44px;min-width:48px;border:0;border-radius:50%;background:var(--green);color:white;font-size:20px}
-.fileinput{display:none}
-.filebtn{color:#54656f;font-size:24px;border:0;background:transparent;padding:8px}
-.filehint{font-size:11px;color:#667781;padding:0 14px 8px;background:#f0f2f5}
-.welcomearea{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;color:#667781}
-.welcomearea h2{color:#075e54;font-weight:400}
-.welcomearea .big{font-size:70px}
-.mobile-only{display:none}
-.notice{font-size:12px;text-align:center;padding:7px;color:#6c757d;background:#f7f8fa}
-@media(max-width:650px){
- .sidebar{width:100%;border:0}
- .chatpanel{display:none;width:100%}
- .app.chat-open .sidebar{display:none}
- .app.chat-open .chatpanel{display:flex}
- .backbtn{display:block}
- .mobile-only{display:block}
- .messages{padding:14px 10px}
- .bubble{max-width:88%}
+
+*{
+    box-sizing:border-box;
 }
+
+html,
+body{
+    margin:0;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#eef1f5;
+    color:#111;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+header{
+    background:#fff;
+    border-bottom:1px solid #ddd;
+    padding:12px 16px;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+h1{
+    margin:0;
+    font-size:20px;
+}
+
+.sub{
+    font-size:12px;
+    color:#666;
+    margin-top:3px;
+}
+
+button,
+.fileBtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    border:0;
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:14px;
+    cursor:pointer;
+    background:#0b57d0;
+    color:#fff;
+    text-align:center;
+}
+
+button.secondary{
+    background:#fff;
+    color:#111;
+    border:1px solid #ccc;
+}
+
+button.danger{
+    background:#c62828;
+}
+
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+input[type=file]{
+    display:none;
+}
+
+.appLayout{
+    display:grid;
+    grid-template-columns:250px minmax(0,1fr);
+    gap:14px;
+    max-width:1500px;
+    margin:14px auto;
+    padding:0 14px;
+    align-items:start;
+}
+
+.sidebar{
+    background:#fff;
+    border:1px solid #d8dce1;
+    border-radius:12px;
+    padding:12px;
+    position:sticky;
+    top:82px;
+    z-index:10;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.sidebarTitle{
+    font-size:16px;
+    font-weight:700;
+    margin:2px 0 10px;
+}
+
+.sidebar .subTitle{
+    font-size:12px;
+    color:#666;
+    line-height:1.4;
+    margin-bottom:10px;
+}
+
+.toolGroup{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.workspace{
+    min-width:0;
+}
+
+.workspaceHead{
+    background:#fff;
+    border:1px solid #d8dce1;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+}
+
+.workspaceHead h2{
+    font-size:17px;
+    margin:0 0 4px;
+}
+
+.workspaceHead p{
+    font-size:12px;
+    color:#666;
+    margin:0;
+}
+
+.status{
+    font-size:13px;
+    padding:9px 10px;
+    background:#f7f7f7;
+    border-radius:8px;
+    margin-top:10px;
+}
+
+.notice{
+    background:#fff8e1;
+    border:1px solid #f0c36d;
+    padding:10px;
+    border-radius:8px;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.success{
+    background:#e8f5e9;
+    border-color:#9ad29e;
+}
+
+.pages{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+    align-items:start;
+    width:100%;
+}
+
+.pageCard{
+    background:#fff;
+    border:2px solid #d2d6db;
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    min-width:0;
+}
+
+.pageCard.selected{
+    border-color:#0b57d0;
+    box-shadow:0 0 0 2px rgba(11,87,208,.08);
+}
+
+.pageTitle{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-weight:bold;
+    margin-bottom:8px;
+    gap:8px;
+}
+
+.canvasWrap{
+    position:relative;
+    width:100%;
+    background:#ddd;
+    overflow:visible;
+    border:1px solid #bbb;
+    cursor:default;
+}
+
+.canvasWrap canvas{
+    display:block;
+    width:100%;
+    height:auto;
+    background:#fff;
+}
+
+.overlay{
+    position:absolute;
+    display:block;
+    touch-action:none;
+    cursor:move;
+    outline:1px dashed rgba(11,87,208,.65);
+    z-index:5;
+}
+
+.overlay img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:fill;
+    pointer-events:none;
+}
+
+.handle{
+    position:absolute;
+    right:-7px;
+    bottom:-7px;
+    width:16px;
+    height:16px;
+    background:#0b57d0;
+    border:2px solid #fff;
+    border-radius:50%;
+    cursor:nwse-resize;
+}
+
+.controls{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+
+.controls button{
+    width:auto;
+    flex:1 1 auto;
+}
+
+.small{
+    font-size:12px;
+    color:#666;
+}
+
+.empty{
+    padding:35px;
+    text-align:center;
+    color:#777;
+    pointer-events:none;
+}
+
+#editorModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.72);
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal{
+    background:#fff;
+    width:min(1050px,100%);
+    max-height:95vh;
+    overflow:auto;
+    border-radius:12px;
+    padding:14px;
+}
+
+.modal h2{
+    margin:0 0 10px;
+    font-size:18px;
+}
+
+#cropImage{
+    max-width:100%;
+    max-height:55vh;
+    display:block;
+    margin:auto;
+}
+
+.modalActions{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.modalActions button{
+    width:auto;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.range{
+    width:220px;
+}
+
+.signaturePreviewBox{
+    margin-top:12px;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:
+        linear-gradient(45deg,#eee 25%,transparent 25%),
+        linear-gradient(-45deg,#eee 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,#eee 75%),
+        linear-gradient(-45deg,transparent 75%,#eee 75%);
+    background-size:20px 20px;
+    background-position:0 0,0 10px,10px -10px,-10px 0;
+}
+
+.signaturePreviewBox strong{
+    display:block;
+    margin-bottom:8px;
+    font-size:13px;
+}
+
+#signaturePreview{
+    display:block;
+    max-width:100%;
+    max-height:180px;
+    margin:auto;
+}
+
+@media(max-width:1000px){
+
+    .pages{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:900px){
+
+    .appLayout{
+        grid-template-columns:210px minmax(0,1fr);
+    }
+
+}
+
+@media(max-width:650px){
+
+    header{
+        position:relative;
+    }
+
+    .appLayout{
+        grid-template-columns:1fr;
+        margin-top:10px;
+    }
+
+    .sidebar{
+        position:relative;
+        top:auto;
+    }
+
+    .toolGroup{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .toolGroup button,
+    .toolGroup .fileBtn{
+        width:100%;
+    }
+
+    .pages{
+        grid-template-columns:1fr;
+    }
+
+    .controls button{
+        width:100%;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
-<div class="app" id="app">
 
-  <aside class="sidebar">
-    <div class="header">
-      <div class="brand">💬 Chat</div>
-      <div>
-        <button class="iconbtn" id="newChatBtn" title="नई चैट">＋</button>
-        <button class="iconbtn" id="clearBtn" title="सभी लोकल चैट मिटाएँ">⋮</button>
-      </div>
-    </div>
-    <div class="search">
-      <input id="searchInput" type="search" placeholder="चैट खोजें...">
-    </div>
-    <div class="notice">इस ब्राउज़र में सेव होने वाली चैट</div>
-    <div class="contactlist" id="contactList"></div>
-  </aside>
+<header>
 
-  <main class="chatpanel" id="chatPanel">
-    <div class="welcomearea" id="welcomeArea">
-      <div>
-        <div class="big">💬</div>
-        <h2>आपकी चैट</h2>
-        <p>नई चैट शुरू करने के लिए ऊपर ＋ दबाएँ।</p>
-        <p>मैसेज और फाइलें इसी ब्राउज़र में सेव होंगी।</p>
-      </div>
-    </div>
+<h1>PAN PDF Maker</h1>
 
-    <section id="conversation" style="display:none;flex:1;min-height:0;flex-direction:column">
-      <div class="chatheader">
-        <button class="iconbtn backbtn" id="backBtn" aria-label="वापस">‹</button>
-        <div class="avatar" id="chatAvatar">C</div>
-        <div class="chatheading">
-          <strong id="chatName">Chat</strong>
-          <small>लोकल चैट</small>
-        </div>
-        <button class="iconbtn" id="deleteChatBtn" title="यह चैट हटाएँ">🗑</button>
-      </div>
-
-      <div class="messages" id="messages">
-        <div class="welcome">यह आपकी निजी लोकल चैट है। नीचे मैसेज लिखें।</div>
-      </div>
-
-      <div class="composer">
-        <label class="filebtn" for="fileInput" title="फोटो या फाइल जोड़ें">＋</label>
-        <input class="fileinput" type="file" id="fileInput" multiple
-          accept="image/*,video/*,.pdf,.txt,.doc,.docx,.xls,.xlsx,.zip">
-        <textarea id="messageInput" rows="1" placeholder="मैसेज लिखें..."></textarea>
-        <button class="sendbtn" id="sendBtn" title="मैसेज भेजें">➤</button>
-      </div>
-      <div class="filehint">Enter = भेजें · Shift+Enter = नई लाइन · फाइलें ब्राउज़र स्टोरेज की सीमा के अधीन हैं</div>
-    </section>
-  </main>
+<div class="sub">
+Photo + Signature + 2 अतिरिक्त A4 पेज • अधिकतम 4 पेज
 </div>
 
-<script>
-"use strict";
+</header>
 
-const $ = id => document.getElementById(id);
-const app = $("app");
 
-let db;
-let activeChat = null;
-let contacts = [];
-let messages = [];
-let pendingFiles = [];
-let busy = false;
+<div class="appLayout">
 
-const DB_NAME = "SingleFileChatDB";
-const DB_VERSION = 1;
+<aside class="sidebar">
 
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const request = indexedDB.open(DB_NAME,DB_VERSION);
-    request.onupgradeneeded = ()=>{
-      const d = request.result;
-      if(!d.objectStoreNames.contains("contacts")){
-        d.createObjectStore("contacts",{keyPath:"id"});
-      }
-      if(!d.objectStoreNames.contains("messages")){
-        const s = d.createObjectStore("messages",{keyPath:"id",autoIncrement:true});
-        s.createIndex("chatId","chatId",{unique:false});
-      }
+<div class="sidebarTitle">
+Controls
+</div>
+
+<div class="subTitle">
+बाईं तरफ से काम करें और दाईं तरफ सभी pages का live preview देखें।
+</div>
+
+<div class="toolGroup">
+
+<label class="fileBtn">
+PAN Template PDF
+<input id="templateInput"
+       type="file"
+       accept="application/pdf">
+</label>
+
+
+<label class="fileBtn">
+Add Photo
+<input id="photoInput"
+       type="file"
+       accept="image/*">
+</label>
+
+
+<label class="fileBtn">
+Add Signature
+<input id="signatureInput"
+       type="file"
+       accept="image/*">
+</label>
+
+
+<button id="addPageBtn">
+Add A4 Page
+</button>
+
+
+<button id="addDocumentBtn"
+        class="secondary">
+Add Document
+</button>
+
+
+<input id="documentInput"
+       type="file"
+       accept="image/*,application/pdf"
+       hidden>
+
+
+<button id="makePdfBtn">
+Final PDF बनाएं
+</button>
+
+
+<button id="downloadBtn"
+        class="success"
+        disabled>
+PDF Download
+</button>
+
+</div>
+
+</aside>
+
+
+<main class="workspace">
+
+<div class="workspaceHead">
+
+<h2>
+Live PDF Preview
+</h2>
+
+<p>
+सभी pages यहाँ साफ दिखाई देंगे। Photo, Signature और Document को drag करके move तथा resize किया जा सकता है।
+</p>
+
+<div id="status"
+     class="status">
+पहले अपना 2-page PAN template PDF चुनें।
+</div>
+
+<div class="notice">
+
+<b>ध्यान दें:</b>
+एक A4 page पर अधिकतम 2 अलग-अलग documents/photos लगाए जा सकते हैं। जैसे Aadhaar Front और Aadhaar Back।
+
+</div>
+
+</div>
+
+
+<div id="pages"
+     class="pages">
+</div>
+
+</main>
+
+</div>
+
+
+<div id="editorModal">
+
+<div class="modal">
+
+<h2 id="editorTitle">
+Image Editor
+</h2>
+
+
+<div class="row"
+     id="signatureTools"
+     style="display:none">
+
+<label>
+
+Background Threshold:
+
+<input id="threshold"
+       class="range"
+       type="range"
+       min="80"
+       max="240"
+       value="150">
+
+</label>
+
+<span id="thresholdValue">
+150
+</span>
+
+</div>
+
+
+<div style="margin-top:10px;overflow:hidden">
+
+<img id="cropImage"
+     alt="crop">
+
+</div>
+
+
+<div id="signaturePreviewBox"
+     class="signaturePreviewBox"
+     style="display:none">
+
+<strong>
+Background Removed Preview
+</strong>
+
+<canvas id="signaturePreview">
+</canvas>
+
+</div>
+
+
+<div class="small"
+     style="margin-top:8px">
+
+Crop box को drag/resize करके सही हिस्सा चुनें।
+
+</div>
+
+
+<div class="modalActions">
+
+<button id="cancelEditor"
+        class="secondary">
+Cancel
+</button>
+
+<button id="applyEditor">
+Done
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+const pdfjsLib = await import(
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+);
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+
+const {
+    PDFDocument
+} = PDFLib;
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const A4 = {
+    w:595.28,
+    h:841.89
+};
+
+const MAX_PAGES = 4;
+
+const BASE_PAGES = 2;
+
+const MAX_DOCUMENTS_PER_A4 = 2;
+
+
+const PAN_POSITIONS = {
+
+    photo1:{
+        x:10,
+        y:109,
+        w:106,
+        h:127
+    },
+
+    photo2:{
+        x:479,
+        y:109,
+        w:96,
+        h:127
+    },
+
+    signature1:{
+        x:75,
+        y:183,
+        w:82,
+        h:34
+    },
+
+    signature2:{
+        x:378,
+        y:727,
+        w:91,
+        h:38
+    }
+
+};
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let templatePdfBytes = null;
+
+let templatePdf = null;
+
+let pageData = [];
+
+let selectedA4 = -1;
+
+let cropper = null;
+
+let editorMode = "";
+
+let editorDone = null;
+
+/* Final PDF bytes */
+let finalPdfBytes = null;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const statusEl =
+    document.getElementById("status");
+
+const pagesEl =
+    document.getElementById("pages");
+
+const templateInput =
+    document.getElementById("templateInput");
+
+const photoInput =
+    document.getElementById("photoInput");
+
+const signatureInput =
+    document.getElementById("signatureInput");
+
+const documentInput =
+    document.getElementById("documentInput");
+
+const editorModal =
+    document.getElementById("editorModal");
+
+const cropImage =
+    document.getElementById("cropImage");
+
+const thresholdInput =
+    document.getElementById("threshold");
+
+const thresholdValue =
+    document.getElementById("thresholdValue");
+
+const signatureTools =
+    document.getElementById("signatureTools");
+
+const signaturePreviewBox =
+    document.getElementById("signaturePreviewBox");
+
+const signaturePreview =
+    document.getElementById("signaturePreview");
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function status(text,success=false){
+
+    statusEl.innerHTML = text;
+
+    statusEl.className =
+        "status" + (success ? " success" : "");
+
+}
+
+
+/* =========================================================
+   FILE READER
+========================================================= */
+
+function readFile(file){
+
+    return new Promise((resolve,reject)=>{
+
+        const reader =
+            new FileReader();
+
+        reader.onload =
+            ()=>resolve(reader.result);
+
+        reader.onerror =
+            reject;
+
+        reader.readAsArrayBuffer(file);
+
+    });
+
+}
+
+
+/* =========================================================
+   IMAGE LOADER
+========================================================= */
+
+function loadImage(src){
+
+    return new Promise((resolve,reject)=>{
+
+        const img =
+            new Image();
+
+        img.onload =
+            ()=>resolve(img);
+
+        img.onerror =
+            reject;
+
+        img.src =
+            src;
+
+    });
+
+}
+
+
+/* =========================================================
+   TEMPLATE LOAD
+========================================================= */
+
+async function loadTemplate(bytes){
+
+    templatePdfBytes =
+        bytes.slice(0);
+
+    templatePdf =
+        await pdfjsLib.getDocument({
+            data:bytes.slice(0)
+        }).promise;
+
+
+    if(templatePdf.numPages < 2){
+
+        throw new Error(
+            "Template PDF में कम-से-कम 2 pages होने चाहिए।"
+        );
+
+    }
+
+
+    pageData=[];
+
+
+    for(let i=0;i<2;i++){
+
+        const pdfPage =
+            await templatePdf.getPage(i+1);
+
+
+        const viewport =
+            pdfPage.getViewport({
+                scale:2.2
+            });
+
+
+        const canvas =
+            document.createElement("canvas");
+
+
+        canvas.width =
+            Math.ceil(viewport.width);
+
+        canvas.height =
+            Math.ceil(viewport.height);
+
+
+        const context =
+            canvas.getContext(
+                "2d",
+                {
+                    alpha:false
+                }
+            );
+
+
+        context.fillStyle="#fff";
+
+        context.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+        await pdfPage.render({
+
+            canvasContext:context,
+
+            viewport:viewport
+
+        }).promise;
+
+
+        pageData.push({
+
+            type:"base",
+
+            canvas:canvas,
+
+            photo1:null,
+
+            photo2:null,
+
+            sig1:null,
+
+            sig2:null
+
+        });
+
+    }
+
+
+    renderPages();
+
+
+    status(
+        "2 PAN pages तैयार हैं। अब Photo और Signature जोड़ें।",
+        true
+    );
+
+}
+
+
+/* =========================================================
+   TEMPLATE INPUT
+========================================================= */
+
+templateInput.addEventListener(
+    "change",
+    async e=>{
+
+        const file =
+            e.target.files[0];
+
+        if(!file)return;
+
+
+        try{
+
+            await loadTemplate(
+                await readFile(file)
+            );
+
+        }
+        catch(error){
+
+            console.error(error);
+
+            status(
+                "Template load नहीं हुआ: "
+                + error.message
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   AUTO LOAD
+========================================================= */
+
+async function autoLoadTemplate(){
+
+    try{
+
+        const response =
+            await fetch(
+                "./pan-template.pdf",
+                {
+                    cache:"no-store"
+                }
+            );
+
+
+        if(!response.ok)return;
+
+
+        await loadTemplate(
+            await response.arrayBuffer()
+        );
+
+    }
+    catch(error){
+
+    }
+
+}
+
+autoLoadTemplate();
+
+
+/* =========================================================
+   PAGE CARD
+========================================================= */
+
+function makePageCard(index){
+
+    const page =
+        pageData[index];
+
+
+    const card =
+        document.createElement("div");
+
+
+    card.className =
+        "pageCard"
+        +
+        (
+            index===selectedA4
+            ? " selected"
+            : ""
+        );
+
+
+    const title =
+        document.createElement("div");
+
+
+    title.className =
+        "pageTitle";
+
+
+    const titleText =
+        document.createElement("span");
+
+
+    titleText.textContent =
+        `Page ${index+1}`
+        +
+        (
+            index<2
+            ? " • PAN"
+            : " • A4 Added"
+        );
+
+
+    title.appendChild(titleText);
+
+
+    if(index>=2){
+
+        const remove =
+            document.createElement("button");
+
+
+        remove.textContent =
+            "Remove";
+
+
+        remove.className =
+            "danger";
+
+
+        remove.style.width =
+            "auto";
+
+
+        remove.style.padding =
+            "7px 10px";
+
+
+        remove.onclick =
+            e=>{
+
+                e.stopPropagation();
+
+
+                pageData.splice(
+                    index,
+                    1
+                );
+
+
+                if(pageData.length<=2){
+
+                    selectedA4=-1;
+
+                }
+                else{
+
+                    selectedA4 =
+                        Math.min(
+                            index,
+                            pageData.length-1
+                        );
+
+
+                    if(selectedA4<2){
+
+                        selectedA4=-1;
+
+                    }
+
+                }
+
+
+                renderPages();
+
+            };
+
+
+        title.appendChild(remove);
+
+    }
+
+
+    card.appendChild(title);
+
+
+    const wrap =
+        document.createElement("div");
+
+
+    wrap.className =
+        "canvasWrap";
+
+
+    const canvas =
+        document.createElement("canvas");
+
+
+    canvas.width =
+        page.canvas.width;
+
+    canvas.height =
+        page.canvas.height;
+
+
+    canvas.getContext("2d")
+        .drawImage(
+            page.canvas,
+            0,
+            0
+        );
+
+
+    wrap.appendChild(canvas);
+
+
+    /* =====================================================
+       PAN OBJECTS
+    ===================================================== */
+
+    if(index<2){
+
+        if(page.photo1){
+
+            addOverlay(
+                wrap,
+                page.photo1,
+                index
+            );
+
+        }
+
+
+        if(index===0 && page.photo2){
+
+            addOverlay(
+                wrap,
+                page.photo2,
+                index
+            );
+
+        }
+
+
+        if(index===0 && page.sig1){
+
+            addOverlay(
+                wrap,
+                page.sig1,
+                index
+            );
+
+        }
+
+
+        if(index===1 && page.sig2){
+
+            addOverlay(
+                wrap,
+                page.sig2,
+                index
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       A4 DOCUMENTS
+    ===================================================== */
+
+    else{
+
+        if(
+            page.docs &&
+            page.docs.length
+        ){
+
+            page.docs.forEach(
+                (doc,index2)=>{
+
+                    addOverlay(
+                        wrap,
+                        doc,
+                        index
+                    );
+
+                }
+            );
+
+        }
+        else{
+
+            const empty =
+                document.createElement("div");
+
+
+            empty.className =
+                "empty";
+
+
+            empty.textContent =
+                "Add Document दबाएँ";
+
+
+            wrap.appendChild(
+                empty
+            );
+
+        }
+
+
+        wrap.onclick =
+            e=>{
+
+                if(
+                    e.target.closest(".overlay")
+                ){
+
+                    return;
+
+                }
+
+
+                selectedA4=index;
+
+                renderPages();
+
+
+                status(
+                    `Page ${index+1} selected। अब Add Document दबाएँ।`
+                );
+
+            };
+
+    }
+
+
+    card.appendChild(wrap);
+
+
+    /* =====================================================
+       CONTROLS
+    ===================================================== */
+
+    const controls =
+        document.createElement("div");
+
+
+    controls.className =
+        "controls";
+
+
+    if(index===0){
+
+        if(page.photo1){
+
+            const button =
+                document.createElement("button");
+
+
+            button.textContent =
+                "Photo 1 adjust";
+
+
+            button.className =
+                "secondary";
+
+
+            button.onclick =
+                e=>{
+
+                    e.stopPropagation();
+
+                    adjustOverlay(
+                        page.photo1
+                    );
+
+                };
+
+
+            controls.appendChild(button);
+
+        }
+
+
+        if(page.photo2){
+
+            const button =
+                document.createElement("button");
+
+
+            button.textContent =
+                "Photo 2 adjust";
+
+
+            button.className =
+                "secondary";
+
+
+            button.onclick =
+                e=>{
+
+                    e.stopPropagation();
+
+                    adjustOverlay(
+                        page.photo2
+                    );
+
+                };
+
+
+            controls.appendChild(button);
+
+        }
+
+
+        if(page.sig1){
+
+            const button =
+                document.createElement("button");
+
+
+            button.textContent =
+                "Signature adjust";
+
+
+            button.className =
+                "secondary";
+
+
+            button.onclick =
+                e=>{
+
+                    e.stopPropagation();
+
+                    adjustOverlay(
+                        page.sig1
+                    );
+
+                };
+
+
+            controls.appendChild(button);
+
+        }
+
+    }
+
+
+    if(index===1 && page.sig2){
+
+        const button =
+            document.createElement("button");
+
+
+        button.textContent =
+            "Signature adjust";
+
+
+        button.className =
+            "secondary";
+
+
+        button.onclick =
+            e=>{
+
+                e.stopPropagation();
+
+                adjustOverlay(
+                    page.sig2
+                );
+
+            };
+
+
+        controls.appendChild(button);
+
+    }
+
+
+    if(index>=2){
+
+        if(
+            page.docs &&
+            page.docs.length
+        ){
+
+            page.docs.forEach(
+                (doc,docIndex)=>{
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    button.textContent =
+                        `Document ${docIndex+1} adjust`;
+
+
+                    button.className =
+                        "secondary";
+
+
+                    button.onclick =
+                        e=>{
+
+                            e.stopPropagation();
+
+                            adjustOverlay(
+                                doc
+                            );
+
+                        };
+
+
+                    controls.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+        }
+
+
+        const addButton =
+            document.createElement(
+                "button"
+            );
+
+
+        addButton.textContent =
+            page.docs &&
+            page.docs.length>=MAX_DOCUMENTS_PER_A4
+                ? "2 Documents Added"
+                : "Add Document";
+
+
+        if(
+            page.docs &&
+            page.docs.length>=MAX_DOCUMENTS_PER_A4
+        ){
+
+            addButton.disabled=true;
+
+        }
+
+
+        addButton.onclick =
+            e=>{
+
+                e.stopPropagation();
+
+
+                selectedA4=index;
+
+
+                if(
+                    pageData[index].docs.length>=
+                    MAX_DOCUMENTS_PER_A4
+                ){
+
+                    alert(
+                        "एक A4 page पर अधिकतम 2 documents/photos ही जोड़े जा सकते हैं।"
+                    );
+
+                    return;
+
+                }
+
+
+                documentInput.click();
+
+            };
+
+
+        controls.appendChild(
+            addButton
+        );
+
+    }
+
+
+    if(controls.children.length){
+
+        card.appendChild(
+            controls
+        );
+
+    }
+
+
+    return card;
+
+}
+
+
+/* =========================================================
+   RENDER PAGES
+========================================================= */
+
+function renderPages(){
+
+    pagesEl.innerHTML="";
+
+
+    pageData.forEach(
+        (_,index)=>{
+
+            pagesEl.appendChild(
+                makePageCard(index)
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+function addOverlay(
+    wrap,
+    object,
+    pageIndex
+){
+
+    const overlay =
+        document.createElement("div");
+
+
+    overlay.className =
+        "overlay";
+
+
+    /* हमेशा visible */
+    overlay.style.display =
+        "block";
+
+
+    const image =
+        document.createElement("img");
+
+
+    image.src =
+        object.url;
+
+
+    overlay.appendChild(
+        image
+    );
+
+
+    const handle =
+        document.createElement("div");
+
+
+    handle.className =
+        "handle";
+
+
+    overlay.appendChild(
+        handle
+    );
+
+
+    const pageCanvas =
+        pageData[pageIndex].canvas;
+
+
+    const pxPerPt =
+        pageCanvas.width/A4.w;
+
+
+    function update(){
+
+        const displayScale =
+            wrap.clientWidth /
+            pageCanvas.width;
+
+
+        overlay.style.left =
+            (
+                object.x *
+                pxPerPt *
+                displayScale
+            ) + "px";
+
+
+        overlay.style.top =
+            (
+                object.y *
+                pxPerPt *
+                displayScale
+            ) + "px";
+
+
+        overlay.style.width =
+            (
+                object.w *
+                pxPerPt *
+                displayScale
+            ) + "px";
+
+
+        overlay.style.height =
+            (
+                object.h *
+                pxPerPt *
+                displayScale
+            ) + "px";
+
+    }
+
+
+    let moving=false;
+
+    let resizing=false;
+
+    let startX=0;
+
+    let startY=0;
+
+    let originalX=0;
+
+    let originalY=0;
+
+    let originalW=0;
+
+    let originalH=0;
+
+
+    overlay.onpointerdown =
+        e=>{
+
+            e.preventDefault();
+
+            e.stopPropagation();
+
+
+            overlay.setPointerCapture(
+                e.pointerId
+            );
+
+
+            if(e.target===handle){
+
+                resizing=true;
+
+            }
+            else{
+
+                moving=true;
+
+            }
+
+
+            startX=e.clientX;
+
+            startY=e.clientY;
+
+
+            originalX=object.x;
+
+            originalY=object.y;
+
+            originalW=object.w;
+
+            originalH=object.h;
+
+        };
+
+
+    overlay.onpointermove =
+        e=>{
+
+            if(
+                !moving &&
+                !resizing
+            ){
+
+                return;
+
+            }
+
+
+            const displayScale =
+                wrap.clientWidth /
+                pageCanvas.width;
+
+
+            const factor =
+                pxPerPt *
+                displayScale;
+
+
+            const dx =
+                (
+                    e.clientX-startX
+                )/factor;
+
+
+            const dy =
+                (
+                    e.clientY-startY
+                )/factor;
+
+
+            if(moving){
+
+                object.x =
+                    Math.max(
+                        0,
+                        originalX+dx
+                    );
+
+
+                object.y =
+                    Math.max(
+                        0,
+                        originalY+dy
+                    );
+
+            }
+            else{
+
+                if(object.keepRatio){
+
+                    const ratio =
+                        originalW/
+                        originalH;
+
+
+                    let newW =
+                        Math.max(
+                            10,
+                            originalW+dx
+                        );
+
+
+                    let newH =
+                        newW/ratio;
+
+
+                    if(
+                        originalH+dy >
+                        newH
+                    ){
+
+                        newH =
+                            Math.max(
+                                10,
+                                originalH+dy
+                            );
+
+
+                        newW =
+                            newH*ratio;
+
+                    }
+
+
+                    object.w=newW;
+
+                    object.h=newH;
+
+                }
+                else{
+
+                    object.w =
+                        Math.max(
+                            10,
+                            originalW+dx
+                        );
+
+
+                    object.h =
+                        Math.max(
+                            10,
+                            originalH+dy
+                        );
+
+                }
+
+            }
+
+
+            update();
+
+        };
+
+
+    overlay.onpointerup =
+        ()=>{
+
+            moving=false;
+
+            resizing=false;
+
+        };
+
+
+    overlay.onpointercancel =
+        ()=>{
+
+            moving=false;
+
+            resizing=false;
+
+        };
+
+
+    wrap.appendChild(
+        overlay
+    );
+
+
+    update();
+
+}
+
+
+/* =========================================================
+   MANUAL ADJUST
+========================================================= */
+
+function adjustOverlay(object){
+
+    if(!object)return;
+
+
+    const value =
+        prompt(
+            "X, Y, Width, Height (A4 points) comma से लिखें:",
+            `${object.x.toFixed(1)}, ${object.y.toFixed(1)}, ${object.w.toFixed(1)}, ${object.h.toFixed(1)}`
+        );
+
+
+    if(!value)return;
+
+
+    const values =
+        value
+            .split(",")
+            .map(Number);
+
+
+    if(
+        values.length===4 &&
+        values.every(
+            Number.isFinite
+        )
+    ){
+
+        object.x=values[0];
+
+        object.y=values[1];
+
+        object.w=values[2];
+
+        object.h=values[3];
+
+
+        renderPages();
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD A4 PAGE
+========================================================= */
+
+document.getElementById(
+    "addPageBtn"
+).onclick=()=>{
+
+    if(pageData.length>=MAX_PAGES){
+
+        alert(
+            "अधिकतम 4 pages ही रखे जा सकते हैं।"
+        );
+
+        return;
+
+    }
+
+
+    const canvas =
+        document.createElement("canvas");
+
+
+    canvas.width=1785;
+
+    canvas.height=2526;
+
+
+    const context =
+        canvas.getContext("2d");
+
+
+    context.fillStyle="#fff";
+
+
+    context.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    pageData.push({
+
+        type:"a4",
+
+        canvas:canvas,
+
+        docs:[]
+
+    });
+
+
+    selectedA4 =
+        pageData.length-1;
+
+
+    renderPages();
+
+
+    status(
+        `Page ${pageData.length} जोड़ा गया। अब Add Document करें।`,
+        true
+    );
+
+};
+
+
+/* =========================================================
+   ADD DOCUMENT BUTTON
+========================================================= */
+
+document.getElementById(
+    "addDocumentBtn"
+).onclick=()=>{
+
+    if(selectedA4<2){
+
+        alert(
+            "पहले Add A4 Page करें और उस page को select करें।"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        pageData[selectedA4].docs.length>=
+        MAX_DOCUMENTS_PER_A4
+    ){
+
+        alert(
+            "एक A4 page पर अधिकतम 2 documents/photos ही जोड़े जा सकते हैं।"
+        );
+
+        return;
+
+    }
+
+
+    documentInput.click();
+
+};
+
+
+/* =========================================================
+   DOCUMENT UPLOAD
+========================================================= */
+
+documentInput.addEventListener(
+    "change",
+    async e=>{
+
+        const file =
+            e.target.files[0];
+
+
+        if(!file){
+
+            return;
+
+        }
+
+
+        if(selectedA4<2){
+
+            documentInput.value="";
+
+            return;
+
+        }
+
+
+        const targetPage =
+            selectedA4;
+
+
+        const page =
+            pageData[targetPage];
+
+
+        if(
+            !page.docs
+        ){
+
+            page.docs=[];
+
+        }
+
+
+        if(
+            page.docs.length>=
+            MAX_DOCUMENTS_PER_A4
+        ){
+
+            alert(
+                "एक A4 page पर अधिकतम 2 documents/photos ही जोड़े जा सकते हैं।"
+            );
+
+            documentInput.value="";
+
+            return;
+
+        }
+
+
+        try{
+
+            let url;
+
+
+            if(
+                file.type==="application/pdf"
+            ){
+
+                const bytes =
+                    await readFile(file);
+
+
+                const pdf =
+                    await pdfjsLib
+                        .getDocument({
+                            data:bytes
+                        })
+                        .promise;
+
+
+                const pg =
+                    await pdf.getPage(1);
+
+
+                const vp =
+                    pg.getViewport({
+                        scale:2.0
+                    });
+
+
+                const c =
+                    document.createElement(
+                        "canvas"
+                    );
+
+
+                c.width =
+                    Math.ceil(vp.width);
+
+                c.height =
+                    Math.ceil(vp.height);
+
+
+                await pg.render({
+
+                    canvasContext:
+                        c.getContext("2d"),
+
+                    viewport:vp
+
+                }).promise;
+
+
+                url =
+                    c.toDataURL(
+                        "image/jpeg",
+                        .95
+                    );
+
+            }
+            else{
+
+                url =
+                    URL.createObjectURL(
+                        file
+                    );
+
+            }
+
+
+            openEditor(
+                url,
+                "document",
+                async dataUrl=>{
+
+                    const img =
+                        await loadImage(
+                            dataUrl
+                        );
+
+
+                    const docNumber =
+                        page.docs.length;
+
+
+                    const maxW=555;
+
+                    const maxH=350;
+
+
+                    let w=maxW;
+
+                    let h =
+                        w /
+                        (
+                            img.width /
+                            img.height
+                        );
+
+
+                    if(h>maxH){
+
+                        h=maxH;
+
+                        w =
+                            h *
+                            (
+                                img.width /
+                                img.height
+                            );
+
+                    }
+
+
+                    let x=20;
+
+                    let y=20;
+
+
+                    if(docNumber===1){
+
+                        y =
+                            Math.max(
+                                20,
+                                841.89 -
+                                h -
+                                25
+                            );
+
+                    }
+
+
+                    page.docs.push({
+
+                        url:dataUrl,
+
+                        x:x,
+
+                        y:y,
+
+                        w:w,
+
+                        h:h,
+
+                        ratio:
+                            img.width /
+                            img.height,
+
+                        keepRatio:true
+
+                    });
+
+
+                    renderPages();
+
+
+                    status(
+                        `Page ${targetPage+1} पर Document ${page.docs.length} जोड़ दिया गया। दोनों documents अलग-अलग move/resize किए जा सकते हैं।`,
+                        true
+                    );
+
+                }
+            );
+
+        }
+        catch(error){
+
+            console.error(error);
+
+
+            alert(
+                "Document load नहीं हुआ: "
+                + error.message
+            );
+
+        }
+
+
+        documentInput.value="";
+
+    }
+);
+
+
+/* =========================================================
+   PHOTO
+========================================================= */
+
+photoInput.addEventListener(
+    "change",
+    e=>{
+
+        const file =
+            e.target.files[0];
+
+
+        if(!file)return;
+
+
+        const url =
+            URL.createObjectURL(
+                file
+            );
+
+
+        openEditor(
+            url,
+            "photo",
+            async dataUrl=>{
+
+                const page =
+                    pageData[0];
+
+
+                page.photo1={
+
+                    url:dataUrl,
+
+                    ...PAN_POSITIONS.photo1,
+
+                    keepRatio:false
+
+                };
+
+
+                page.photo2={
+
+                    url:dataUrl,
+
+                    ...PAN_POSITIONS.photo2,
+
+                    keepRatio:false
+
+                };
+
+
+                renderPages();
+
+
+                status(
+                    "Photo दोनों निर्धारित boxes में लगा दी गई है।",
+                    true
+                );
+
+            }
+        );
+
+
+        photoInput.value="";
+
+    }
+);
+
+
+/* =========================================================
+   SIGNATURE
+========================================================= */
+
+signatureInput.addEventListener(
+    "change",
+    e=>{
+
+        const file =
+            e.target.files[0];
+
+
+        if(!file)return;
+
+
+        const url =
+            URL.createObjectURL(
+                file
+            );
+
+
+        openEditor(
+            url,
+            "signature",
+            async dataUrl=>{
+
+                const page1 =
+                    pageData[0];
+
+
+                const page2 =
+                    pageData[1];
+
+
+                page1.sig1={
+
+                    url:dataUrl,
+
+                    ...PAN_POSITIONS.signature1,
+
+                    keepRatio:true
+
+                };
+
+
+                page2.sig2={
+
+                    url:dataUrl,
+
+                    ...PAN_POSITIONS.signature2,
+
+                    keepRatio:true
+
+                };
+
+
+                renderPages();
+
+
+                status(
+                    "Signature Page 1 और Page 2 में सही निर्धारित स्थान पर लगा दी गई है।",
+                    true
+                );
+
+            }
+        );
+
+
+        signatureInput.value="";
+
+    }
+);
+
+
+/* =========================================================
+   OPEN EDITOR
+========================================================= */
+
+function openEditor(
+    url,
+    mode,
+    done
+){
+
+    editorMode=mode;
+
+    editorDone=done;
+
+
+    document.getElementById(
+        "editorTitle"
+    ).textContent =
+        mode==="signature"
+            ? "Signature Crop + Background Removal"
+            : "Crop";
+
+
+    signatureTools.style.display =
+        mode==="signature"
+            ? "flex"
+            : "none";
+
+
+    signaturePreviewBox.style.display =
+        mode==="signature"
+            ? "block"
+            : "none";
+
+
+    cropImage.src=url;
+
+
+    editorModal.style.display =
+        "flex";
+
+
+    cropImage.onload =
+        ()=>{
+
+            if(cropper){
+
+                cropper.destroy();
+
+                cropper=null;
+
+            }
+
+
+            cropper =
+                new Cropper(
+                    cropImage,
+                    {
+
+                        viewMode:1,
+
+                        autoCropArea:.85,
+
+                        background:false,
+
+                        rotatable:false,
+
+                        zoomable:true,
+
+                        scalable:false,
+
+                        responsive:true,
+
+                        restore:false
+
+                    }
+                );
+
+
+            if(mode==="signature"){
+
+                updateSignaturePreview();
+
+            }
+
+        };
+
+}
+
+
+/* =========================================================
+   CANCEL
+========================================================= */
+
+document.getElementById(
+    "cancelEditor"
+).onclick=()=>{
+
+    if(cropper){
+
+        cropper.destroy();
+
+        cropper=null;
+
+    }
+
+
+    editorModal.style.display =
+        "none";
+
+
+    signaturePreviewBox.style.display =
+        "none";
+
+};
+
+
+/* =========================================================
+   SIGNATURE BACKGROUND REMOVAL
+========================================================= */
+
+function removeSignatureBackground(
+    sourceCanvas,
+    threshold
+){
+
+    const output =
+        document.createElement(
+            "canvas"
+        );
+
+
+    output.width =
+        sourceCanvas.width;
+
+    output.height =
+        sourceCanvas.height;
+
+
+    const ctx =
+        output.getContext(
+            "2d",
+            {
+                willReadFrequently:true
+            }
+        );
+
+
+    ctx.drawImage(
+        sourceCanvas,
+        0,
+        0
+    );
+
+
+    const imageData =
+        ctx.getImageData(
+            0,
+            0,
+            output.width,
+            output.height
+        );
+
+
+    const data =
+        imageData.data;
+
+
+    const width =
+        output.width;
+
+    const height =
+        output.height;
+
+
+    const t =
+        Math.max(
+            80,
+            Math.min(
+                240,
+                threshold
+            )
+        );
+
+
+    const samples=[];
+
+
+    const sampleSize =
+        Math.max(
+            2,
+            Math.floor(
+                Math.min(
+                    width,
+                    height
+                )*.05
+            )
+        );
+
+
+    function sampleArea(
+        startX,
+        startY
+    ){
+
+        let r=0;
+
+        let g=0;
+
+        let b=0;
+
+        let count=0;
+
+
+        for(
+            let y=startY;
+            y<startY+sampleSize &&
+            y<height;
+            y++
+        ){
+
+            for(
+                let x=startX;
+                x<startX+sampleSize &&
+                x<width;
+                x++
+            ){
+
+                const index =
+                    (y*width+x)*4;
+
+
+                r+=data[index];
+
+                g+=data[index+1];
+
+                b+=data[index+2];
+
+                count++;
+
+            }
+
+        }
+
+
+        if(count){
+
+            samples.push({
+
+                r:r/count,
+
+                g:g/count,
+
+                b:b/count
+
+            });
+
+        }
+
+    }
+
+
+    sampleArea(0,0);
+
+    sampleArea(
+        Math.max(
+            0,
+            width-sampleSize
+        ),
+        0
+    );
+
+    sampleArea(
+        0,
+        Math.max(
+            0,
+            height-sampleSize
+        )
+    );
+
+    sampleArea(
+        Math.max(
+            0,
+            width-sampleSize
+        ),
+        Math.max(
+            0,
+            height-sampleSize
+        )
+    );
+
+
+    let bgR=255;
+
+    let bgG=255;
+
+    let bgB=255;
+
+
+    if(samples.length){
+
+        bgR =
+            samples.reduce(
+                (sum,s)=>sum+s.r,
+                0
+            )/samples.length;
+
+
+        bgG =
+            samples.reduce(
+                (sum,s)=>sum+s.g,
+                0
+            )/samples.length;
+
+
+        bgB =
+            samples.reduce(
+                (sum,s)=>sum+s.b,
+                0
+            )/samples.length;
+
+    }
+
+
+    const colorTolerance =
+        30+
+        ((240-t)*.45);
+
+
+    const neutralLimit=48;
+
+
+    for(
+        let i=0;
+        i<data.length;
+        i+=4
+    ){
+
+        const r=data[i];
+
+        const g=data[i+1];
+
+        const b=data[i+2];
+
+
+        const brightness =
+            (r+g+b)/3;
+
+
+        const spread =
+            Math.max(r,g,b)-
+            Math.min(r,g,b);
+
+
+        const bgDistance =
+            Math.sqrt(
+                Math.pow(r-bgR,2)+
+                Math.pow(g-bgG,2)+
+                Math.pow(b-bgB,2)
+            );
+
+
+        const neutral =
+            spread<=neutralLimit;
+
+
+        let alpha=255;
+
+
+        if(
+            neutral &&
+            brightness>=t
+        ){
+
+            alpha=0;
+
+        }
+        else if(
+            bgDistance<=colorTolerance &&
+            brightness>55
+        ){
+
+            alpha=0;
+
+        }
+        else if(
+            neutral &&
+            brightness>=t-35
+        ){
+
+            const ratio =
+                (
+                    brightness-(t-35)
+                )/35;
+
+
+            alpha =
+                Math.round(
+                    255*(1-ratio)
+                );
+
+        }
+
+
+        data[i+3] =
+            Math.max(
+                0,
+                Math.min(
+                    255,
+                    alpha
+                )
+            );
+
+    }
+
+
+    ctx.putImageData(
+        imageData,
+        0,
+        0
+    );
+
+
+    return output;
+
+}
+
+
+/* =========================================================
+   SIGNATURE PREVIEW
+========================================================= */
+
+async function updateSignaturePreview(){
+
+    if(
+        editorMode!=="signature" ||
+        !cropper
+    ){
+
+        return;
+
+    }
+
+
+    const cropped =
+        cropper.getCroppedCanvas({
+
+            maxWidth:1800,
+
+            maxHeight:1800,
+
+            imageSmoothingEnabled:true,
+
+            imageSmoothingQuality:"high"
+
+        });
+
+
+    const processed =
+        removeSignatureBackground(
+            cropped,
+            Number(
+                thresholdInput.value
+            )
+        );
+
+
+    signaturePreview.width =
+        processed.width;
+
+    signaturePreview.height =
+        processed.height;
+
+
+    const ctx =
+        signaturePreview.getContext(
+            "2d"
+        );
+
+
+    ctx.clearRect(
+        0,
+        0,
+        signaturePreview.width,
+        signaturePreview.height
+    );
+
+
+    ctx.drawImage(
+        processed,
+        0,
+        0
+    );
+
+}
+
+
+/* =========================================================
+   THRESHOLD
+========================================================= */
+
+thresholdInput.oninput =
+    async e=>{
+
+        thresholdValue.textContent =
+            e.target.value;
+
+
+        await updateSignaturePreview();
+
     };
-    request.onsuccess = ()=>resolve(request.result);
-    request.onerror = ()=>reject(request.error);
-  });
-}
 
-function store(name,mode="readonly"){
-  return db.transaction(name,mode).objectStore(name);
-}
 
-function getAll(name){
-  return new Promise((resolve,reject)=>{
-    const r=store(name).getAll();
-    r.onsuccess=()=>resolve(r.result);
-    r.onerror=()=>reject(r.error);
-  });
-}
+/* =========================================================
+   APPLY EDITOR
+========================================================= */
 
-function put(name,value){
-  return new Promise((resolve,reject)=>{
-    const r=store(name,"readwrite").put(value);
-    r.onsuccess=()=>resolve(r.result);
-    r.onerror=()=>reject(r.error);
-  });
-}
+document.getElementById(
+    "applyEditor"
+).onclick=async()=>{
 
-function add(name,value){
-  return new Promise((resolve,reject)=>{
-    const r=store(name,"readwrite").add(value);
-    r.onsuccess=()=>resolve(r.result);
-    r.onerror=()=>reject(r.error);
-  });
-}
+    if(!cropper)return;
 
-function remove(name,id){
-  return new Promise((resolve,reject)=>{
-    const r=store(name,"readwrite").delete(id);
-    r.onsuccess=()=>resolve();
-    r.onerror=()=>reject(r.error);
-  });
-}
 
-function deleteChatMessages(chatId){
-  return new Promise((resolve,reject)=>{
-    const tx=db.transaction("messages","readwrite");
-    const s=tx.objectStore("messages");
-    const idx=s.index("chatId");
-    const r=idx.openCursor(IDBKeyRange.only(chatId));
-    r.onsuccess=()=>{
-      const cursor=r.result;
-      if(cursor){cursor.delete();cursor.continue();}
-    };
-    tx.oncomplete=resolve;
-    tx.onerror=()=>reject(tx.error);
-  });
-}
+    const cropped =
+        cropper.getCroppedCanvas({
 
-function safeText(value){
-  return String(value ?? "");
-}
+            maxWidth:1800,
 
-function initials(name){
-  return safeText(name).trim().slice(0,1).toUpperCase() || "C";
-}
+            maxHeight:1800,
 
-function formatTime(time){
-  return new Date(time).toLocaleTimeString("hi-IN",{
-    hour:"2-digit",minute:"2-digit"
-  });
-}
+            imageSmoothingEnabled:true,
 
-function latestMessage(chatId){
-  return messages.filter(m=>m.chatId===chatId)
-    .sort((a,b)=>b.time-a.time)[0];
-}
+            imageSmoothingQuality:"high"
 
-function sortContacts(){
-  contacts.sort((a,b)=>{
-    const am=latestMessage(a.id);
-    const bm=latestMessage(b.id);
-    return (bm?.time||b.createdAt)-(am?.time||a.createdAt);
-  });
-}
+        });
 
-function renderContacts(){
-  sortContacts();
-  const query=$("searchInput").value.trim().toLowerCase();
-  const list=$("contactList");
-  list.replaceChildren();
 
-  const filtered=contacts.filter(c=>{
-    const m=latestMessage(c.id);
-    return c.name.toLowerCase().includes(query) ||
-      safeText(m?.text).toLowerCase().includes(query);
-  });
+    let dataUrl;
 
-  if(!filtered.length){
-    const div=document.createElement("div");
-    div.className="emptycontacts";
-    div.textContent=contacts.length
-      ?"कोई चैट नहीं मिली।"
-      :"अभी कोई चैट नहीं है। ＋ दबाकर नई चैट बनाएँ।";
-    list.appendChild(div);
-    return;
-  }
 
-  filtered.forEach(c=>{
-    const row=document.createElement("div");
-    row.className="contact"+(c.id===activeChat?" active":"");
+    if(editorMode==="signature"){
 
-    const avatar=document.createElement("div");
-    avatar.className="avatar";
-    avatar.textContent=initials(c.name);
+        const processed =
+            removeSignatureBackground(
+                cropped,
+                Number(
+                    thresholdInput.value
+                )
+            );
 
-    const info=document.createElement("div");
-    info.className="contactinfo";
 
-    const name=document.createElement("div");
-    name.className="contactname";
-    name.textContent=c.name;
+        dataUrl =
+            processed.toDataURL(
+                "image/png"
+            );
 
-    const preview=document.createElement("div");
-    preview.className="preview";
-    const m=latestMessage(c.id);
-    preview.textContent=m?(m.text || m.fileName || "फाइल"):"अभी कोई मैसेज नहीं";
+    }
+    else{
 
-    info.append(name,preview);
-    row.append(avatar,info);
-    row.addEventListener("click",()=>openChat(c.id));
-    list.appendChild(row);
-  });
-}
+        dataUrl =
+            cropped.toDataURL(
+                "image/jpeg",
+                .95
+            );
 
-async function refresh(){
-  contacts=await getAll("contacts");
-  messages=await getAll("messages");
-  renderContacts();
-  if(activeChat) renderMessages();
-}
-
-function openChat(id){
-  activeChat=id;
-  const contact=contacts.find(c=>c.id===id);
-  if(!contact)return;
-
-  $("chatName").textContent=contact.name;
-  $("chatAvatar").textContent=initials(contact.name);
-  $("welcomeArea").style.display="none";
-  $("conversation").style.display="flex";
-  app.classList.add("chat-open");
-  renderContacts();
-  renderMessages();
-  $("messageInput").focus();
-}
-
-function renderMessages(){
-  const area=$("messages");
-  area.replaceChildren();
-  const items=messages.filter(m=>m.chatId===activeChat)
-    .sort((a,b)=>a.time-b.time);
-
-  if(!items.length){
-    const empty=document.createElement("div");
-    empty.className="welcome";
-    empty.textContent="यह चैट खाली है। पहला मैसेज लिखें।";
-    area.appendChild(empty);
-    return;
-  }
-
-  let previousDay="";
-  items.forEach(m=>{
-    const day=new Date(m.time).toLocaleDateString("hi-IN");
-    if(day!==previousDay){
-      const label=document.createElement("div");
-      label.className="daylabel";
-      label.textContent=day;
-      area.appendChild(label);
-      previousDay=day;
     }
 
-    const bubble=document.createElement("div");
-    bubble.className="bubble outgoing";
 
-    if(m.text){
-      const text=document.createElement("div");
-      text.textContent=m.text;
-      bubble.appendChild(text);
+    const done =
+        editorDone;
+
+
+    if(cropper){
+
+        cropper.destroy();
+
+        cropper=null;
+
     }
 
-    if(m.file){
-      const file=m.file;
-      if(file.type && file.type.startsWith("image/")){
-        const img=document.createElement("img");
-        img.alt=m.fileName || "फोटो";
-        const url=URL.createObjectURL(file);
-        img.src=url;
-        img.onload=()=>URL.revokeObjectURL(url);
-        bubble.appendChild(img);
-      }
 
-      const link=document.createElement("a");
-      const url=URL.createObjectURL(file);
-      link.href=url;
-      link.download=m.fileName || "download";
-      link.textContent="📎 "+(m.fileName || "फाइल डाउनलोड करें");
-      link.target="_blank";
-      link.rel="noopener";
-      link.addEventListener("click",()=>{
-        setTimeout(()=>URL.revokeObjectURL(url),60000);
-      });
-      bubble.appendChild(link);
+    editorModal.style.display =
+        "none";
+
+
+    signaturePreviewBox.style.display =
+        "none";
+
+
+    await done(dataUrl);
+
+};
+
+
+/* =========================================================
+   PDF RASTER PAGE
+========================================================= */
+
+async function renderFinalRasterPage(
+    pageIndex,
+    scale
+){
+
+    const page =
+        pageData[pageIndex];
+
+
+    const width =
+        Math.round(
+            A4.w*scale
+        );
+
+
+    const height =
+        Math.round(
+            A4.h*scale
+        );
+
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    canvas.width=width;
+
+    canvas.height=height;
+
+
+    const ctx =
+        canvas.getContext(
+            "2d",
+            {
+                alpha:false
+            }
+        );
+
+
+    ctx.fillStyle="#fff";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    ctx.drawImage(
+        page.canvas,
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    const sx =
+        width/A4.w;
+
+
+    const sy =
+        height/A4.h;
+
+
+    async function addObject(
+        object
+    ){
+
+        if(!object)return;
+
+
+        const img =
+            await loadImage(
+                object.url
+            );
+
+
+        ctx.drawImage(
+
+            img,
+
+            object.x*sx,
+
+            object.y*sy,
+
+            object.w*sx,
+
+            object.h*sy
+
+        );
+
     }
 
-    const time=document.createElement("div");
-    time.className="msgtime";
-    time.textContent=formatTime(m.time)+"  ✓";
-    bubble.appendChild(time);
-    area.appendChild(bubble);
-  });
 
-  area.scrollTop=area.scrollHeight;
+    await addObject(
+        page.photo1
+    );
+
+
+    await addObject(
+        page.photo2
+    );
+
+
+    await addObject(
+        page.sig1
+    );
+
+
+    await addObject(
+        page.sig2
+    );
+
+
+    if(
+        page.docs &&
+        page.docs.length
+    ){
+
+        for(
+            const doc of page.docs
+        ){
+
+            await addObject(
+                doc
+            );
+
+        }
+
+    }
+
+
+    return canvas;
+
 }
 
-async function createChat(){
-  const name=prompt("नए चैट का नाम लिखें:");
-  if(name===null)return;
-  const clean=name.trim();
-  if(!clean){alert("कृपया नाम लिखें।");return;}
 
-  const contact={
-    id:crypto.randomUUID(),
-    name:clean,
-    createdAt:Date.now()
-  };
+/* =========================================================
+   JPEG BLOB
+========================================================= */
 
-  try{
-    await add("contacts",contact);
-    await refresh();
-    openChat(contact.id);
-  }catch(e){
-    console.error(e);
-    alert("चैट नहीं बन सकी। ब्राउज़र स्टोरेज जाँचें।");
-  }
+function canvasToJpegBlob(
+    canvas,
+    quality
+){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            canvas.toBlob(
+                blob=>{
+
+                    if(blob){
+
+                        resolve(blob);
+
+                    }
+                    else{
+
+                        reject(
+                            new Error(
+                                "JPEG conversion failed"
+                            )
+                        );
+
+                    }
+
+                },
+                "image/jpeg",
+                quality
+            );
+
+        }
+    );
+
 }
 
-async function sendMessage(){
-  if(busy)return;
-  if(!activeChat){alert("पहले नई चैट बनाएँ।");return;}
 
-  const text=$("messageInput").value.trim();
-  if(!text && !pendingFiles.length)return;
+/* =========================================================
+   CREATE PDF
+========================================================= */
 
-  busy=true;
-  $("sendBtn").disabled=true;
+async function createRasterPdf(
+    scale,
+    quality
+){
 
-  try{
-    for(const file of pendingFiles){
-      await add("messages",{
-        chatId:activeChat,
-        text:"",
-        file:file,
-        fileName:file.name,
-        time:Date.now()
-      });
+    const pdf =
+        await PDFDocument.create();
+
+
+    for(
+        let i=0;
+        i<pageData.length;
+        i++
+    ){
+
+        const canvas =
+            await renderFinalRasterPage(
+                i,
+                scale
+            );
+
+
+        const blob =
+            await canvasToJpegBlob(
+                canvas,
+                quality
+            );
+
+
+        const bytes =
+            new Uint8Array(
+                await blob.arrayBuffer()
+            );
+
+
+        const jpg =
+            await pdf.embedJpg(
+                bytes
+            );
+
+
+        const page =
+            pdf.addPage([
+                A4.w,
+                A4.h
+            ]);
+
+
+        page.drawImage(
+            jpg,
+            {
+
+                x:0,
+
+                y:0,
+
+                width:A4.w,
+
+                height:A4.h
+
+            }
+        );
+
     }
 
-    if(text){
-      await add("messages",{
-        chatId:activeChat,
-        text,
-        time:Date.now()
-      });
-    }
 
-    $("messageInput").value="";
-    $("messageInput").style.height="auto";
-    pendingFiles=[];
-    $("fileInput").value="";
-    await refresh();
-    openChat(activeChat);
-  }catch(e){
-    console.error(e);
-    alert("मैसेज सेव नहीं हो सका। स्टोरेज भर गया हो सकता है। छोटी फाइल से प्रयास करें।");
-  }finally{
-    busy=false;
-    $("sendBtn").disabled=false;
-  }
+    return await pdf.save({
+        useObjectStreams:true
+    });
+
 }
 
-async function deleteActiveChat(){
-  if(!activeChat)return;
-  if(!confirm("क्या इस चैट और इसके सभी मैसेज को हटाना चाहते हैं?"))return;
 
-  const id=activeChat;
-  try{
-    await deleteChatMessages(id);
-    await remove("contacts",id);
-    activeChat=null;
-    $("conversation").style.display="none";
-    $("welcomeArea").style.display="flex";
-    app.classList.remove("chat-open");
-    await refresh();
-  }catch(e){
-    console.error(e);
-    alert("चैट हटाई नहीं जा सकी।");
-  }
+/* =========================================================
+   SAFE PADDING
+========================================================= */
+
+function padPdfAfterEOF(
+    bytes,
+    targetBytes,
+    maxBytes
+){
+
+    if(bytes.length>=targetBytes){
+
+        return bytes;
+
+    }
+
+
+    if(bytes.length>maxBytes){
+
+        throw new Error(
+            "PDF maximum size exceeded"
+        );
+
+    }
+
+
+    const extra =
+        targetBytes-bytes.length;
+
+
+    const text =
+        "\n% PAN PDF SIZE PADDING\n";
+
+
+    const textBytes =
+        new TextEncoder().encode(
+            text
+        );
+
+
+    const repetitions =
+        Math.ceil(
+            extra/
+            textBytes.length
+        );
+
+
+    const padding =
+        new Uint8Array(
+            repetitions*
+            textBytes.length
+        );
+
+
+    for(
+        let i=0;
+        i<repetitions;
+        i++
+    ){
+
+        padding.set(
+            textBytes,
+            i*textBytes.length
+        );
+
+    }
+
+
+    const finalPadding =
+        padding.slice(
+            0,
+            extra
+        );
+
+
+    const output =
+        new Uint8Array(
+            bytes.length+
+            finalPadding.length
+        );
+
+
+    output.set(
+        bytes,
+        0
+    );
+
+
+    output.set(
+        finalPadding,
+        bytes.length
+    );
+
+
+    return output;
+
 }
 
-$("newChatBtn").addEventListener("click",createChat);
-$("searchInput").addEventListener("input",renderContacts);
-$("sendBtn").addEventListener("click",sendMessage);
-$("deleteChatBtn").addEventListener("click",deleteActiveChat);
-$("backBtn").addEventListener("click",()=>{
-  app.classList.remove("chat-open");
-});
 
-$("messageInput").addEventListener("input",()=>{
-  const el=$("messageInput");
-  el.style.height="auto";
-  el.style.height=Math.min(el.scrollHeight,120)+"px";
-});
+/* =========================================================
+   MB
+========================================================= */
 
-$("messageInput").addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
-    e.preventDefault();
-    sendMessage();
-  }
-});
+function mb(bytes){
 
-$("fileInput").addEventListener("change",e=>{
-  const files=Array.from(e.target.files||[]);
-  if(!files.length)return;
+    return bytes/1048576;
 
-  const maxSize=10*1024*1024;
-  const accepted=files.filter(f=>f.size<=maxSize);
-  const rejected=files.filter(f=>f.size>maxSize);
+}
 
-  pendingFiles.push(...accepted);
 
-  if(rejected.length){
-    alert("10 MB से बड़ी फाइल नहीं जोड़ी गई: "+rejected.map(f=>f.name).join(", "));
-  }
+/* =========================================================
+   FINAL PDF
+========================================================= */
 
-  if(pendingFiles.length){
-    $("messageInput").placeholder=
-      pendingFiles.length+" फाइल चुनी गईं। चाहें तो मैसेज भी लिखें...";
-  }
-});
+document.getElementById(
+    "makePdfBtn"
+).onclick=async()=>{
 
-$("clearBtn").addEventListener("click",async()=>{
-  if(!confirm("सभी लोकल चैट और मैसेज स्थायी रूप से हटाएँ?"))return;
-  try{
-    const tx=db.transaction(["contacts","messages"],"readwrite");
-    tx.objectStore("contacts").clear();
-    tx.objectStore("messages").clear();
-    tx.oncomplete=async()=>{
-      activeChat=null;
-      $("conversation").style.display="none";
-      $("welcomeArea").style.display="flex";
-      app.classList.remove("chat-open");
-      await refresh();
-    };
-    tx.onerror=()=>alert("डेटा हटाने में समस्या हुई।");
-  }catch(e){
-    console.error(e);
-    alert("डेटा हटाया नहीं जा सका।");
-  }
-});
+    try{
 
-(async function init(){
-  try{
-    if(!("indexedDB" in window)){
-      throw new Error("IndexedDB उपलब्ध नहीं है");
+        if(pageData.length<2){
+
+            alert(
+                "पहले 2-page PAN template load करें।"
+            );
+
+            return;
+
+        }
+
+
+        if(pageData.length!==4){
+
+            alert(
+                "Final PDF के लिए 2 PAN + 2 A4 = कुल 4 pages रखें।"
+            );
+
+            return;
+
+        }
+
+
+        finalPdfBytes=null;
+
+
+        document.getElementById(
+            "downloadBtn"
+        ).disabled=true;
+
+
+        status(
+            "High-quality PDF तैयार हो रहा है… कृपया प्रतीक्षा करें।"
+        );
+
+
+        const MIN_BYTES =
+            Math.ceil(
+                1.50*1048576
+            );
+
+
+        const MAX_BYTES =
+            Math.floor(
+                1.70*1048576
+            );
+
+
+        const attempts=[
+
+            {scale:3.20,quality:.97},
+
+            {scale:3.20,quality:.96},
+
+            {scale:3.10,quality:.96},
+
+            {scale:3.00,quality:.96},
+
+            {scale:3.00,quality:.95},
+
+            {scale:2.90,quality:.95},
+
+            {scale:2.80,quality:.95},
+
+            {scale:2.70,quality:.94},
+
+            {scale:2.60,quality:.94},
+
+            {scale:2.50,quality:.93},
+
+            {scale:2.40,quality:.92},
+
+            {scale:2.30,quality:.92},
+
+            {scale:2.20,quality:.91}
+
+        ];
+
+
+        let bestUnderMax=null;
+
+        let bestUnderMaxSize=0;
+
+
+        for(
+            let i=0;
+            i<attempts.length;
+            i++
+        ){
+
+            const setting =
+                attempts[i];
+
+
+            status(
+                `High-quality PDF तैयार हो रही है… ${i+1}/${attempts.length}`
+            );
+
+
+            const pdfBytes =
+                await createRasterPdf(
+                    setting.scale,
+                    setting.quality
+                );
+
+
+            const size =
+                pdfBytes.length;
+
+
+            if(
+                size<=MAX_BYTES &&
+                size>bestUnderMaxSize
+            ){
+
+                bestUnderMax =
+                    pdfBytes;
+
+                bestUnderMaxSize =
+                    size;
+
+            }
+
+
+            if(
+                size>=MIN_BYTES &&
+                size<=MAX_BYTES
+            ){
+
+                finalPdfBytes =
+                    pdfBytes;
+
+                break;
+
+            }
+
+        }
+
+
+        if(!finalPdfBytes){
+
+            if(
+                bestUnderMax &&
+                bestUnderMaxSize<MIN_BYTES
+            ){
+
+                const target =
+                    Math.ceil(
+                        1.55*1048576
+                    );
+
+
+                const padded =
+                    padPdfAfterEOF(
+                        bestUnderMax,
+                        Math.min(
+                            target,
+                            MAX_BYTES
+                        ),
+                        MAX_BYTES
+                    );
+
+
+                if(
+                    padded.length>=MIN_BYTES &&
+                    padded.length<=MAX_BYTES
+                ){
+
+                    finalPdfBytes =
+                        padded;
+
+                }
+
+            }
+
+        }
+
+
+        if(!finalPdfBytes){
+
+            if(
+                bestUnderMax &&
+                bestUnderMaxSize>=MIN_BYTES &&
+                bestUnderMaxSize<=MAX_BYTES
+            ){
+
+                finalPdfBytes =
+                    bestUnderMax;
+
+            }
+
+        }
+
+
+        if(!finalPdfBytes){
+
+            throw new Error(
+                "PDF को 1.50–1.70 MB सीमा में रखते हुए पर्याप्त quality के साथ बनाना संभव नहीं हुआ।"
+            );
+
+        }
+
+
+        const finalSize =
+            finalPdfBytes.length;
+
+
+        if(
+            finalSize<MIN_BYTES ||
+            finalSize>MAX_BYTES
+        ){
+
+            throw new Error(
+                "Final PDF 1.50–1.70 MB सीमा में नहीं है।"
+            );
+
+        }
+
+
+        document.getElementById(
+            "downloadBtn"
+        ).disabled=false;
+
+
+        status(
+            `PDF तैयार है • 4 pages • ${mb(finalSize).toFixed(2)} MB • 1.50–1.70 MB सीमा में`,
+            true
+        );
+
     }
-    db=await openDB();
-    await refresh();
-  }catch(e){
-    console.error(e);
-    document.body.innerHTML=
-      '<div style="padding:25px;font-family:Arial"><h2>चैट शुरू नहीं हो सकी</h2><p>आपका ब्राउज़र लोकल स्टोरेज नहीं खोल पा रहा है। ब्राउज़र सेटिंग्स जाँचें और पेज दोबारा खोलें।</p></div>';
-  }
-})();
+    catch(error){
+
+        console.error(error);
+
+
+        finalPdfBytes=null;
+
+
+        document.getElementById(
+            "downloadBtn"
+        ).disabled=true;
+
+
+        status(
+            "PDF बनाने में error: "
+            + error.message
+        );
+
+    }
+
+};
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+document.getElementById(
+    "downloadBtn"
+).onclick=()=>{
+
+    if(!finalPdfBytes)return;
+
+
+    const blob =
+        new Blob(
+            [finalPdfBytes],
+            {
+                type:"application/pdf"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href=url;
+
+
+    link.download =
+        "PAN_Application_Final.pdf";
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+    setTimeout(
+        ()=>{
+            URL.revokeObjectURL(url);
+        },
+        1500
+    );
+
+};
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        if(pageData.length){
+
+            renderPages();
+
+        }
+
+    }
+);
+
 </script>
+
 </body>
 </html>
